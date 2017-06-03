@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95db8ef3-dc68-4d9b-92df-556df2fad813" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/db/diagnostic.data/metrics.interim" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/db/diagnostic.data/metrics.2017-06-03T13-45-02Z-00000" afterPath="$PROJECT_DIR$/data/db/diagnostic.data/metrics.2017-06-03T13-45-02Z-00000" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/db/diagnostic.data/metrics.interim" afterPath="$PROJECT_DIR$/data/db/diagnostic.data/metrics.interim" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
