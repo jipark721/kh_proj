@@ -13,3 +13,4 @@ patients = khdb.get_collection("patients")
 
 for patient in patients.find():
     pprint(patient)
+
