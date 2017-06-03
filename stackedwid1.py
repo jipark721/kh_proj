@@ -757,7 +757,7 @@ class StackedWid1(object): #QtWidgets.QStackedWidget
         self.btn_enter.clicked.connect(self.checkPwd)
         #page 2
         self.btn_go2Client.clicked.connect(self.go2Client)
-        self.btn_go2Date.clicked.connect(self.go2Data)
+        self.btn_go2Data.clicked.connect(self.go2Data)
         self.btn_logout.clicked.connect(self.logout)
         #page 3
         self.btn_findExistingClient.clicked.connect(self.go2FindExistingClient)

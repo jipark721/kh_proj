@@ -19,9 +19,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     self.setupFlow()
     
   def setupFlow(self):
-    
     pass
-    
     
 def main():
    app = QtWidgets.QApplication(sys.argv)
