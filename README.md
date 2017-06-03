@@ -19,6 +19,11 @@
 - Change permission for read/write ("chmod +x /data/db")
 - enter "mongod --dbpath ./data/db" to run
 
+## Initializing DB
+
+1. Store necessary excel files under /xls
+2. run "init_db.sh"
+
 ## Test Run (from "kh_proj/")
 
 - "source venv/bin/active"

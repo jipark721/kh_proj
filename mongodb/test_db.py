@@ -1,19 +1,8 @@
 from pymongo import MongoClient
 client = MongoClient()
 
-rest = client.test.restaurants
+print("Printing mongodb configurations...\n")
+print("Databases:\n%s\n" %client.database_names())
+print("Collections under khdb:\n%s\n" %client.get_database("khdb").collection_names())
 
-#for i in rest.find():
-    #print(i['name'])
 
-test1_db = client.test1.test_col
-
-for i in test1_db.find():
-    print(i)
-
-test1_db.insert_one(
-    {
-        "name" : "alex",
-        "age" : 100
-    }
-)
