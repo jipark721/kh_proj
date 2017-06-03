@@ -5,8 +5,9 @@
 ## Simple Set Up:
 
 1. "./init_proj.sh"
-2. "mongod --dbpath ./data/db" (keep it running on a new terminal for local server hosting)
-3. "cd mongodb" -> "./init_db.sh"
+2. "source venv/bin/activate"
+3. "mongod --dbpath ./data/db" (keep it running on a new terminal for local server hosting)
+4. "cd mongodb" -> "./init_db.sh"
 
 ## Environment  Requirements (recommend using Homebrew for installation):
 
