@@ -765,7 +765,61 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.btn_findExistingClient.clicked.connect(self.go2FindExistingClient)
         self.btn_registerNewClient.clicked.connect(self.go2RegisterNewClient)
         self.btn_home_3.clicked.connect(self.goHome)
-        # page 4
+        # page 4_1 - register new client
+        self.btn_home_4_1.clicked.connect(self.goHomeFrom4_1)
+        self.btn_cancel_4_1.clicked.connect(self.cancelRegisterNewClient)
+
+        # page_4_2 - find existing client
+        self.btn_cancel_4_2.clicked.connect(self.cancelFindExistingClient)
+        self.btn_home_4_2.clicked.connect(self.goHomeFrom4_2)
+
+    def goHomeFrom4_2(self):
+        self.clearFindExistingClient()
+        self.goHome()
+
+    def clearFindExistingClient(self):
+        self.lineEdit_ID_4_2.setText("")
+        self.lineEdit_name_4_2.setText("")
+        self.dateEdit_birthdate_4_2.setDateTime(QtCore.QDate(1900, 1, 1))
+        self.tableWidget_clientCandidates.setRowCount(0)
+
+    def cancelFindExistingClient(self):
+        self.clearFindExistingClient()
+        self.go2PreviousPage(3)
+
+    def goHomeFrom4_1(self):
+        self.clearRegisterNewClient()
+        self.goHome()
+
+    def warnBeforeHome(self):
+        msgbox = QtWidgets.QMessageBox.question(self, 'Warning', "모든 정보가 사라집니다. 홈으로 이동하시겠습니까?",
+                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        msgbox.setText("Incorrect Password")
+        msgbox.setWindowTitle("Error")
+        msgbox.exec_()
+
+    def clearRegisterNewClient(self):
+        self.lineEdit_ID_4_1.setText("")
+        self.lineEdit_name_4_1.setText("")
+        self.radioBtn_male_4_1.setChecked(True)
+        self.radioBtn_female_4_1.setChecked(False)
+        self.dateEdit_birthdate_4_1.setDateTime(QtCore.QDate(1900, 1, 1))
+        self.lineEdit_address_4_1.setText("")
+        self.lineEdit_height_4_1.setText("")
+        self.spinBox_weight_4_1.stValue(0.0)
+        self.radioBtn_kg_4_1.setChecked(True)
+        self.radioBtn_lb_4_1.setChecked(False)
+        self.ckBox_preg_4_1.setChecked(False)
+        self.ckBox_bFeeding_4_1.setChecked(False)
+        self.dateEdit_lastOfficeVisit_4_1.setDateTime(QtCore.QDate.currentDate())
+        self.lineEdit_diagDis_4_1.setText("")
+
+    def cancelRegisterNewClient(self):
+        self.clearRegisterNewClient()
+        self.go2PreviousPage(3)
+
+    def go2PreviousPage(self, currPage):
+        self.stackedWidget.setCurrentIndex(currPage - 1)
 
     def logout(self):
         self.stackedWidget.setCurrentIndex(0)
@@ -796,16 +850,16 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
 
     def checkPwd(self):
         pwd = self.lineEdit_pw.text()
+        print(pwd)
         if pwd == "kiho":
+            self.lineEdit_pw.setText("")
             self.stackedWidget.setCurrentIndex(1)
-
         elif len(pwd) != 0:
             msgbox = QtWidgets.QMessageBox()
             msgbox.setIcon(QtWidgets.QMessageBox.Warning)
             msgbox.setText("Incorrect Password")
             msgbox.setWindowTitle("Error")
             msgbox.exec_()
-
         else:
             msgbox = QtWidgets.QMessageBox()
             msgbox.setIcon(QtWidgets.QMessageBox.Warning)
