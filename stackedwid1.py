@@ -7,8 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from mongodb.utils import *
 
-class StackedWid1(object): #QtWidgets.QStackedWidget
+
+class StackedWid1(object):  # QtWidgets.QStackedWidget
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(814, 613)
@@ -133,7 +135,7 @@ class StackedWid1(object): #QtWidgets.QStackedWidget
         self.lineEdit_diagDis_4_1.setObjectName("lineEdit_diagDis_4_1")
         self.btnBox_nextStep_4_1 = QtWidgets.QDialogButtonBox(self.page_4_1)
         self.btnBox_nextStep_4_1.setGeometry(QtCore.QRect(480, 510, 164, 32))
-        self.btnBox_nextStep_4_1.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.btnBox_nextStep_4_1.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.btnBox_nextStep_4_1.setObjectName("btnBox_nextStep_4_1")
         self.btn_home_4_1 = QtWidgets.QPushButton(self.page_4_1)
         self.btn_home_4_1.setGeometry(QtCore.QRect(570, 20, 71, 51))
@@ -173,13 +175,13 @@ class StackedWid1(object): #QtWidgets.QStackedWidget
         self.btn_findbyName.setObjectName("btn_findbyName")
         self.btnBox_nextStep_4_2 = QtWidgets.QDialogButtonBox(self.page_4_2)
         self.btnBox_nextStep_4_2.setGeometry(QtCore.QRect(480, 510, 164, 32))
-        self.btnBox_nextStep_4_2.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.btnBox_nextStep_4_2.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.btnBox_nextStep_4_2.setObjectName("btnBox_nextStep_4_2")
         self.tableWidget_clientCandidates = QtWidgets.QTableWidget(self.page_4_2)
         self.tableWidget_clientCandidates.setGeometry(QtCore.QRect(50, 240, 421, 291))
         self.tableWidget_clientCandidates.setObjectName("tableWidget_clientCandidates")
         self.tableWidget_clientCandidates.setColumnCount(4)
-        self.tableWidget_clientCandidates.setRowCount(0)
+        self.tableWidget_clientCandidates.setRowCount(5)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_clientCandidates.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -241,7 +243,7 @@ class StackedWid1(object): #QtWidgets.QStackedWidget
         self.radioBtn_lb_4_3.setObjectName("radioBtn_lb_4_3")
         self.btnBox_nextStep_4_3 = QtWidgets.QDialogButtonBox(self.page_4_3)
         self.btnBox_nextStep_4_3.setGeometry(QtCore.QRect(480, 510, 164, 32))
-        self.btnBox_nextStep_4_3.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.btnBox_nextStep_4_3.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.btnBox_nextStep_4_3.setObjectName("btnBox_nextStep_4_3")
         self.lineEdit_name_4_3 = QtWidgets.QLineEdit(self.page_4_3)
         self.lineEdit_name_4_3.setGeometry(QtCore.QRect(140, 80, 113, 21))
@@ -747,64 +749,69 @@ class StackedWid1(object): #QtWidgets.QStackedWidget
         MainWindow.setStatusBar(self.statusbar)
 
         self.setupFlow()
-        
+
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
+
     def setupFlow(self):
-        #page 1
+        # page 1
         self.btn_enter.clicked.connect(self.checkPwd)
-        #page 2
+        # page 2
         self.btn_go2Client.clicked.connect(self.go2Client)
         self.btn_go2Data.clicked.connect(self.go2Data)
         self.btn_logout.clicked.connect(self.logout)
-        #page 3
+        # page 3
         self.btn_findExistingClient.clicked.connect(self.go2FindExistingClient)
         self.btn_registerNewClient.clicked.connect(self.go2RegisterNewClient)
         self.btn_home_3.clicked.connect(self.goHome)
-        #page 4
-        
-        
+        # page 4
+
     def logout(self):
-      self.stackedWidget.setCurrentIndex(0)
-      
+        self.stackedWidget.setCurrentIndex(0)
+
     def goHome(self):
-      self.stackedWidget.setCurrentIndex(1)
-      
+        self.stackedWidget.setCurrentIndex(1)
+
     def go2FindExistingClient(self):
-      self.stackedWidget.setCurrentIndex(4)
-      
+        self.stackedWidget.setCurrentIndex(4)
+
     def go2RegisterNewClient(self):
-      self.stackedWidget.setCurrentIndex(3)
-      
+        self.stackedWidget.setCurrentIndex(3)
+
     #############################
     # TODO - NEED TO WORK ON DATA PAGE
     #############################
+    def updatePatients(self):
+        # for patient in getAllPatients():
+        #     self.tableWidget_clientCandidates.
+        #     patient.
+        pass
+
     def go2Data(self):
-      pass
-    
+        pass
+
     def go2Client(self):
-      self.stackedWidget.setCurrentIndex(2)
-      
+        self.stackedWidget.setCurrentIndex(2)
+
     def checkPwd(self):
         pwd = self.lineEdit_pw.text()
         if pwd == "kiho":
-          self.stackedWidget.setCurrentIndex(1)
+            self.stackedWidget.setCurrentIndex(1)
 
         elif len(pwd) != 0:
-          msgbox = QtWidgets.QMessageBox()
-          msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-          msgbox.setText("Incorrect Password")
-          msgbox.setWindowTitle("Error")
-          msgbox.exec_()
-        
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+            msgbox.setText("Incorrect Password")
+            msgbox.setWindowTitle("Error")
+            msgbox.exec_()
+
         else:
-          msgbox = QtWidgets.QMessageBox()
-          msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-          msgbox.setText("Please enter password")
-          msgbox.setWindowTitle("Error")
-          msgbox.exec_()
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+            msgbox.setText("Please enter password")
+            msgbox.setWindowTitle("Error")
+            msgbox.exec_()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -969,10 +976,10 @@ class StackedWid1(object): #QtWidgets.QStackedWidget
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = StackedWid1()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
