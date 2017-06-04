@@ -1,44 +1,42 @@
-{
-    "data": [
-        {
-            "disease_eng": "disease_1",
-            "disease_kor": "질병_1"
-        },
-        {
-            "disease_eng": "disease_2",
-            "disease_kor": "질병_2"
-        },
-        {
-            "disease_eng": "disease_3",
-            "disease_kor": "질병_3"
-        },
-        {
-            "disease_eng": "disease_4",
-            "disease_kor": "질병_4"
-        },
-        {
-            "disease_eng": "disease_5",
-            "disease_kor": "질병_5"
-        },
-        {
-            "disease_eng": "disease_6",
-            "disease_kor": "질병_6"
-        },
-        {
-            "disease_eng": "disease_7",
-            "disease_kor": "질병_7"
-        },
-        {
-            "disease_eng": "disease_8",
-            "disease_kor": "질병_8"
-        },
-        {
-            "disease_eng": "disease_9",
-            "disease_kor": "질병_9"
-        },
-        {
-            "disease_eng": "disease_10",
-            "disease_kor": "질병_10"
-        }
-    ]
-}
+[
+    {
+        "disease_eng": "disease_1",
+        "disease_kor": "질병_1"
+    },
+    {
+        "disease_eng": "disease_2",
+        "disease_kor": "질병_2"
+    },
+    {
+        "disease_eng": "disease_3",
+        "disease_kor": "질병_3"
+    },
+    {
+        "disease_eng": "disease_4",
+        "disease_kor": "질병_4"
+    },
+    {
+        "disease_eng": "disease_5",
+        "disease_kor": "질병_5"
+    },
+    {
+        "disease_eng": "disease_6",
+        "disease_kor": "질병_6"
+    },
+    {
+        "disease_eng": "disease_7",
+        "disease_kor": "질병_7"
+    },
+    {
+        "disease_eng": "disease_8",
+        "disease_kor": "질병_8"
+    },
+    {
+        "disease_eng": "disease_9",
+        "disease_kor": "질병_9"
+    },
+    {
+        "disease_eng": "disease_10",
+        "disease_kor": "질병_10"
+    }
+]

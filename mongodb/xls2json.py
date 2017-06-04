@@ -22,5 +22,5 @@ for xls_file_name, json_file_name in xls2json_files.items() :
         data.append(row_data)
 
     with open(json_file_name, 'w') as json_file:
-        data = json.dumps({'data': data}, indent=4, ensure_ascii=False)
+        data = json.dumps(data, indent=4, ensure_ascii=False)
         json_file.write(data)
