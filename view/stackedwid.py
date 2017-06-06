@@ -7,7 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from mongodb.utils import *
 
 class StackedWid1(object):
     def setupUi(self, MainWindow):
@@ -123,8 +122,7 @@ class StackedWid1(object):
         self.lineEdit_height_4_1.setObjectName("lineEdit_height_4_1")
         self.dateEdit_birthdate_4_1 = QtWidgets.QDateEdit(self.page_4_1)
         self.dateEdit_birthdate_4_1.setGeometry(QtCore.QRect(160, 140, 110, 24))
-        self.dateEdit_birthdate_4_1.setMinimumDateTime(
-            QtCore.QDateTime(QtCore.QDate(1900, 1, 1), QtCore.QTime(0, 0, 0)))
+        self.dateEdit_birthdate_4_1.setMinimumDateTime(QtCore.QDateTime(QtCore.QDate(1900, 1, 1), QtCore.QTime(0, 0, 0)))
         self.dateEdit_birthdate_4_1.setMinimumDate(QtCore.QDate(1900, 1, 1))
         self.dateEdit_birthdate_4_1.setCalendarPopup(True)
         self.dateEdit_birthdate_4_1.setObjectName("dateEdit_birthdate_4_1")
@@ -754,134 +752,9 @@ class StackedWid1(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        self.setupFlow()
-
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(3)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def setupFlow(self):
-        # page 1
-        self.btn_enter.clicked.connect(self.checkPwd)
-        # page 2
-        self.btn_go2Client.clicked.connect(self.go2Client)
-        self.btn_go2Data.clicked.connect(self.go2Data)
-        self.btn_logout.clicked.connect(self.logout)
-        # page 3
-        self.btn_findExistingClient.clicked.connect(self.go2FindExistingClient)
-        self.btn_registerNewClient.clicked.connect(self.go2RegisterNewClient)
-        self.btn_home_3.clicked.connect(self.goHome)
-        # page 4_1 - register new client
-        self.btn_home_4_1.clicked.connect(self.goHomeFrom4_1)
-        self.btn_cancel_4_1.clicked.connect(self.cancelRegisterNewClient)
-
-        # page_4_2 - find existing client
-        self.btn_cancel_4_2.clicked.connect(self.cancelFindExistingClient)
-        self.btn_home_4_2.clicked.connect(self.goHomeFrom4_2)
-
-    def goHomeFrom4_2(self):
-        self.clearFindExistingClient()
-        self.goHome()
-
-    def clearFindExistingClient(self):
-        self.lineEdit_ID_4_2.setText("")
-        self.lineEdit_name_4_2.setText("")
-        self.dateEdit_birthdate_4_2.setDate(QtCore.QDate(1900, 1, 1))
-        self.tableWidget_clientCandidates.setRowCount(0)
-
-    def cancelFindExistingClient(self):
-        self.clearFindExistingClient()
-        self.go2PreviousPage(3)
-
-    def goHomeFrom4_1(self):
-        if self.warnBeforeHome() == False:
-            return
-        else:
-            self.clearRegisterNewClient()
-            self.goHome()
-
-    def warnBeforeHome(self):
-
-        msgbox = QtWidgets.QMessageBox()
-        msgbox.setWindowTitle("Warning")
-        msgbox.setText("현재 페이지 정보가 사라집니다. 홈으로 이동하시겠습니까?")
-        msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        msgbox.setDefaultButton(QtWidgets.QMessageBox.No)
-        ret = msgbox.exec_()
-
-        if ret == QtWidgets.QMessageBox.Yes:
-            return True
-        else:
-            return False
-
-    def clearRegisterNewClient(self):
-        self.lineEdit_ID_4_1.setText("")
-        self.lineEdit_name_4_1.setText("")
-        self.radioBtn_male_4_1.setChecked(True)
-        self.radioBtn_female_4_1.setChecked(False)
-        self.dateEdit_birthdate_4_1.setDate(QtCore.QDate(1900, 1, 1))
-        self.lineEdit_address_4_1.setText("")
-        self.lineEdit_height_4_1.setText("")
-        self.spinBox_weight_4_1.setValue(0.0)
-        self.radioBtn_kg_4_1.setChecked(True)
-        self.radioBtn_lb_4_1.setChecked(False)
-        self.ckBox_preg_4_1.setChecked(False)
-        self.ckBox_bFeeding_4_1.setChecked(False)
-        self.dateEdit_lastOfficeVisit_4_1.setDate(QtCore.QDate.currentDate())
-
-    def cancelRegisterNewClient(self):
-        self.clearRegisterNewClient()
-        self.go2PreviousPage(3)
-
-    def go2PreviousPage(self, currPage):
-        self.stackedWidget.setCurrentIndex(currPage - 1)
-
-
-    def logout(self):
-        self.stackedWidget.setCurrentIndex(0)
-
-    def goHome(self):
-        self.stackedWidget.setCurrentIndex(1)
-
-    def go2FindExistingClient(self):
         self.stackedWidget.setCurrentIndex(4)
-
-    def go2RegisterNewClient(self):
-        self.stackedWidget.setCurrentIndex(3)
-
-    #############################
-    # TODO - NEED TO WORK ON DATA PAGE
-    #############################
-    def updatePatients(self):
-        # for patient in getAllPatients():
-        #     self.tableWidget_clientCandidates.
-        #     patient.
-        pass
-
-    def go2Data(self):
-        pass
-
-    def go2Client(self):
-        self.stackedWidget.setCurrentIndex(2)
-
-    def checkPwd(self):
-        pwd = self.lineEdit_pw.text()
-        print(pwd)
-        if pwd == "kiho":
-            self.lineEdit_pw.setText("")
-            self.stackedWidget.setCurrentIndex(1)
-        elif len(pwd) != 0:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("Incorrect Password")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
-        else:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("Please enter password")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -1054,10 +927,10 @@ class StackedWid1(object):
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = StackedWid1()
+    ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
