@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from pymongo import MongoClient
 from pprint import pprint
 import json
@@ -8,12 +9,14 @@ khdb = client.get_database("khdb")
 patients_collection = khdb.get_collection("patients")
 diseases_collection = khdb.get_collection("diseases")
 ingredients_collection = khdb.get_collection("ingredients")
+nutrients_collection = khdb.get_collection("nutrients")
 
 
 def reset_database():
     khdb.drop_collection("patients")
     khdb.drop_collection("diseases")
     khdb.drop_collection("ingredients")
+    khdb.drop_collection("nutrients")
 
 def initialize_database():
     with open("json/patients.json") as patient_data:
@@ -40,7 +43,7 @@ def get_all_patients():
 
 
 def get_patient_by_name(name):
-    return patients_collection.find({"성명": name})
+    return patients_collection.find({"이름": name})
 
 
 def get_patient_by_id(id):
@@ -50,8 +53,8 @@ def get_patient_by_id(id):
 def get_patient_by_name_and_birthdate(name, birthdate):
     return patients_collection.find(
         {"$and":
-             [{"성명": name},
-              {"생일": birthdate}]
+             [{"이름": name},
+              {"생년월일": birthdate}]
          }
     )
 
@@ -74,6 +77,50 @@ def add_one_patient(patient):
         "알레르기음식": patient["알레르기음식"]
         }
     )
+
+def update_patient_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList, diagDiseases):
+    return patients_collection.update(
+        {"ID": id},
+        {
+            "이름": name,
+            "성별": sex,
+            "생년월일": birthdate,
+            "주소": address,
+            "키": height,
+            "몸무게": weight,
+            "임신여부": isPreg,
+            "수유여부": isBFeeding,
+            "진료일": officeVisitDateList,
+            "진단명": diagDiseases
+        }
+    )
+
+#####################
+# Diseases Related  #
+#####################
+def get_all_diseases():
+    return diseases_collection.find()
+
+
+#####################
+# Ingredients Related #
+#####################
+def get_all_ingredients():
+    return ingredients_collection.find()
+
+def get_ingredients_by_level(level):
+    pass
+
+
+#####################
+# Nutrients Related #
+#####################
+def get_all_nutrients():
+    return nutrients_collection.find()
+
+def get_nutrients_by_level(level):
+    pass
+
 
 # Convert list of entry-defined (val_1, val_2) objects to list of tuples
 def convert_list_2_tuple(entry_list):
