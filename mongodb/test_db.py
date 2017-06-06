@@ -27,18 +27,20 @@ print("There are %d many ingredients data\n" % ingredients.count())
 
 def print_all_patients():
     for patient in patients.find():
-        pprint(patient["알레르기음식"])
+        pprint(patient)
 
 def print_all_diseases():
     for disease in diseases.find():
-        pprint(disease["질병명"])
+        pprint(disease)
 
 def print_all_ingredients():
     for ingredient in ingredients.find():
-        pprint(ingredient["식품명"])
+        pprint(ingredient)
 
 def print_all_nutrients():
     for nutrient in nutrients.find():
-        pprint(nutrient["영양소명"])
+        pprint(nutrient)
 
-print_all_patients()
+#print_all_patients()
+#print_all_diseases()
+#print_all_ingredients()

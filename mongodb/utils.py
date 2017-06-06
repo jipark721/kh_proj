@@ -4,10 +4,10 @@ from pprint import pprint
 import json
 
 client = MongoClient()
-khdb = client.khdb
-patients_collection = khdb.patients
-diseases_collection = khdb.diseases
-ingredients_collection = khdb.ingredients
+khdb = client.get_database("khdb")
+patients_collection = khdb.get_collection("patients")
+diseases_collection = khdb.get_collection("diseases")
+ingredients_collection = khdb.get_collection("ingredients")
 
 
 def reset_database():
@@ -15,14 +15,25 @@ def reset_database():
     khdb.drop_collection("diseases")
     khdb.drop_collection("ingredients")
 
-
 def initialize_database():
     with open("json/patients.json") as patient_data:
         patients = json.load(patient_data)
         for patient in patients:
             patient["알레르기음식"] = convert_list_2_tuple(patient["알레르기음식"])
-            add_one_patient(patient)
+            patients_collection.insert_one(patient)
 
+    with open("json/diseases.json") as diseases_data:
+        diseases = json.load(diseases_data)
+        for disease in diseases:
+            disease["질병식품관계"] = convert_list_2_tuple(disease["질병식품관계"])
+            disease["질병영양소관계"] = convert_list_2_tuple(disease["질병영양소관계"])
+            diseases_collection.insert_one(disease)
+
+    with open("json/ingredients.json") as ingredients_data:
+        ingredients = json.load(ingredients_data)
+        for ingredient in ingredients:
+            ingredient["식품영양소관계"] = convert_list_2_tuple(ingredient["식품영양소관계"])
+            ingredients_collection.insert_one(ingredient)
 
 def get_all_patients():
     return patients_collection.find()
