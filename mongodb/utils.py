@@ -32,7 +32,7 @@ def get_all_patients():
 
 
 def get_patient_by_name(name):
-    return patients_collection.find({"명": name})
+    return patients_collection.find({"이름": name})
 
 
 def get_patient_by_id(id):
@@ -42,7 +42,7 @@ def get_patient_by_id(id):
 def get_patient_by_name_and_birthdate(name, birthdate):
     return patients_collection.find(
         {"$and":
-             [{"성명": name},
+             [{"이름": name},
               {"생일": birthdate}]
          }
     )
