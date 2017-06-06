@@ -9,8 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from mongodb.utils import *
 
-
-class StackedWid1(object):  # QtWidgets.QStackedWidget
+class StackedWid1(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(814, 613)
@@ -133,13 +132,21 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.lineEdit_diagDis_4_1 = QtWidgets.QLineEdit(self.page_4_1)
         self.lineEdit_diagDis_4_1.setGeometry(QtCore.QRect(160, 320, 301, 21))
         self.lineEdit_diagDis_4_1.setObjectName("lineEdit_diagDis_4_1")
-        self.btnBox_nextStep_4_1 = QtWidgets.QDialogButtonBox(self.page_4_1)
-        self.btnBox_nextStep_4_1.setGeometry(QtCore.QRect(480, 510, 164, 32))
-        self.btnBox_nextStep_4_1.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        self.btnBox_nextStep_4_1.setObjectName("btnBox_nextStep_4_1")
         self.btn_home_4_1 = QtWidgets.QPushButton(self.page_4_1)
         self.btn_home_4_1.setGeometry(QtCore.QRect(570, 20, 71, 51))
         self.btn_home_4_1.setObjectName("btn_home_4_1")
+        self.widget_13 = QtWidgets.QWidget(self.page_4_1)
+        self.widget_13.setGeometry(QtCore.QRect(440, 510, 221, 61))
+        self.widget_13.setObjectName("widget_13")
+        self.btn_cancel_4_1 = QtWidgets.QPushButton(self.widget_13)
+        self.btn_cancel_4_1.setGeometry(QtCore.QRect(10, 20, 101, 31))
+        self.btn_cancel_4_1.setObjectName("btn_cancel_4_1")
+        self.btn_registerClient = QtWidgets.QPushButton(self.widget_13)
+        self.btn_registerClient.setGeometry(QtCore.QRect(110, 20, 101, 31))
+        self.btn_registerClient.setObjectName("btn_registerClient")
+        self.btn_checkUniqID = QtWidgets.QPushButton(self.page_4_1)
+        self.btn_checkUniqID.setGeometry(QtCore.QRect(280, 50, 113, 32))
+        self.btn_checkUniqID.setObjectName("btn_checkUniqID")
         self.stackedWidget.addWidget(self.page_4_1)
         self.page_4_2 = QtWidgets.QWidget()
         self.page_4_2.setObjectName("page_4_2")
@@ -173,10 +180,6 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.btn_findbyName = QtWidgets.QPushButton(self.page_4_2)
         self.btn_findbyName.setGeometry(QtCore.QRect(270, 170, 111, 31))
         self.btn_findbyName.setObjectName("btn_findbyName")
-        self.btnBox_nextStep_4_2 = QtWidgets.QDialogButtonBox(self.page_4_2)
-        self.btnBox_nextStep_4_2.setGeometry(QtCore.QRect(480, 510, 164, 32))
-        self.btnBox_nextStep_4_2.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        self.btnBox_nextStep_4_2.setObjectName("btnBox_nextStep_4_2")
         self.tableWidget_clientCandidates = QtWidgets.QTableWidget(self.page_4_2)
         self.tableWidget_clientCandidates.setGeometry(QtCore.QRect(50, 240, 421, 291))
         self.tableWidget_clientCandidates.setObjectName("tableWidget_clientCandidates")
@@ -193,6 +196,15 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.btn_home_4_2 = QtWidgets.QPushButton(self.page_4_2)
         self.btn_home_4_2.setGeometry(QtCore.QRect(570, 20, 71, 51))
         self.btn_home_4_2.setObjectName("btn_home_4_2")
+        self.widget_14 = QtWidgets.QWidget(self.page_4_2)
+        self.widget_14.setGeometry(QtCore.QRect(440, 510, 221, 61))
+        self.widget_14.setObjectName("widget_14")
+        self.btn_cancel_4_2 = QtWidgets.QPushButton(self.widget_14)
+        self.btn_cancel_4_2.setGeometry(QtCore.QRect(10, 20, 101, 31))
+        self.btn_cancel_4_2.setObjectName("btn_cancel_4_2")
+        self.btn_findClient = QtWidgets.QPushButton(self.widget_14)
+        self.btn_findClient.setGeometry(QtCore.QRect(110, 20, 101, 31))
+        self.btn_findClient.setObjectName("btn_findClient")
         self.stackedWidget.addWidget(self.page_4_2)
         self.page_4_3 = QtWidgets.QWidget()
         self.page_4_3.setObjectName("page_4_3")
@@ -241,10 +253,6 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.radioBtn_lb_4_3 = QtWidgets.QRadioButton(self.page_4_3)
         self.radioBtn_lb_4_3.setGeometry(QtCore.QRect(270, 230, 51, 20))
         self.radioBtn_lb_4_3.setObjectName("radioBtn_lb_4_3")
-        self.btnBox_nextStep_4_3 = QtWidgets.QDialogButtonBox(self.page_4_3)
-        self.btnBox_nextStep_4_3.setGeometry(QtCore.QRect(480, 510, 164, 32))
-        self.btnBox_nextStep_4_3.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        self.btnBox_nextStep_4_3.setObjectName("btnBox_nextStep_4_3")
         self.lineEdit_name_4_3 = QtWidgets.QLineEdit(self.page_4_3)
         self.lineEdit_name_4_3.setGeometry(QtCore.QRect(140, 80, 113, 21))
         self.lineEdit_name_4_3.setObjectName("lineEdit_name_4_3")
@@ -275,6 +283,15 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.btn_home_4_3 = QtWidgets.QPushButton(self.page_4_3)
         self.btn_home_4_3.setGeometry(QtCore.QRect(570, 20, 71, 51))
         self.btn_home_4_3.setObjectName("btn_home_4_3")
+        self.widget_15 = QtWidgets.QWidget(self.page_4_3)
+        self.widget_15.setGeometry(QtCore.QRect(440, 510, 221, 61))
+        self.widget_15.setObjectName("widget_15")
+        self.btn_cancel_4_3 = QtWidgets.QPushButton(self.widget_15)
+        self.btn_cancel_4_3.setGeometry(QtCore.QRect(10, 20, 101, 31))
+        self.btn_cancel_4_3.setObjectName("btn_cancel_4_3")
+        self.btn_next_4_3 = QtWidgets.QPushButton(self.widget_15)
+        self.btn_next_4_3.setGeometry(QtCore.QRect(110, 20, 101, 31))
+        self.btn_next_4_3.setObjectName("btn_next_4_3")
         self.stackedWidget.addWidget(self.page_4_3)
         self.page_5 = QtWidgets.QWidget()
         self.page_5.setObjectName("page_5")
@@ -494,22 +511,6 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.radioBtn_lv5_6 = QtWidgets.QRadioButton(self.widget_7)
         self.radioBtn_lv5_6.setGeometry(QtCore.QRect(280, 250, 41, 20))
         self.radioBtn_lv5_6.setObjectName("radioBtn_lv5_6")
-        self.nutrientList_6.raise_()
-        self.label_49.raise_()
-        self.tableWidget_RecNut.raise_()
-        self.tableWidget_NotRecNut.raise_()
-        self.label_50.raise_()
-        self.label_51.raise_()
-        self.btn_go2Rec.raise_()
-        self.btn_undo2Rec.raise_()
-        self.btn_undo2NotRec.raise_()
-        self.btn_go2NotRec.raise_()
-        self.label_52.raise_()
-        self.radioBtn_lv1_6.raise_()
-        self.radioBtn_lv2_6.raise_()
-        self.radioBtn_lv3_6.raise_()
-        self.radioBtn_lv4_6.raise_()
-        self.radioBtn_lv5_6.raise_()
         self.widget_8 = QtWidgets.QWidget(self.widget_5)
         self.widget_8.setGeometry(QtCore.QRect(280, 520, 371, 41))
         self.widget_8.setObjectName("widget_8")
@@ -751,7 +752,7 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.setupFlow()
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def setupFlow(self):
@@ -765,7 +766,72 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.btn_findExistingClient.clicked.connect(self.go2FindExistingClient)
         self.btn_registerNewClient.clicked.connect(self.go2RegisterNewClient)
         self.btn_home_3.clicked.connect(self.goHome)
-        # page 4
+        # page 4_1 - register new client
+        self.btn_home_4_1.clicked.connect(self.goHomeFrom4_1)
+        self.btn_cancel_4_1.clicked.connect(self.cancelRegisterNewClient)
+
+        # page_4_2 - find existing client
+        self.btn_cancel_4_2.clicked.connect(self.cancelFindExistingClient)
+        self.btn_home_4_2.clicked.connect(self.goHomeFrom4_2)
+
+    def goHomeFrom4_2(self):
+        self.clearFindExistingClient()
+        self.goHome()
+
+    def clearFindExistingClient(self):
+        self.lineEdit_ID_4_2.setText("")
+        self.lineEdit_name_4_2.setText("")
+        self.dateEdit_birthdate_4_2.setDate(QtCore.QDate(1900, 1, 1))
+        self.tableWidget_clientCandidates.setRowCount(0)
+
+    def cancelFindExistingClient(self):
+        self.clearFindExistingClient()
+        self.go2PreviousPage(3)
+
+    def goHomeFrom4_1(self):
+        if self.warnBeforeHome() == False:
+            return
+        else:
+            self.clearRegisterNewClient()
+            self.goHome()
+
+    def warnBeforeHome(self):
+
+        msgbox = QtWidgets.QMessageBox()
+        msgbox.setWindowTitle("Warning")
+        msgbox.setText("현재 페이지 정보가 사라집니다. 홈으로 이동하시겠습니까?")
+        msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        msgbox.setDefaultButton(QtWidgets.QMessageBox.No)
+        ret = msgbox.exec_()
+
+        if ret == QtWidgets.QMessageBox.Yes:
+            return True
+        else:
+            return False
+
+    def clearRegisterNewClient(self):
+        self.lineEdit_ID_4_1.setText("")
+        self.lineEdit_name_4_1.setText("")
+        self.radioBtn_male_4_1.setChecked(True)
+        self.radioBtn_female_4_1.setChecked(False)
+        self.dateEdit_birthdate_4_1.setDate(QtCore.QDate(1900, 1, 1))
+        self.lineEdit_address_4_1.setText("")
+        self.lineEdit_height_4_1.setText("")
+        self.spinBox_weight_4_1.setValue(0.0)
+        self.radioBtn_kg_4_1.setChecked(True)
+        self.radioBtn_lb_4_1.setChecked(False)
+        self.ckBox_preg_4_1.setChecked(False)
+        self.ckBox_bFeeding_4_1.setChecked(False)
+        self.dateEdit_lastOfficeVisit_4_1.setDate(QtCore.QDate.currentDate())
+        self.lineEdit_diagDis_4_1.setText("")
+
+    def cancelRegisterNewClient(self):
+        self.clearRegisterNewClient()
+        self.go2PreviousPage(3)
+
+    def go2PreviousPage(self, currPage):
+        self.stackedWidget.setCurrentIndex(currPage - 1)
+
 
     def logout(self):
         self.stackedWidget.setCurrentIndex(0)
@@ -796,16 +862,16 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
 
     def checkPwd(self):
         pwd = self.lineEdit_pw.text()
+        print(pwd)
         if pwd == "kiho":
+            self.lineEdit_pw.setText("")
             self.stackedWidget.setCurrentIndex(1)
-
         elif len(pwd) != 0:
             msgbox = QtWidgets.QMessageBox()
             msgbox.setIcon(QtWidgets.QMessageBox.Warning)
             msgbox.setText("Incorrect Password")
             msgbox.setWindowTitle("Error")
             msgbox.exec_()
-
         else:
             msgbox = QtWidgets.QMessageBox()
             msgbox.setIcon(QtWidgets.QMessageBox.Warning)
@@ -842,6 +908,9 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.radioBtn_kg_4_1.setText(_translate("MainWindow", "kg"))
         self.radioBtn_lb_4_1.setText(_translate("MainWindow", "lb"))
         self.btn_home_4_1.setText(_translate("MainWindow", "HOME"))
+        self.btn_cancel_4_1.setText(_translate("MainWindow", "취소"))
+        self.btn_registerClient.setText(_translate("MainWindow", "등록"))
+        self.btn_checkUniqID.setText(_translate("MainWindow", "ID 사용가능?"))
         self.label_38.setText(_translate("MainWindow", "기존회원 찾기 "))
         self.label_27.setText(_translate("MainWindow", "ID로 찾기"))
         self.btn_findbyID.setText(_translate("MainWindow", "찾기"))
@@ -858,6 +927,8 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         item = self.tableWidget_clientCandidates.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "주소"))
         self.btn_home_4_2.setText(_translate("MainWindow", "HOME"))
+        self.btn_cancel_4_2.setText(_translate("MainWindow", "취소"))
+        self.btn_findClient.setText(_translate("MainWindow", "확인"))
         self.label_31.setText(_translate("MainWindow", "기존 회원 정보 보기/수정"))
         self.radioBtn_kg_4_3.setText(_translate("MainWindow", "kg"))
         self.label_32.setText(_translate("MainWindow", "주소"))
@@ -875,6 +946,8 @@ class StackedWid1(object):  # QtWidgets.QStackedWidget
         self.label_35.setText(_translate("MainWindow", "몸무게"))
         self.label_42.setText(_translate("MainWindow", "성별"))
         self.btn_home_4_3.setText(_translate("MainWindow", "HOME"))
+        self.btn_cancel_4_3.setText(_translate("MainWindow", "취소"))
+        self.btn_next_4_3.setText(_translate("MainWindow", "다음"))
         self.label_14.setText(_translate("MainWindow", "이름"))
         self.label_15.setText(_translate("MainWindow", "ID"))
         self.label_16.setText(_translate("MainWindow", "생년월일 "))

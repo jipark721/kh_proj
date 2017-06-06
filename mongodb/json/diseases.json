@@ -1,7 +1,15 @@
 [
     {
         "disease_eng": "disease_1",
-        "disease_kor": "질병_1"
+        "disease_kor": "질병_1",
+        "ingredient_effects": [
+            (콘푸레이크: -4),
+            (죽): +3),
+            (과일: +4)
+        ],
+        "nutrient_effects" : [
+
+        ]
     },
     {
         "disease_eng": "disease_2",
