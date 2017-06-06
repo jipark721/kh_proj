@@ -781,7 +781,7 @@ class StackedWid1(object):
     def clearFindExistingClient(self):
         self.lineEdit_ID_4_2.setText("")
         self.lineEdit_name_4_2.setText("")
-        self.dateEdit_birthdate_4_2.setDateTime(QtCore.QDate(1900, 1, 1))
+        self.dateEdit_birthdate_4_2.setDate(QtCore.QDate(1900, 1, 1))
         self.tableWidget_clientCandidates.setRowCount(0)
 
     def cancelFindExistingClient(self):
@@ -789,28 +789,40 @@ class StackedWid1(object):
         self.go2PreviousPage(3)
 
     def goHomeFrom4_1(self):
-        self.clearRegisterNewClient()
-        self.goHome()
+        if self.warnBeforeHome() == False:
+            return
+        else:
+            self.clearRegisterNewClient()
+            self.goHome()
 
     def warnBeforeHome(self):
-        msgbox = QtWidgets.QMessageBox.question(self, 'Warning', "모든 정보가 사라집니다. 홈으로 이동하시겠습니까?",
-                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        msgbox.exec_()
+
+        msgbox = QtWidgets.QMessageBox()
+        msgbox.setWindowTitle("Warning")
+        msgbox.setText("현재 페이지 정보가 사라집니다. 홈으로 이동하시겠습니까?")
+        msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        msgbox.setDefaultButton(QtWidgets.QMessageBox.No)
+        ret = msgbox.exec_()
+
+        if ret == QtWidgets.QMessageBox.Yes:
+            return True
+        else:
+            return False
 
     def clearRegisterNewClient(self):
         self.lineEdit_ID_4_1.setText("")
         self.lineEdit_name_4_1.setText("")
         self.radioBtn_male_4_1.setChecked(True)
         self.radioBtn_female_4_1.setChecked(False)
-        self.dateEdit_birthdate_4_1.setDateTime(QtCore.QDate(1900, 1, 1))
+        self.dateEdit_birthdate_4_1.setDate(QtCore.QDate(1900, 1, 1))
         self.lineEdit_address_4_1.setText("")
         self.lineEdit_height_4_1.setText("")
-        self.spinBox_weight_4_1.stValue(0.0)
+        self.spinBox_weight_4_1.setValue(0.0)
         self.radioBtn_kg_4_1.setChecked(True)
         self.radioBtn_lb_4_1.setChecked(False)
         self.ckBox_preg_4_1.setChecked(False)
         self.ckBox_bFeeding_4_1.setChecked(False)
-        self.dateEdit_lastOfficeVisit_4_1.setDateTime(QtCore.QDate.currentDate())
+        self.dateEdit_lastOfficeVisit_4_1.setDate(QtCore.QDate.currentDate())
         self.lineEdit_diagDis_4_1.setText("")
 
     def cancelRegisterNewClient(self):
