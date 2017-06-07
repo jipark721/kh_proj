@@ -2,12 +2,11 @@
 
 ### Collaborators: Alex Ahn, Ji Park
 
-## Simple Set Up:
+## Simple Set Up & Check up:
 
-1. "./init_proj.sh"
-2. "source venv/bin/activate"
-3. "mongod --dbpath ./data/db" (keep it running on a new terminal for local server hosting)
-4. "cd mongodb" -> "./init_db.sh"
+1. git clone
+2. run "init_proj.sh"
+3. run "python test_db.py" at mongodb dir.
 
 ## Environment  Requirements (recommend using Homebrew for installation):
 
@@ -18,21 +17,13 @@
 
 ## Virtual Environment
 
-- make sure to activate environment ("source venv/bin/activate")
-
-## Mongodb Setup
-
-- Make a directory for set up ("mkdir -p /data/db")
-- Change permission for read/write ("chmod +x /data/db")
-- enter "mongod --dbpath ./data/db" to run
+- make sure to activate environment ("source venv/bin/activate") every time.
 
 ## Initializing DB
 
-1. Store necessary excel files under /xls
-2. run "init_db.sh"
+1. Place all .xlsx files under ~/Downloads
+2. run "init_db.sh" in at mongodb dir.
 
-## Test Run (from "kh_proj/")
+## Testing
 
-- "source venv/bin/active"
-- "mongod --dbpath ./data/db"
-- "python mongodb/test_db.py"
+1. run "python test_db.py" at mongodb dir.
