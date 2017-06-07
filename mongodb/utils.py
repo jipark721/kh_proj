@@ -4,7 +4,12 @@ from pymongo import MongoClient
 from pprint import pprint
 import json
 
-client = MongoClient()
+ID = "kihoproject"
+PW = "!kiho1234"
+DATABASE_NAME = "KHDB"
+CLUSTER_URL = "mongodb://" + ID + ":" + PW + "@cluster0-shard-00-00-gugln.mongodb.net:27017,cluster0-shard-00-01-gugln.mongodb.net:27017,cluster0-shard-00-02-gugln.mongodb.net:27017/" + DATABASE_NAME + "?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"
+
+client = MongoClient(CLUSTER_URL)
 khdb = client.get_database("khdb")
 patients_collection = khdb.get_collection("patients")
 diseases_collection = khdb.get_collection("diseases")
