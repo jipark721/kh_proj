@@ -5,6 +5,7 @@ xls2json_files = {
     "xls/diseases.xlsx" : "json/diseases.json",
     "xls/patients.xlsx" : "json/patients.json",
     "xls/ingredients.xlsx" : "json/ingredients.json",
+    "xls/nutrients.xlsx" : "json/nutrients.json"
 }
 
 for xls_file_name, json_file_name in xls2json_files.items() :
