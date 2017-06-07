@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -326,16 +326,6 @@
        <string>수유</string>
       </property>
      </widget>
-     <widget class="QDoubleSpinBox" name="spinBox_weight_4_1">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>230</y>
-        <width>68</width>
-        <height>24</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QRadioButton" name="radioBtn_female_4_1">
       <property name="geometry">
        <rect>
@@ -516,6 +506,16 @@
        <string>cm</string>
       </property>
      </widget>
+     <widget class="QLineEdit" name="lineEdit_weight_4_1">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>230</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_4_1_1">
      <widget class="QWidget" name="widget_16" native="true">
@@ -653,16 +653,16 @@
      <widget class="QWidget" name="widget_17" native="true">
       <property name="geometry">
        <rect>
-        <x>440</x>
-        <y>510</y>
-        <width>221</width>
+        <x>390</x>
+        <y>500</y>
+        <width>311</width>
         <height>61</height>
        </rect>
       </property>
       <widget class="QPushButton" name="btn_cancel_4_1_1">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>20</y>
          <width>101</width>
          <height>31</height>
@@ -675,7 +675,7 @@
       <widget class="QPushButton" name="btn_registerClient_4_1_1">
        <property name="geometry">
         <rect>
-         <x>110</x>
+         <x>200</x>
          <y>20</y>
          <width>101</width>
          <height>31</height>
@@ -683,6 +683,19 @@
        </property>
        <property name="text">
         <string>등록</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_back_4_1_1">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>20</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>뒤로</string>
        </property>
       </widget>
      </widget>
@@ -927,16 +940,6 @@
       </property>
       <property name="text">
        <string>진료일</string>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="spinBox_weight_4_3">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>230</y>
-        <width>68</width>
-        <height>24</height>
-       </rect>
       </property>
      </widget>
      <widget class="QRadioButton" name="radioBtn_female_4_3">
@@ -1207,7 +1210,7 @@
      <widget class="QLabel" name="label_79">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>220</x>
         <y>230</y>
         <width>60</width>
         <height>21</height>
@@ -1215,6 +1218,16 @@
       </property>
       <property name="text">
        <string>kg</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_weight_4_3">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>230</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
       </property>
      </widget>
     </widget>

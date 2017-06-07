@@ -10,6 +10,7 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 
 from mongodb.utils import *
 from stackedwid1 import StackedWid1
+from decimal import Decimal
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -38,26 +39,24 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         pass
 
     def registerClient(self):
+        if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0 :
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+            msgbox.setText("ID, 이름, 생년월일은 필수입니다.")
+            msgbox.setWindowTitle("Error")
+            msgbox.exec_()
+        else:
+            #id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList, diagDiseases
+            id = self.ui.lineEdit_ID_4_1.text()
+            name = self.ui.lineEdit_name_4_1.text()
+            sex = "남" if self.ui.radioBtn_male_4_1.isChecked else "여"
+            tempbdate = self.ui.dateEdit_birthdate_4_1.date()
+            birthdate = self.ui.dateEdit_birthdate_4_1.date()
+            address = self.ui.lineEdit_address_4_1.text()
+            height = Decimal(self.ui.lineEdit_height_4_1.text())
+            weight = Decimal(self.ui.lineEdit_weight_4_1.text())
 
-        pass
-        # if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0 :
-        #     msgbox = QtWidgets.QMessageBox()
-        #     msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-        #     msgbox.setText("ID, 이름, 생년월일은 필수입니다.")
-        #     msgbox.setWindowTitle("Error")
-        #     msgbox.exec_()
-        # else:
-        #     #id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList, diagDiseases
-        #     id = self.ui.lineEdit_ID_4_1.text()
-        #     name = self.ui.lineEdit_name_4_1.text()
-        #     sex = "남자" if self.ui.radioBtn_male_4_1.isChecked else "여자"
-        #     tempbdate = self.ui.dateEdit_birthdate_4_1.date()
-        #     birthdate = self.ui.dateEdit_birthdate_4_1.date()
-        #     address = self.ui.lineEdit_address_4_1.text()
-        #     height = self.ui.lineEdit_height_4_1.text()
-        #     weight = self.ui.spinBox_weight_4_1
-        #
-        #     utils.addOnePatient()
+            addOnePatient()
 
 
     def checkUniqID(self):

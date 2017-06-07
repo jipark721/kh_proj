@@ -99,9 +99,6 @@ class StackedWid1(object):
         self.ckBox_bFeeding_4_1 = QtWidgets.QCheckBox(self.page_4_1)
         self.ckBox_bFeeding_4_1.setGeometry(QtCore.QRect(220, 260, 61, 20))
         self.ckBox_bFeeding_4_1.setObjectName("ckBox_bFeeding_4_1")
-        self.spinBox_weight_4_1 = QtWidgets.QDoubleSpinBox(self.page_4_1)
-        self.spinBox_weight_4_1.setGeometry(QtCore.QRect(160, 230, 68, 24))
-        self.spinBox_weight_4_1.setObjectName("spinBox_weight_4_1")
         self.radioBtn_female_4_1 = QtWidgets.QRadioButton(self.page_4_1)
         self.radioBtn_female_4_1.setGeometry(QtCore.QRect(210, 110, 71, 20))
         self.radioBtn_female_4_1.setObjectName("radioBtn_female_4_1")
@@ -146,6 +143,9 @@ class StackedWid1(object):
         self.label_24 = QtWidgets.QLabel(self.page_4_1)
         self.label_24.setGeometry(QtCore.QRect(240, 200, 60, 21))
         self.label_24.setObjectName("label_24")
+        self.lineEdit_weight_4_1 = QtWidgets.QLineEdit(self.page_4_1)
+        self.lineEdit_weight_4_1.setGeometry(QtCore.QRect(160, 230, 71, 21))
+        self.lineEdit_weight_4_1.setObjectName("lineEdit_weight_4_1")
         self.stackedWidget.addWidget(self.page_4_1)
         self.page_4_1_1 = QtWidgets.QWidget()
         self.page_4_1_1.setObjectName("page_4_1_1")
@@ -195,14 +195,17 @@ class StackedWid1(object):
         self.label_81.setGeometry(QtCore.QRect(580, 30, 131, 21))
         self.label_81.setObjectName("label_81")
         self.widget_17 = QtWidgets.QWidget(self.page_4_1_1)
-        self.widget_17.setGeometry(QtCore.QRect(440, 510, 221, 61))
+        self.widget_17.setGeometry(QtCore.QRect(390, 500, 311, 61))
         self.widget_17.setObjectName("widget_17")
         self.btn_cancel_4_1_1 = QtWidgets.QPushButton(self.widget_17)
-        self.btn_cancel_4_1_1.setGeometry(QtCore.QRect(10, 20, 101, 31))
+        self.btn_cancel_4_1_1.setGeometry(QtCore.QRect(0, 20, 101, 31))
         self.btn_cancel_4_1_1.setObjectName("btn_cancel_4_1_1")
         self.btn_registerClient_4_1_1 = QtWidgets.QPushButton(self.widget_17)
-        self.btn_registerClient_4_1_1.setGeometry(QtCore.QRect(110, 20, 101, 31))
+        self.btn_registerClient_4_1_1.setGeometry(QtCore.QRect(200, 20, 101, 31))
         self.btn_registerClient_4_1_1.setObjectName("btn_registerClient_4_1_1")
+        self.btn_back_4_1_1 = QtWidgets.QPushButton(self.widget_17)
+        self.btn_back_4_1_1.setGeometry(QtCore.QRect(100, 20, 101, 31))
+        self.btn_back_4_1_1.setObjectName("btn_back_4_1_1")
         self.stackedWidget.addWidget(self.page_4_1_1)
         self.page_4_2 = QtWidgets.QWidget()
         self.page_4_2.setObjectName("page_4_2")
@@ -273,9 +276,6 @@ class StackedWid1(object):
         self.label_41 = QtWidgets.QLabel(self.page_4_3)
         self.label_41.setGeometry(QtCore.QRect(40, 290, 60, 16))
         self.label_41.setObjectName("label_41")
-        self.spinBox_weight_4_3 = QtWidgets.QDoubleSpinBox(self.page_4_3)
-        self.spinBox_weight_4_3.setGeometry(QtCore.QRect(140, 230, 68, 24))
-        self.spinBox_weight_4_3.setObjectName("spinBox_weight_4_3")
         self.radioBtn_female_4_3 = QtWidgets.QRadioButton(self.page_4_3)
         self.radioBtn_female_4_3.setGeometry(QtCore.QRect(190, 110, 71, 20))
         self.radioBtn_female_4_3.setObjectName("radioBtn_female_4_3")
@@ -343,8 +343,11 @@ class StackedWid1(object):
         self.label_56.setGeometry(QtCore.QRect(220, 200, 60, 21))
         self.label_56.setObjectName("label_56")
         self.label_79 = QtWidgets.QLabel(self.page_4_3)
-        self.label_79.setGeometry(QtCore.QRect(210, 230, 60, 21))
+        self.label_79.setGeometry(QtCore.QRect(220, 230, 60, 21))
         self.label_79.setObjectName("label_79")
+        self.lineEdit_weight_4_3 = QtWidgets.QLineEdit(self.page_4_3)
+        self.lineEdit_weight_4_3.setGeometry(QtCore.QRect(140, 230, 71, 21))
+        self.lineEdit_weight_4_3.setObjectName("lineEdit_weight_4_3")
         self.stackedWidget.addWidget(self.page_4_3)
         self.page_5 = QtWidgets.QWidget()
         self.page_5.setObjectName("page_5")
@@ -839,8 +842,8 @@ class StackedWid1(object):
         self.btn_cancel_4_1.clicked.connect(self.cancelRegisterNewClient)
         self.btn_next_4_1.clicked.connect(self.go2RegisterNewClientPage2)
         # page 4_1_1 register new client page 2
-
-
+        self.btn_cancel_4_1_1.clicked.connect(self.cancelRegisterNewClient)
+        self.btn_back_4_1_1.clicked.connect(self.go2RegisterNewClientPage1)
         # page_4_2 - find existing client
         self.btn_cancel_4_2.clicked.connect(self.cancelFindExistingClient)
         self.btn_home_4_2.clicked.connect(self.goHomeFrom4_2)
@@ -871,19 +874,6 @@ class StackedWid1(object):
 
             myCursor_gs = get_ingredients_guepsung()
             self.createAllergyTableWidget(myCursor_gs, self.tableWidget_allergies_gs_4_1_1)
-            # self.tableWidget_allergies_gs_4_1_1.setRowCount(myCursor_gs.count())
-            # self.tableWidget_allergies_gs_4_1_1.setColumnCount(2)
-            # rowIndex = 0
-            # for ing_gs in myCursor_gs:
-            #     ckbtnitem = QtWidgets.QTableWidgetItem(ing_gs["식품명"])
-            #     ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-            #     ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
-            #     self.tableWidget_allergies_gs_4_1_1.setItem(rowIndex, 0, ckbtnitem)
-            #     spboxitem = QtWidgets.QTableWidgetItem("0")
-            #     #spboxitem.setFlags(QtCore.Qt.ItemIsEditable)
-            #     self.tableWidget_allergies_gs_4_1_1.setItem(rowIndex, 1, spboxitem)
-            #     rowIndex = rowIndex+1
-
             myCursor_ms = get_ingredients_mansung()
             self.createAllergyTableWidget(myCursor_ms, self.tableWidget_allergies_ms_4_1_1)
             myCursor_lgg4 = get_ingredients_mansung_lgg4()
@@ -929,7 +919,6 @@ class StackedWid1(object):
         msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         msgbox.setDefaultButton(QtWidgets.QMessageBox.No)
         ret = msgbox.exec_()
-
         if ret == QtWidgets.QMessageBox.Yes:
             return True
         else:
@@ -947,6 +936,8 @@ class StackedWid1(object):
         self.ckBox_preg_4_1.setChecked(False)
         self.ckBox_bFeeding_4_1.setChecked(False)
         self.dateEdit_lastOfficeVisit_4_1.setDate(QtCore.QDate.currentDate())
+        for index in range(self.listWidget_diseases_4_1_1.count()):
+            self.listWidget_diseases_4_1_1.item(index).setCheckState(QtCore.Qt.Unchecked)
 
     def cancelRegisterNewClient(self):
         self.clearRegisterNewClient()
@@ -1051,6 +1042,7 @@ class StackedWid1(object):
         self.label_81.setText(_translate("MainWindow", "만성 알레르기 lgG4 음식 "))
         self.btn_cancel_4_1_1.setText(_translate("MainWindow", "취소"))
         self.btn_registerClient_4_1_1.setText(_translate("MainWindow", "등록"))
+        self.btn_back_4_1_1.setText(_translate("MainWindow", "뒤로"))
         self.label_38.setText(_translate("MainWindow", "기존회원 찾기 "))
         self.label_27.setText(_translate("MainWindow", "ID로 찾기"))
         self.btn_findbyID.setText(_translate("MainWindow", "찾기"))
