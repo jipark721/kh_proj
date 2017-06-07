@@ -22,6 +22,7 @@ def reset_database():
     khdb.drop_collection("ingredients")
     khdb.drop_collection("nutrients")
 
+
 def initialize_database():
     with open("json/patients.json") as patient_data:
         patients = json.load(patient_data)
@@ -49,8 +50,10 @@ def initialize_database():
         for nutrient in nutrients:
             nutrients_collection.insert_one(nutrient)
 
+
 def get_all_patients():
     return patients_collection.find()
+
 
 def get_patient_by_name(name):
     return patients_collection.find({"이름": name})
@@ -68,29 +71,32 @@ def get_patient_by_name_and_birthdate(name, birthdate):
          }
     )
 
+
 def add_one_patient(patient):
     return patients_collection.insert_one(
         {
-        #"Num": 1.0,
-        "ID": patient['ID'],
-        "이름": patient['이름'],
-        "성별": patient['성별'],
-        "생년월일": patient['생년월일'],
-        "주소": patient['주소'],
-        "진단명": patient['진단명'],
-        "진료일": patient['진료일'],
-        "방문횟수": patient['방문횟수'],
-        "키": patient['키'],
-        "몸무게": patient['몸무게'],
-        "임신여부": patient['임신여부'],
-        "수유여부": patient['수유여부'],
-        "급성알레르기음식": patient["급성알레르기음식"],
-        "만성알레르기음식": patient["만성알레르기음식"],
-        "만성lgG4과민반응음식": patient["만성lgG4과민반응음식"]
+            # "Num": 1.0,
+            "ID": patient['ID'],
+            "이름": patient['이름'],
+            "성별": patient['성별'],
+            "생년월일": patient['생년월일'],
+            "주소": patient['주소'],
+            "진단명": patient['진단명'],
+            "진료일": patient['진료일'],
+            "방문횟수": patient['방문횟수'],
+            "키": patient['키'],
+            "몸무게": patient['몸무게'],
+            "임신여부": patient['임신여부'],
+            "수유여부": patient['수유여부'],
+            "급성알레르기음식": patient["급성알레르기음식"],
+            "만성알레르기음식": patient["만성알레르기음식"],
+            "만성lgG4과민반응음식": patient["만성lgG4과민반응음식"]
         }
     )
 
-def update_patient_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList, diagDiseases):
+
+def update_patient_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList,
+                        diagDiseases):
     return patients_collection.update(
         {"ID": id},
         {
@@ -107,9 +113,14 @@ def update_patient_info(id, name, sex, birthdate, address, height, weight, isPre
         }
     )
 
+
 #####################
 # Diseases Related  #
 #####################
+def get_empty_disease_obj():
+    return dict.fromkeys([field for field in diseases_collection.find_one()])
+
+
 def get_all_diseases():
     return diseases_collection.find()
 
@@ -117,14 +128,21 @@ def get_all_diseases():
 #######################
 # Ingredients Related #
 #######################
+def get_empty_ingredients_obj():
+    return dict.fromkeys([field for field in ingredients_collection.find_one()])
+
+
 def get_all_ingredients():
     return ingredients_collection.find()
+
 
 def get_ingredients_guepsung():
     return ingredients_collection.find({"급성알레르기가능여부": "y"})
 
+
 def get_ingredients_mansung():
     return ingredients_collection.find({"만성알레르기가능여부": "y"})
+
 
 def get_ingredients_mansung_lgg4():
     return ingredients_collection.find({"만성 lgG4 과민반응가능여부": "y"})
@@ -133,8 +151,12 @@ def get_ingredients_mansung_lgg4():
 #####################
 # Nutrients Related #
 #####################
+def get_empty_nutrients_obj():
+    return dict.fromkeys([field for field in nutrients_collection.find_one()])
+
 def get_all_nutrients():
     return nutrients_collection.find()
+
 
 def get_nutrients_by_level(level):
     pass
@@ -149,6 +171,7 @@ def convert_list_2_tuple(entry_list):
         return None
     entries = [entry.strip() for entry in entry_list.split(",")]
     return [convert_entry_2_tuple(tuple) for tuple in entries]
+
 
 # (val_1:val_2) -> tup(val_1,val_2)
 def convert_entry_2_tuple(entry):
