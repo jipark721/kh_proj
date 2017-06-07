@@ -22,7 +22,9 @@ def initialize_database():
     with open("json/patients.json") as patient_data:
         patients = json.load(patient_data)
         for patient in patients:
-            patient["알레르기음식"] = convert_list_2_tuple(patient["알레르기음식"])
+            patient["급성알레르기음식"] = convert_list_2_tuple(patient["급성알레르기음식"])
+            patient["만성알레르기음식"] = convert_list_2_tuple(patient["만성알레르기음식"])
+            patient["만성lgG4과민반응음식"] = convert_list_2_tuple(patient["만성lgG4과민반응음식"])
             patients_collection.insert_one(patient)
 
     with open("json/diseases.json") as diseases_data:
@@ -38,9 +40,13 @@ def initialize_database():
             ingredient["식품영양소관계"] = convert_list_2_tuple(ingredient["식품영양소관계"])
             ingredients_collection.insert_one(ingredient)
 
+    with open("json/nutrients.json") as nutrients_data:
+        nutrients = json.load(nutrients_data)
+        for nutrient in nutrients:
+            nutrients_collection.insert_one(nutrient)
+
 def get_all_patients():
     return patients_collection.find()
-
 
 def get_patient_by_name(name):
     return patients_collection.find({"이름": name})
@@ -74,7 +80,9 @@ def add_one_patient(patient):
         "몸무게": patient['몸무게'],
         "임신여부": patient['임신여부'],
         "수유여부": patient['수유여부'],
-        "알레르기음식": patient["알레르기음식"]
+        "급성알레르기음식": patient["급성알레르기음식"],
+        "만성알레르기음식": patient["만성알레르기음식"],
+        "만성lgG4과민반응음식": patient["만성lgG4과민반응음식"]
         }
     )
 
@@ -102,14 +110,20 @@ def get_all_diseases():
     return diseases_collection.find()
 
 
-#####################
+#######################
 # Ingredients Related #
-#####################
+#######################
 def get_all_ingredients():
     return ingredients_collection.find()
 
-def get_ingredients_by_level(level):
-    pass
+def get_ingredients_guepsung():
+    return ingredients_collection.find({"급성알레르기가능여부": "y"})
+
+def get_ingredients_mansung():
+    return ingredients_collection.find({"만성알레르기가능여부": "y"})
+
+def get_ingredients_mansung_lgg4():
+    return ingredients_collection.find({"만성 lgG4 과민반응가능여부": "y"})
 
 
 #####################
@@ -122,6 +136,9 @@ def get_nutrients_by_level(level):
     pass
 
 
+#####################
+# Helper functions  #
+#####################
 # Convert list of entry-defined (val_1, val_2) objects to list of tuples
 def convert_list_2_tuple(entry_list):
     if entry_list == "" or entry_list is None:

@@ -2,6 +2,7 @@
 
 from pymongo import MongoClient
 from pprint import pprint
+
 from utils import *
 
 reset_database()
@@ -23,6 +24,9 @@ nutrients = khdb.nutrients
 print("There are %d many patients data" % patients.count())
 print("There are %d many diseases data" % diseases.count())
 print("There are %d many ingredients data\n" % ingredients.count())
+
+gs_ingred = get_ingredients_guepsung()
+print("There are %d many ingredients data for guepsung allergy\n" % gs_ingred.count())
 
 
 def print_all_patients():
