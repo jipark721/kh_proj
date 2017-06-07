@@ -4,3 +4,4 @@ data/
 data/.DS_Store
 .idea/
 view/stackedwid1.ui.autosave
+*.pyc
