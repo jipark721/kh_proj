@@ -932,7 +932,7 @@ class StackedWid1(object):
         self.dateEdit_birthdate_4_1.setDate(QtCore.QDate(1900, 1, 1))
         self.lineEdit_address_4_1.setText("")
         self.lineEdit_height_4_1.setText("")
-        self.spinBox_weight_4_1.setValue(0.0)
+        self.lineEdit_weight_4_1.setText("")
         self.ckBox_preg_4_1.setChecked(False)
         self.ckBox_bFeeding_4_1.setChecked(False)
         self.dateEdit_lastOfficeVisit_4_1.setDate(QtCore.QDate.currentDate())
