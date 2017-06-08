@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from mongodb.utils import *
 
-class StackedWid1(object):
+class UI(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(721, 613)
@@ -823,7 +823,7 @@ class StackedWid1(object):
         self.setupFlow()
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(5)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def setupFlow(self):
@@ -1191,7 +1191,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = StackedWid1()
+    ui = UI()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

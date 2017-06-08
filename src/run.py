@@ -1,26 +1,18 @@
+# -*- coding: utf-8 -*-
+
 import sys
-import re
-import math
-import csv
-import string
-
-import numpy as np
-
+from ui import UI
 from PyQt5 import QtGui, QtWidgets, QtCore
-
 from mongodb.utils import *
-from stackedwid1 import StackedWid1
 from decimal import Decimal
+
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(MyFoodRecommender, self).__init__(parent)
-
-        self.ui = StackedWid1()
+        self.ui = UI()
         self.ui.setupUi(self)
-
         self.setupLogic()
-
 
     def setupLogic(self):
         # page_4_1
@@ -29,40 +21,58 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_registerClient_4_1_1.clicked.connect(self.registerClient)
         # page_4_2
         self.ui.btn_findbyID.clicked.connect(self.findByID)
-        self.ui.btn_findbyName.clicked.connect(self.findByName)
-        #self.ui.btn_
+        self.ui.btn_findbyName.clicked.connect(lambda x: self.findByName(self.ui.lineEdit_name_4_2.text()))
+        # self.ui.btn_
 
-    def findByName(self):
-        pass
+    def findByName(self, name):
+        if not name:
+            found_patients = get_all_patients()
+            self.ui.tableWidget_clientCandidates.setRowCount(found_patients.count())
+            i=1
+            for patient in found_patients:
+                self.ui.tableWidget_clientCandidates.item(i, 0).setText(patient['ID'])
+                self.ui.tableWidget_clientCandidates.item(i, 1).setText(patient['이름'])
+                self.ui.tableWidget_clientCandidates.item(i, 2).setText(patient['생년월일'])
+                self.ui.tableWidget_clientCandidates.item(i, 3).setText(patient['주소'])
+                i += 1
+        else:
+            found_patients = get_patients_by_name(name)
+            self.ui.tableWidget_clientCandidates.setRowCount(found_patients.count())
+            i=1
+            for patient in found_patients:
+                self.ui.tableWidget_clientCandidates.item(i, 0).setText(patient['ID'])
+                self.ui.tableWidget_clientCandidates.item(i, 1).setText(patient['이름'])
+                self.ui.tableWidget_clientCandidates.item(i, 2).setText(patient['생년월일'])
+                self.ui.tableWidget_clientCandidates.item(i, 3).setText(patient['주소'])
+                i += 1
 
-    def findByID(self):
+    def findByID(self, ID):
         pass
 
     def registerClient(self):
-        if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0 :
+        if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0:
             msgbox = QtWidgets.QMessageBox()
             msgbox.setIcon(QtWidgets.QMessageBox.Warning)
             msgbox.setText("ID, 이름, 생년월일은 필수입니다.")
             msgbox.setWindowTitle("Error")
             msgbox.exec_()
         else:
-            #id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList, diagDiseases
             id = self.ui.lineEdit_ID_4_1.text()
             name = self.ui.lineEdit_name_4_1.text()
             sex = "남" if self.ui.radioBtn_male_4_1.isChecked else "여"
-            birthdate = self.ui.dateEdit_birthdate_4_1.date().toString(format = QtCore.Qt.ISODate)
+            birthdate = self.ui.dateEdit_birthdate_4_1.date().toString(format=QtCore.Qt.ISODate)
             address = self.ui.lineEdit_address_4_1.text()
-            if self.ui.lineEdit_height_4_1.text() != "":
+            if self.ui.lineEdit_height_4_1.text():
                 height = Decimal(float(self.ui.lineEdit_height_4_1.text()))
             else:
                 height = 0
-            if self.ui.lineEdit_weight_4_1.text() != "":
+            if self.ui.lineEdit_weight_4_1.text():
                 weight = Decimal(float(self.ui.lineEdit_weight_4_1.text()))
             else:
                 weight = 0
             isPreg = "T" if self.ui.ckBox_preg_4_1.isChecked() else "F"
             isBFeeding = "T" if self.ui.ckBox_bFeeding_4_1.isChecked() else "F"
-            officeVisitDateList = self.ui.dateEdit_lastOfficeVisit_4_1.date().toString(format =QtCore.Qt.ISODate)
+            officeVisitDateList = self.ui.dateEdit_lastOfficeVisit_4_1.date().toString(format=QtCore.Qt.ISODate)
 
             diagDiseasesStr = ""
             isFirstCheckedFound = False
@@ -72,10 +82,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                     if not isFirstCheckedFound:
                         diagDiseasesStr = ckbtn.text()
                         isFirstCheckedFound = True
-                    else :
+                    else:
                         diagDiseasesStr = diagDiseasesStr + ", " + ckbtn.text()
-
-            #print("tw items" + str(self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_gs_4_1_1))[1:-1])
 
             patientObj = get_empty_patient_obj()
             patientObj['ID'] = id
@@ -90,28 +98,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             patientObj['몸무게'] = weight
             patientObj['임신여부'] = isPreg
             patientObj['수유여부'] = isBFeeding
-
-            patientObj['급성알레르기음식'] =None
-            patientObj['만성알레르기음식'] = None
-            patientObj['만성lgG4과민반응음식'] = None
+            patientObj['급성알레르기음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_gs_4_1_1)
+            patientObj['만성알레르기음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_ms_4_1_1)
+            patientObj['만성lgG4과민반응음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_lgg4_4_1_1)
             add_one_patient(patientObj)
 
     def convertAllergyTableWidget2Tuples(self, tw):
         list = []
         for index in range(tw.rowCount()):
-            #print(tw.item(index, 0).text() + " " + tw.item(index, 1).text())
             if int(tw.item(index, 1).text()) != 0:
                 mytup = tuple([tw.item(index, 0).text(), int(tw.item(index, 1).text())])
                 print(mytup[0], mytup[1])
                 list.append(mytup)
-                #entry = tw.item(index, 0).text() + ":" + tw.item(index, 1).text()
-
-                # list.append(convert_entry_2_tuple(entry))
         return list
-                # tup = tuple([tw.item(index, 0).text(), int(tw.item(index, 1).text())])
-                # list.append(tup)
-
-
 
     def checkUniqID(self):
         uniqIDChecked = False

@@ -57,15 +57,15 @@ def get_all_patients():
     return patients_collection.find()
 
 
-def get_patient_by_name(name):
+def get_patients_by_name(name):
     return patients_collection.find({"이름": name})
 
 
-def get_patient_by_id(id):
+def get_patients_by_id(id):
     return patients_collection.find({"ID": id})
 
 
-def get_patient_by_name_and_birthdate(name, birthdate):
+def get_patients_by_name_and_birthdate(name, birthdate):
     return patients_collection.find(
         {"$and":
              [{"이름": name},

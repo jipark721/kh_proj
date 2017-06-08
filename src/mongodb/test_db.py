@@ -19,6 +19,9 @@ diseases = khdb.diseases
 ingredients = khdb.ingredients
 nutrients = khdb.nutrients
 
+# reset_database()
+# initialize_database()
+
 print("There are %d many patients data" % patients.count())
 print("There are %d many diseases data" % diseases.count())
 print("There are %d many ingredients data" % ingredients.count())
@@ -47,6 +50,3 @@ def print_all_nutrients():
 #print_all_patients()
 #print_all_diseases()
 #print_all_ingredients()
-
-#reset_database()
-#initialize_database()
