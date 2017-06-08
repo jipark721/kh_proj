@@ -50,6 +50,8 @@ def initialize_database():
         for nutrient in nutrients:
             nutrients_collection.insert_one(nutrient)
 
+def get_empty_patient_obj():
+    return dict.fromkeys([field for field in patients_collection.find_one()])
 
 def get_all_patients():
     return patients_collection.find()
@@ -128,7 +130,7 @@ def get_all_diseases():
 #######################
 # Ingredients Related #
 #######################
-def get_empty_ingredients_obj():
+def get_empty_ingredient_obj():
     return dict.fromkeys([field for field in ingredients_collection.find_one()])
 
 
@@ -151,7 +153,7 @@ def get_ingredients_mansung_lgg4():
 #####################
 # Nutrients Related #
 #####################
-def get_empty_nutrients_obj():
+def get_empty_nutrient_obj():
     return dict.fromkeys([field for field in nutrients_collection.find_one()])
 
 def get_all_nutrients():

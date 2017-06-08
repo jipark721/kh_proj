@@ -890,7 +890,7 @@ class StackedWid1(object):
             ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
             tableWidget.setItem(rowIndex, 0, ckbtnitem)
             spboxitem = QtWidgets.QTableWidgetItem("0")
-            # spboxitem.setFlags(QtCore.Qt.ItemIsEditable)
+            #spboxitem.setFlags(QtCore.Qt.ItemIsEditable)
             tableWidget.setItem(rowIndex, 1, spboxitem)
             rowIndex = rowIndex + 1
 

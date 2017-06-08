@@ -50,13 +50,67 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             id = self.ui.lineEdit_ID_4_1.text()
             name = self.ui.lineEdit_name_4_1.text()
             sex = "남" if self.ui.radioBtn_male_4_1.isChecked else "여"
-            tempbdate = self.ui.dateEdit_birthdate_4_1.date()
-            birthdate = self.ui.dateEdit_birthdate_4_1.date()
+            birthdate = self.ui.dateEdit_birthdate_4_1.date().toString(format = QtCore.Qt.ISODate)
             address = self.ui.lineEdit_address_4_1.text()
-            height = Decimal(self.ui.lineEdit_height_4_1.text())
-            weight = Decimal(self.ui.lineEdit_weight_4_1.text())
+            if self.ui.lineEdit_height_4_1.text() != "":
+                height = Decimal(float(self.ui.lineEdit_height_4_1.text()))
+            else:
+                height = 0
+            if self.ui.lineEdit_weight_4_1.text() != "":
+                weight = Decimal(float(self.ui.lineEdit_weight_4_1.text()))
+            else:
+                weight = 0
+            isPreg = "T" if self.ui.ckBox_preg_4_1.isChecked() else "F"
+            isBFeeding = "T" if self.ui.ckBox_bFeeding_4_1.isChecked() else "F"
+            officeVisitDateList = self.ui.dateEdit_lastOfficeVisit_4_1.date().toString(format =QtCore.Qt.ISODate)
 
-            addOnePatient()
+            diagDiseasesStr = ""
+            isFirstCheckedFound = False
+            for i in range(self.ui.listWidget_diseases_4_1_1.count()):
+                ckbtn = self.ui.listWidget_diseases_4_1_1.item(i)
+                if ckbtn.checkState() == QtCore.Qt.Checked:
+                    if not isFirstCheckedFound:
+                        diagDiseasesStr = ckbtn.text()
+                        isFirstCheckedFound = True
+                    else :
+                        diagDiseasesStr = diagDiseasesStr + ", " + ckbtn.text()
+
+            #print("tw items" + str(self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_gs_4_1_1))[1:-1])
+
+            patientObj = get_empty_patient_obj()
+            patientObj['ID'] = id
+            patientObj['이름'] = name
+            patientObj['성별'] = sex
+            patientObj['생년월일'] = birthdate
+            patientObj['주소'] = address
+            patientObj['진단명'] = diagDiseasesStr
+            patientObj['진료일'] = officeVisitDateList
+            patientObj['방문횟수'] = 1
+            patientObj['키'] = height
+            patientObj['몸무게'] = weight
+            patientObj['임신여부'] = isPreg
+            patientObj['수유여부'] = isBFeeding
+
+            patientObj['급성알레르기음식'] =None
+            patientObj['만성알레르기음식'] = None
+            patientObj['만성lgG4과민반응음식'] = None
+            add_one_patient(patientObj)
+
+    def convertAllergyTableWidget2Tuples(self, tw):
+        list = []
+        for index in range(tw.rowCount()):
+            #print(tw.item(index, 0).text() + " " + tw.item(index, 1).text())
+            if int(tw.item(index, 1).text()) != 0:
+                mytup = tuple([tw.item(index, 0).text(), int(tw.item(index, 1).text())])
+                print(mytup[0], mytup[1])
+                list.append(mytup)
+                #entry = tw.item(index, 0).text() + ":" + tw.item(index, 1).text()
+
+                # list.append(convert_entry_2_tuple(entry))
+        return list
+                # tup = tuple([tw.item(index, 0).text(), int(tw.item(index, 1).text())])
+                # list.append(tup)
+
 
 
     def checkUniqID(self):
