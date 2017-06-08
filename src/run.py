@@ -26,7 +26,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_
         self.ui.btn_findClient.clicked.connect(lambda x: self.populate_selected_patient())
 
-        #self.ui_btn.save_4_3.connect(lambda x: self.update_exiting_patient_detail_data)
+        self.ui.btn_update_next_4_3.connect(lambda x: self.update_exiting_patient_detail_data)
         self.ui.btn_update_next_4_3.clicked.connect(lambda x: self.populate_existing_patient_detail(self.ui.lineEdit_ID_4_3.text()))
 
     def find_patients_by_name(self, name):
@@ -89,7 +89,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_weight_5.setText(str(patient["몸무게"]))
         self.ui.lineEdit_name_5.setText(patient["이름"])
 
-        self.ui.listWidget_diseases_5
+        # self.ui.listWidget_diseases_5
         # self.ui.tableWidget_allergies_gs_5
         # self.ui.tableWidget_allergies_lgg4_5
         # self.ui.tableWidget_allergies_ms_5
