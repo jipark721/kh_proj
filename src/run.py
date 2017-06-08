@@ -5,6 +5,7 @@ from ui import UI
 from PyQt5 import QtGui, QtWidgets, QtCore
 from mongodb.utils import *
 from decimal import Decimal
+from functions import *
 
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
@@ -20,34 +21,33 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page 4_1_1
         self.ui.btn_registerClient_4_1_1.clicked.connect(self.registerClient)
         # page_4_2
-        self.ui.btn_findbyID.clicked.connect(self.findByID)
+        self.ui.btn_findbyID.clicked.connect(lambda x: self.findByID(self.ui.lineEdit_ID_4_2.text()))
         self.ui.btn_findbyName.clicked.connect(lambda x: self.findByName(self.ui.lineEdit_name_4_2.text()))
         # self.ui.btn_
 
     def findByName(self, name):
         if not name:
             found_patients = get_all_patients()
-            self.ui.tableWidget_clientCandidates.setRowCount(found_patients.count())
-            i=1
-            for patient in found_patients:
-                self.ui.tableWidget_clientCandidates.item(i, 0).setText(patient['ID'])
-                self.ui.tableWidget_clientCandidates.item(i, 1).setText(patient['이름'])
-                self.ui.tableWidget_clientCandidates.item(i, 2).setText(patient['생년월일'])
-                self.ui.tableWidget_clientCandidates.item(i, 3).setText(patient['주소'])
-                i += 1
         else:
             found_patients = get_patients_by_name(name)
-            self.ui.tableWidget_clientCandidates.setRowCount(found_patients.count())
-            i=1
-            for patient in found_patients:
-                self.ui.tableWidget_clientCandidates.item(i, 0).setText(patient['ID'])
-                self.ui.tableWidget_clientCandidates.item(i, 1).setText(patient['이름'])
-                self.ui.tableWidget_clientCandidates.item(i, 2).setText(patient['생년월일'])
-                self.ui.tableWidget_clientCandidates.item(i, 3).setText(patient['주소'])
-                i += 1
+        self.populate_found_patients(found_patients)
 
-    def findByID(self, ID):
-        pass
+    def findByID(self, id):
+        if not id:
+            found_patients = get_all_patients()
+        else:
+            found_patients = get_patients_by_id(id)
+        self.populate_found_patients(found_patients)
+
+    def populate_found_patients(self, found_patients):
+        self.ui.tableWidget_clientCandidates.setRowCount(found_patients.count())
+        i=0
+        for patient in found_patients:
+            self.ui.tableWidget_clientCandidates.setItem(i, 0, make_checkbox_item(patient['ID']))
+            self.ui.tableWidget_clientCandidates.setItem(i, 1, make_str_item(patient['이름']))
+            self.ui.tableWidget_clientCandidates.setItem(i, 2, make_str_item(patient['생년월일']))
+            self.ui.tableWidget_clientCandidates.setItem(i, 3, make_str_item(patient['주소']))
+            i += 1
 
     def registerClient(self):
         if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0:
