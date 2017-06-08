@@ -44,10 +44,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.tableWidget_clientCandidates.setRowCount(found_patients.count())
         i=0
         for patient in found_patients:
-            self.ui.tableWidget_clientCandidates.setItem(i, 0, make_checkbox_item(patient['ID']))
-            self.ui.tableWidget_clientCandidates.setItem(i, 1, make_str_item(patient['이름']))
-            self.ui.tableWidget_clientCandidates.setItem(i, 2, make_str_item(patient['생년월일']))
-            self.ui.tableWidget_clientCandidates.setItem(i, 3, make_str_item(patient['주소']))
+            self.ui.tableWidget_clientCandidates.setItem(i, 0, make_tw_checkbox_item(patient['ID']))
+            self.ui.tableWidget_clientCandidates.setItem(i, 1, make_tw_str_item(patient['이름']))
+            self.ui.tableWidget_clientCandidates.setItem(i, 2, make_tw_str_item(patient['생년월일']))
+            self.ui.tableWidget_clientCandidates.setItem(i, 3, make_tw_str_item(patient['주소']))
             i += 1
 
     def get_selected_patient(self):
