@@ -21,18 +21,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page 4_1_1
         self.ui.btn_registerClient_4_1_1.clicked.connect(self.registerClient)
         # page_4_2
-        self.ui.btn_findbyID.clicked.connect(lambda x: self.findByID(self.ui.lineEdit_ID_4_2.text()))
-        self.ui.btn_findbyName.clicked.connect(lambda x: self.findByName(self.ui.lineEdit_name_4_2.text()))
+        self.ui.btn_findbyID.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_4_2.text()))
+        self.ui.btn_findbyName.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_4_2.text()))
         # self.ui.btn_
+        self.ui.btn_findClient.clicked.connect(lambda x: self.populate_selected_patient())
 
-    def findByName(self, name):
+    def find_patients_by_name(self, name):
         if not name:
             found_patients = get_all_patients()
         else:
             found_patients = get_patients_by_name(name)
         self.populate_found_patients(found_patients)
 
-    def findByID(self, id):
+    def find_patients_by_id(self, id):
         if not id:
             found_patients = get_all_patients()
         else:
@@ -48,6 +49,34 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.tableWidget_clientCandidates.setItem(i, 2, make_str_item(patient['생년월일']))
             self.ui.tableWidget_clientCandidates.setItem(i, 3, make_str_item(patient['주소']))
             i += 1
+
+    def get_selected_patient(self):
+        for patient_idx in range(self.ui.tableWidget_clientCandidates.rowCount()):
+            if self.ui.tableWidget_clientCandidates.item(patient_idx, 0).checkState() == QtCore.Qt.Checked:
+                return self.ui.tableWidget_clientCandidates.item(patient_idx, 0).text()
+        return None
+
+    def populate_selected_patient(self):
+        self.ui.stackedWidget.setCurrentIndex(6)
+        selected_patient_id = self.get_selected_patient()
+        print(selected_patient_id)
+        if selected_patient_id:
+            patient = patients_collection.find_one({'ID': selected_patient_id})
+            print(patient['ID'])
+            self.ui.lineEdit_ID_4_3.setText(patient['ID'])
+            self.ui.lineEdit_name_4_3.setText(patient['이름'])
+            if patient['성별'] == "남":
+                self.ui.radioBtn_male_4_3.setChecked(True)
+                self.ui.radioBtn_female_4_3.setChecked(False)
+            else:
+                self.ui.radioBtn_male_4_3.setChecked(False)
+                self.ui.radioBtn_female_4_3.setChecked(True)
+            self.ui.lineEdit_address_4_3.setText(patient['주소'])
+            self.ui.lineEdit_height_4_3.setText(str(patient['키']))
+            self.ui.lineEdit_weight_4_3.setText(str(patient['몸무게']))
+            self.ui.ckBox_preg_4_3.setChecked(True) if patient['임신여부'] == "T" else self.ui.ckBox_preg_4_3.setChecked(False)
+            self.ui.ckBox_bFeeding_4_3.setChecked(True) if patient['수유여부'] == "T" else self.ui.ckBox_bFeeding_4_3.setChecked(False)
+
 
     def registerClient(self):
         if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0:
