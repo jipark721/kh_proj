@@ -17,17 +17,18 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def setupLogic(self):
         # page_4_1
-        self.ui.btn_checkUniqID.clicked.connect(self.checkUniqID)
+        self.ui.btn_checkUniqID_3.clicked.connect(self.checkUniqID)
         # page 4_1_1
-        self.ui.btn_registerClient_4_1_1.clicked.connect(self.registerClient)
-        # page_4_2
-        self.ui.btn_findbyID.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_4_2.text()))
-        self.ui.btn_findbyName.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_4_2.text()))
+        self.ui.btn_registerClient_4.clicked.connect(self.registerClient)
+        # page_5
+        self.ui.btn_findbyID_5.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_5.text()))
+        self.ui.btn_findbyName_5.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_5.text()))
         # self.ui.btn_
-        self.ui.btn_findClient.clicked.connect(lambda x: self.populate_selected_patient())
+        self.ui.btn_confirmClient_5.clicked.connect(lambda x: self.populate_selected_patient())
 
-        self.ui.btn_update_next_4_3.connect(lambda x: self.update_exiting_patient_detail_data)
-        self.ui.btn_update_next_4_3.clicked.connect(lambda x: self.populate_existing_patient_detail(self.ui.lineEdit_ID_4_3.text()))
+        #save btn not update and next
+        #self.ui.btn_save_6.clicked.connect(lambda x: self.update_exiting_patient_detail_data())
+        self.ui.btn_save_6.clicked.connect(lambda x: self.populate_existing_patient_detail(self.ui.lineEdit_ID_6.text()))
 
     def find_patients_by_name(self, name):
         if not name:
@@ -44,19 +45,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.populate_found_patients(found_patients)
 
     def populate_found_patients(self, found_patients):
-        self.ui.tableWidget_clientCandidates.setRowCount(found_patients.count())
+        self.ui.tableWidget_clientCandidates_5.setRowCount(found_patients.count())
         i=0
         for patient in found_patients:
-            self.ui.tableWidget_clientCandidates.setItem(i, 0, make_tw_checkbox_item(patient['ID']))
-            self.ui.tableWidget_clientCandidates.setItem(i, 1, make_tw_str_item(patient['이름']))
-            self.ui.tableWidget_clientCandidates.setItem(i, 2, make_tw_str_item(patient['생년월일']))
-            self.ui.tableWidget_clientCandidates.setItem(i, 3, make_tw_str_item(patient['주소']))
+            self.ui.tableWidget_clientCandidates_5.setItem(i, 0, make_tw_checkbox_item(patient['ID']))
+            self.ui.tableWidget_clientCandidates_5.setItem(i, 1, make_tw_str_item(patient['이름']))
+            self.ui.tableWidget_clientCandidates_5.setItem(i, 2, make_tw_str_item(patient['생년월일']))
+            self.ui.tableWidget_clientCandidates_5.setItem(i, 3, make_tw_str_item(patient['주소']))
             i += 1
 
     def get_selected_patient(self):
-        for patient_idx in range(self.ui.tableWidget_clientCandidates.rowCount()):
-            if self.ui.tableWidget_clientCandidates.item(patient_idx, 0).checkState() == QtCore.Qt.Checked:
-                return self.ui.tableWidget_clientCandidates.item(patient_idx, 0).text()
+        for patient_idx in range(self.ui.tableWidget_clientCandidates_5.rowCount()):
+            if self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).checkState() == QtCore.Qt.Checked:
+                return self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).text()
         return None
 
     def populate_selected_patient(self):
@@ -66,66 +67,66 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         if selected_patient_id:
             patient = patients_collection.find_one({'ID': selected_patient_id})
             print(patient['ID'])
-            self.ui.lineEdit_ID_4_3.setText(patient['ID'])
-            self.ui.lineEdit_name_4_3.setText(patient['이름'])
+            self.ui.lineEdit_ID_6.setText(patient['ID'])
+            self.ui.lineEdit_name_6.setText(patient['이름'])
             if patient['성별'] == "남":
-                self.ui.radioBtn_male_4_3.setChecked(True)
-                self.ui.radioBtn_female_4_3.setChecked(False)
+                self.ui.radioBtn_male_6.setChecked(True)
+                self.ui.radioBtn_female_6.setChecked(False)
             else:
-                self.ui.radioBtn_male_4_3.setChecked(False)
-                self.ui.radioBtn_female_4_3.setChecked(True)
-            self.ui.lineEdit_address_4_3.setText(patient['주소'])
-            self.ui.lineEdit_height_4_3.setText(str(patient['키']))
-            self.ui.lineEdit_weight_4_3.setText(str(patient['몸무게']))
-            self.ui.ckBox_preg_4_3.setChecked(True) if patient['임신여부'] == "T" else self.ui.ckBox_preg_4_3.setChecked(False)
-            self.ui.ckBox_bFeeding_4_3.setChecked(True) if patient['수유여부'] == "T" else self.ui.ckBox_bFeeding_4_3.setChecked(False)
+                self.ui.radioBtn_male_6.setChecked(False)
+                self.ui.radioBtn_female_6.setChecked(True)
+            self.ui.lineEdit_address_6.setText(patient['주소'])
+            self.ui.lineEdit_height_6.setText(str(patient['키']))
+            self.ui.lineEdit_weight_6.setText(str(patient['몸무게']))
+            self.ui.ckBox_preg_6.setChecked(True) if patient['임신여부'] == "T" else self.ui.ckBox_preg_6.setChecked(False)
+            self.ui.ckBox_bFeeding_6.setChecked(True) if patient['수유여부'] == "T" else self.ui.ckBox_bFeeding_6.setChecked(False)
 
     def populate_existing_patient_detail(self, id):
         self.ui.stackedWidget.setCurrentIndex(7)
         patient = get_patients_by_id(id)
-        self.ui.lineEdit_ID_5.setText(patient["ID"])
-        self.ui.lineEdit_age_5.setText(patient["생년월일"]) # 나이!
-        self.ui.lineEdit_height_5.setText(str(patient["키"]))
-        self.ui.lineEdit_weight_5.setText(str(patient["몸무게"]))
-        self.ui.lineEdit_name_5.setText(patient["이름"])
+        self.ui.lineEdit_ID_7.setText(patient["ID"])
+        self.ui.lineEdit_age_7.setText(patient["생년월일"]) # 나이!
+        self.ui.lineEdit_height_7.setText(str(patient["키"]))
+        self.ui.lineEdit_weight_7.setText(str(patient["몸무게"]))
+        self.ui.lineEdit_name_7.setText(patient["이름"])
 
-        # self.ui.listWidget_diseases_5
-        # self.ui.tableWidget_allergies_gs_5
-        # self.ui.tableWidget_allergies_lgg4_5
-        # self.ui.tableWidget_allergies_ms_5
+        # self.ui.listWidget_diseases_7
+        # self.ui.tableWidget_allergies_gs_7
+        # self.ui.tableWidget_allergies_lgg4_7
+        # self.ui.tableWidget_allergies_ms_7
 
     def update_exiting_patient_detail_data(self):
         pass
 
     def registerClient(self):
-        if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0:
+        if len(self.ui.lineEdit_ID_3.text()) == 0 or len(self.ui.lineEdit_name_3.text()) == 0:
             msgbox = QtWidgets.QMessageBox()
             msgbox.setIcon(QtWidgets.QMessageBox.Warning)
             msgbox.setText("ID, 이름, 생년월일은 필수입니다.")
             msgbox.setWindowTitle("Error")
             msgbox.exec_()
         else:
-            id = self.ui.lineEdit_ID_4_1.text()
-            name = self.ui.lineEdit_name_4_1.text()
-            sex = "남" if self.ui.radioBtn_male_4_1.isChecked else "여"
-            birthdate = self.ui.dateEdit_birthdate_4_1.date().toString(format=QtCore.Qt.ISODate)
-            address = self.ui.lineEdit_address_4_1.text()
-            if self.ui.lineEdit_height_4_1.text():
-                height = Decimal(float(self.ui.lineEdit_height_4_1.text()))
+            id = self.ui.lineEdit_ID_3.text()
+            name = self.ui.lineEdit_name_3.text()
+            sex = "남" if self.ui.radioBtn_male_3.isChecked else "여"
+            birthdate = self.ui.dateEdit_birthdate_3.date().toString(format=QtCore.Qt.ISODate)
+            address = self.ui.lineEdit_address_3.text()
+            if self.ui.lineEdit_height_3.text():
+                height = Decimal(float(self.ui.lineEdit_height_3.text()))
             else:
                 height = 0
-            if self.ui.lineEdit_weight_4_1.text():
-                weight = Decimal(float(self.ui.lineEdit_weight_4_1.text()))
+            if self.ui.lineEdit_weight_3.text():
+                weight = Decimal(float(self.ui.lineEdit_weight_3.text()))
             else:
                 weight = 0
-            isPreg = "T" if self.ui.ckBox_preg_4_1.isChecked() else "F"
-            isBFeeding = "T" if self.ui.ckBox_bFeeding_4_1.isChecked() else "F"
-            officeVisitDateList = self.ui.dateEdit_lastOfficeVisit_4_1.date().toString(format=QtCore.Qt.ISODate)
+            isPreg = "T" if self.ui.ckBox_preg_3.isChecked() else "F"
+            isBFeeding = "T" if self.ui.ckBox_bFeeding_3.isChecked() else "F"
+            officeVisitDateList = self.ui.dateEdit_lastOfficeVisit_3.date().toString(format=QtCore.Qt.ISODate)
 
             diagDiseasesStr = ""
             isFirstCheckedFound = False
-            for i in range(self.ui.listWidget_diseases_4_1_1.count()):
-                ckbtn = self.ui.listWidget_diseases_4_1_1.item(i)
+            for i in range(self.ui.listWidget_diseases_4.count()):
+                ckbtn = self.ui.listWidget_diseases_4.item(i)
                 if ckbtn.checkState() == QtCore.Qt.Checked:
                     if not isFirstCheckedFound:
                         diagDiseasesStr = ckbtn.text()
@@ -146,9 +147,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             patientObj['몸무게'] = weight
             patientObj['임신여부'] = isPreg
             patientObj['수유여부'] = isBFeeding
-            patientObj['급성알레르기음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_gs_4_1_1)
-            patientObj['만성알레르기음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_ms_4_1_1)
-            patientObj['만성lgG4과민반응음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_lgg4_4_1_1)
+            patientObj['급성알레르기음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_gs_4)
+            patientObj['만성알레르기음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_ms_4)
+            patientObj['만성lgG4과민반응음식'] = self.convertAllergyTableWidget2Tuples(self.ui.tableWidget_allergies_lgg4_4)
             add_one_patient(patientObj)
 
     def convertAllergyTableWidget2Tuples(self, tw):
@@ -163,10 +164,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def checkUniqID(self):
         uniqIDChecked = False
         while (uniqIDChecked == False):
-            idCand = self.ui.lineEdit_ID_4_1.text()
+            idCand = self.ui.lineEdit_ID_3.text()
             idFound = get_patient_by_id(idCand)
             if idFound.count() != 0:
-                self.ui.lineEdit_ID_4_1.setText("")
+                self.ui.lineEdit_ID_3.setText("")
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setIcon(QtWidgets.QMessageBox.Warning)
                 msgbox.setText("동일한 ID가 존재합니다. 다른 ID를 시도해주세요")
