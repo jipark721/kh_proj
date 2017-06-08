@@ -7,7 +7,8 @@ from utils import *
 ID = "kihoproject"
 PW = "!kiho1234"
 CLUSTER_URL = "mongodb://"+ ID + ":" + PW + "@cluster0-shard-00-00-gugln.mongodb.net:27017,cluster0-shard-00-01-gugln.mongodb.net:27017,cluster0-shard-00-02-gugln.mongodb.net:27017/admin?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"
-client = MongoClient(CLUSTER_URL)
+#client = MongoClient(CLUSTER_URL)
+client = MongoClient()
 
 print("\nPrinting mongodb configurations...\n")
 print("Databases:\n\n%s\n" % client.database_names())
@@ -18,9 +19,6 @@ patients = khdb.patients
 diseases = khdb.diseases
 ingredients = khdb.ingredients
 nutrients = khdb.nutrients
-
-# reset_database()
-# initialize_database()
 
 print("There are %d many patients data" % patients.count())
 print("There are %d many diseases data" % diseases.count())
@@ -50,3 +48,6 @@ def print_all_nutrients():
 #print_all_patients()
 #print_all_diseases()
 #print_all_ingredients()
+
+reset_database()
+initialize_database()
