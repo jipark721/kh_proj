@@ -26,6 +26,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_
         self.ui.btn_findClient.clicked.connect(lambda x: self.populate_selected_patient())
 
+        #self.ui_btn.save_4_3.connect(lambda x: self.update_exiting_patient_detail_data)
+        self.ui.btn_update_next_4_3.clicked.connect(lambda x: self.populate_existing_patient_detail(self.ui.lineEdit_ID_4_3.text()))
+
     def find_patients_by_name(self, name):
         if not name:
             found_patients = get_all_patients()
@@ -77,6 +80,22 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.ckBox_preg_4_3.setChecked(True) if patient['임신여부'] == "T" else self.ui.ckBox_preg_4_3.setChecked(False)
             self.ui.ckBox_bFeeding_4_3.setChecked(True) if patient['수유여부'] == "T" else self.ui.ckBox_bFeeding_4_3.setChecked(False)
 
+    def populate_existing_patient_detail(self, id):
+        self.ui.stackedWidget.setCurrentIndex(7)
+        patient = get_patients_by_id(id)
+        self.ui.lineEdit_ID_5.setText(patient["ID"])
+        self.ui.lineEdit_age_5.setText(patient["생년월일"]) # 나이!
+        self.ui.lineEdit_height_5.setText(str(patient["키"]))
+        self.ui.lineEdit_weight_5.setText(str(patient["몸무게"]))
+        self.ui.lineEdit_name_5.setText(patient["이름"])
+
+        self.ui.listWidget_diseases_5
+        # self.ui.tableWidget_allergies_gs_5
+        # self.ui.tableWidget_allergies_lgg4_5
+        # self.ui.tableWidget_allergies_ms_5
+
+    def update_exiting_patient_detail_data(self):
+        pass
 
     def registerClient(self):
         if len(self.ui.lineEdit_ID_4_1.text()) == 0 or len(self.ui.lineEdit_name_4_1.text()) == 0:

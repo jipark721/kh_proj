@@ -63,7 +63,7 @@ def get_patients_by_name(name):
 
 
 def get_patients_by_id(id):
-    return patients_collection.find({"ID": id})
+    return patients_collection.find_one({"ID": id})
 
 
 def get_patients_by_name_and_birthdate(name, birthdate):
