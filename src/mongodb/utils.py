@@ -168,13 +168,34 @@ def get_nutrients_by_level(level):
 #####################
 # Helper functions  #
 #####################
+# Convert string "val_1, val_2" to [val_1, val_2]
+def convert_string_2_list(str):
+    if str == "" or str is None:
+        return None
+    return [entry.strip() for entry in str.split(",")]
+
+def convert_string_2_set(str):
+    if str == "" or str is None:
+        return None
+    s = set()
+    for entry in str.split(','):
+        s.add(entry.strip())
+    return s
+
+def convert_list_2_set(l):
+    if len(l) == 0 or l is None:
+        return None
+    s = set()
+    for entry in l:
+        s.add(entry)
+    return s
+
 # Convert list of entry-defined (val_1, val_2) objects to list of tuples
 def convert_list_2_tuple(entry_list):
     if entry_list == "" or entry_list is None:
         return None
     entries = [entry.strip() for entry in entry_list.split(",")]
     return [convert_entry_2_tuple(tuple) for tuple in entries]
-
 
 # (val_1:val_2) -> tup(val_1,val_2)
 def convert_entry_2_tuple(entry):
