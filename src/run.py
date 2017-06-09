@@ -50,7 +50,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.tableWidget_clientCandidates_5.setRowCount(found_patients.count())
         i=0
         for patient in found_patients:
-            print("index at "+str(i)+" id found " + patient['ID'])
+            print("index at "+str(i)+" id found " + patient["ID"])
             self.ui.tableWidget_clientCandidates_5.setItem(i, 0, make_tw_checkbox_item(patient['ID'], False))
             self.ui.tableWidget_clientCandidates_5.setItem(i, 1, make_tw_str_item(patient['이름']))
             self.ui.tableWidget_clientCandidates_5.setItem(i, 2, make_tw_str_item(patient['생년월일']))
@@ -111,6 +111,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def populate_existing_patient_detail(self, id):
         print("id chosen: "+id)
         patient = get_patient_by_id(id)
+        print(type(patient))
 
         print(patient["이름"])
         self.ui.lineEdit_name_7.setText(patient["이름"])
