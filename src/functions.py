@@ -66,6 +66,7 @@ def create_checkbox_level_tw(cursorToCollection, tableWidget, content, isNewPati
     tableWidget.setColumnCount(2)
     rowIndex = 0
     for item in cursorToCollection:
+        print(item[content])
         ckbtnitem = QtWidgets.QTableWidgetItem(item[content])
         ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
