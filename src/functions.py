@@ -25,6 +25,29 @@ def make_lw_checkbox_item(content, isChecked):
         item.setCheckState(QtCore.Qt.Unchecked)
     return item
 
+#for allergy table widgets, iterate through rows and return a list of tuple(알레르기음식, level)
+def convert_tw_2_tuple_list(tw):
+    list = []
+    for index in range(tw.rowCount()):
+        if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
+            mytup = tuple([tw.item(index, 0).text(), int(tw.item(index, 1).text())])
+            list.append(mytup)
+    return list
+
+#for diagnosed diseases, iterate through rows and return a string separated by ","
+def convert_lw_2_string(lw):
+    toReturn = ""
+    isFirstCheckedFound = False
+    for i in range(lw.count()):
+        ckbtn = lw.item(i)
+        if ckbtn.checkState() == QtCore.Qt.Checked:
+            if not isFirstCheckedFound:
+                toReturn = ckbtn.text()
+                isFirstCheckedFound = True
+            else:
+                toReturn = toReturn + "," + ckbtn.text()
+    return toReturn
+
 def create_checkbox_lw(cursorToCollection, lw, content, isNewPatient, patientDiseaseSet):
     for item in cursorToCollection:
         ckbtnitem = QtWidgets.QListWidgetItem(item[content])
@@ -48,14 +71,14 @@ def create_checkbox_level_tw(cursorToCollection, tableWidget, content, isNewPati
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         levelitem = QtWidgets.QTableWidgetItem("0")
         if not isNewPatient:
-            for allergicFoodLevelTuple in patientAllergyTupleList:
-                if item[content] == allergicFoodLevelTuple[0]:
-                    ckbtnitem.setCheckState(QtCore.Qt.Checked)
-                    levelitem = QtWidgets.QTableWidgetItem(str(allergicFoodLevelTuple[1]))
+            if len(patientAllergyTupleList) != 0 and patientAllergyTupleList is not None:
+                for allergicFoodLevelTuple in patientAllergyTupleList:
+                    if item[content] == allergicFoodLevelTuple[0]:
+                        ckbtnitem.setCheckState(QtCore.Qt.Checked)
+                        levelitem = QtWidgets.QTableWidgetItem(str(allergicFoodLevelTuple[1]))
         tableWidget.setItem(rowIndex, 0, ckbtnitem)
         tableWidget.setItem(rowIndex, 1, levelitem)
         rowIndex = rowIndex + 1
-
 
 def convert_date_string_to_QDate_obj(dateStr):
     date = datetime.strptime(dateStr, '%Y-%m-%d')

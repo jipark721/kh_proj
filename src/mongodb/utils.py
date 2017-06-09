@@ -62,7 +62,7 @@ def get_patients_by_name(name):
     return patients_collection.find({"이름": name})
 
 
-def get_patients_by_id(id):
+def get_patient_by_id(id):
     return patients_collection.find_one({"ID": id})
 
 
@@ -98,8 +98,7 @@ def add_one_patient(patient):
     )
 
 
-def update_patient_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList,
-                        diagDiseases):
+def update_patient_detail_first_page(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList):
     return patients_collection.update(
         {"ID": id},
         {
@@ -111,8 +110,18 @@ def update_patient_info(id, name, sex, birthdate, address, height, weight, isPre
             "몸무게": weight,
             "임신여부": isPreg,
             "수유여부": isBFeeding,
-            "진료일": officeVisitDateList,
-            "진단명": diagDiseases
+            "진료일": officeVisitDateList
+        }
+    )
+
+def update_patient_detail_second_page(id, diagDiseasesStr, ingredients_gs, ingredients_ms, ingredients_lgg4):
+    return patients_collection.update(
+        {"ID": id},
+        {
+            "진단명": diagDiseasesStr,
+            "급성알레르기음식": ingredients_gs,
+            "만성알레르기음식": ingredients_ms,
+            "만성lgG4과민반응음식": ingredients_lgg4
         }
     )
 
