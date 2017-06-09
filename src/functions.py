@@ -57,7 +57,6 @@ def create_checkbox_level_tw(cursorToCollection, tableWidget, content, isNewPati
         tableWidget.setItem(rowIndex, 1, levelitem)
         rowIndex = rowIndex + 1
 
-
 def convert_date_string_to_QDate_obj(dateStr):
     date = datetime.strptime(dateStr, '%Y-%m-%d')
     return QtCore.QDate(date.year, date.month, date.day)
