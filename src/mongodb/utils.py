@@ -65,7 +65,6 @@ def get_patients_by_name(name):
 def get_patient_by_id(id):
     return patients_collection.find_one({"ID": id})
 
-
 def get_patients_by_name_and_birthdate(name, birthdate):
     return patients_collection.find(
         {"$and":
@@ -99,29 +98,64 @@ def add_one_patient(patient):
 
 
 def update_patient_detail_first_page(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList):
+    patient = get_patient_by_id(id)
+    tempDiagDis = patient["진단명"]
+    tempGSIng = patient["급성알레르기음식"]
+    tempMSIng = patient["만성알레르기음식"]
+    tempLGG4Ing = patient["만성lgG4과민반응음식"]
     return patients_collection.update(
         {"ID": id},
-        {
-            "이름": name,
-            "성별": sex,
-            "생년월일": birthdate,
-            "주소": address,
-            "키": height,
-            "몸무게": weight,
-            "임신여부": isPreg,
-            "수유여부": isBFeeding,
-            "진료일": officeVisitDateList
+        {"$set":
+             {
+                 "ID": id,
+                 "이름": name,
+                "성별": sex,
+                "생년월일": birthdate,
+                "주소": address,
+                "키": height,
+                "몸무게": weight,
+                "임신여부": isPreg,
+                "수유여부": isBFeeding,
+                "진료일": officeVisitDateList,
+                 "진단명": tempDiagDis,
+                 "급성알레르기음식": tempGSIng,
+                 "만성알레르기음식": tempMSIng,
+                 "만성lgG4과민반응음식": tempLGG4Ing
+              }
         }
     )
 
 def update_patient_detail_second_page(id, diagDiseasesStr, ingredients_gs, ingredients_ms, ingredients_lgg4):
+    patient = get_patient_by_id(id)
+    tempName = patient["이름"]
+    tempSex = patient["성별"]
+    tempBirthdate = patient["생년월일"]
+    tempAddress = patient["주소"]
+    tempHeight = patient["키"]
+    tempWeight = patient["몸무게"]
+    tempIsPreg = patient["임신여부"]
+    tempIsBFeeding = patient["수유여부"]
+    tempOfficeVisitDateList = patient["진료일"]
+
     return patients_collection.update(
         {"ID": id},
-        {
-            "진단명": diagDiseasesStr,
-            "급성알레르기음식": ingredients_gs,
-            "만성알레르기음식": ingredients_ms,
-            "만성lgG4과민반응음식": ingredients_lgg4
+        {"$set":
+             {
+                 "ID": id,
+                 "이름": tempName,
+                 "성별": tempSex,
+                 "생년월일": tempBirthdate,
+                 "주소": tempAddress,
+                 "키": tempHeight,
+                 "몸무게": tempWeight,
+                 "임신여부": tempIsPreg,
+                 "수유여부": tempIsBFeeding,
+                 "진료일": tempOfficeVisitDateList,
+                "진단명": diagDiseasesStr,
+                "급성알레르기음식": ingredients_gs,
+                "만성알레르기음식": ingredients_ms,
+                "만성lgG4과민반응음식": ingredients_lgg4
+             }
         }
     )
 

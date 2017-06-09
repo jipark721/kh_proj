@@ -26,7 +26,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_confirmClient_5.clicked.connect(lambda x: self.populate_selected_patient())
         # page_6
         self.ui.btn_save_6.clicked.connect(lambda x: self.update_existing_patient_data_first_page())
-        self.ui.btn_save_next_6.clicked.connect(lambda x: self.go_2_existing_patient_detail(self.ui.lineEdit_ID_6.text()))
+        self.ui.btn_save_next_6.clicked.connect(lambda x: self.go_2_existing_patient_detail_second_page(self.ui.lineEdit_ID_6.text()))
         # page_7
         self.ui.btn_save_7.clicked.connect(lambda x: self.update_existing_patient_data_second_page())
         self.ui.btn_save_next_7.clicked.connect(lambda x: self.save_and_go_2_nutrients_edit_page(self.ui.lineEdit_ID_7.text()))
@@ -40,9 +40,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def find_patients_by_id(self, id):
         if not id:
-            found_patients = get_all_patients()
+            found_patients = patients_collection.find()
+            #found_patients = get_all_patients()
         else:
-            found_patients = get_patient_by_id(id)
+            found_patients = patients_collection.find_one({'ID': id})
+            #found_patients = get_patient_by_id(id)
         self.populate_found_patients(found_patients)
 
     def populate_found_patients(self, found_patients):
@@ -57,7 +59,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.tableWidget_clientCandidates_5.setItem(i, 3, make_tw_str_item(patient['주소']))
             i += 1
 
-    def get_selected_patient(self):
+    def get_selected_patient_id(self):
         for patient_idx in range(self.ui.tableWidget_clientCandidates_5.rowCount()):
             if self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).checkState() == QtCore.Qt.Checked:
                 return self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).text()
@@ -65,7 +67,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def populate_selected_patient(self):
         self.ui.stackedWidget.setCurrentIndex(6)
-        selected_patient_id = self.get_selected_patient()
+        selected_patient_id = self.get_selected_patient_id()
         print(selected_patient_id)
         if selected_patient_id:
             patient = patients_collection.find_one({'ID': selected_patient_id})
@@ -103,14 +105,15 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
 
 
-    def go_2_existing_patient_detail(self, id):
+    def go_2_existing_patient_detail_second_page(self, id):
         self.update_existing_patient_data_first_page()
         self.ui.stackedWidget.setCurrentIndex(7)
         self.populate_existing_patient_detail(id)
 
     def populate_existing_patient_detail(self, id):
         print("id chosen: "+id)
-        patient = get_patient_by_id(id)
+        print("there are " + str(get_all_patients().count()) + " patients")
+        patient = patients_collection.find_one({"ID": id})
         print(type(patient))
 
         print(patient["이름"])
@@ -140,23 +143,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         birthdate = self.ui.dateEdit_birthdate_6.date().toString(format=QtCore.Qt.ISODate)
         address = self.ui.lineEdit_address_6.text()
         if self.ui.lineEdit_height_6.text():
-            print(self.ui.lineEdit_height_6.text())
-            print(float(self.ui.lineEdit_height_6.text()))
-            print(type(float(self.ui.lineEdit_height_6.text())))
             # height = Decimal(float(self.ui.lineEdit_height_6.text()))
             height = float(self.ui.lineEdit_height_6.text())
-
         else:
-            height = 0.0
+            height = None
         if self.ui.lineEdit_weight_6.text():
             # weight = Decimal(float(self.ui.lineEdit_weight_6.text()))
             weight = float(self.ui.lineEdit_weight_6.text())
-
         else:
-            weight = 0.0
+            weight = None
         isPreg = "T" if self.ui.ckBox_preg_6.isChecked() else "F"
         isBFeeding = "T" if self.ui.ckBox_bFeeding_6.isChecked() else "F"
         officeVisitDateList = self.ui.dateEdit_lastOfficeVisit_6.date().toString(format=QtCore.Qt.ISODate)
+
         update_patient_detail_first_page(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding, officeVisitDateList)
 
     def update_existing_patient_data_second_page(self):
@@ -164,7 +163,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         gsTupleList = convert_tw_2_tuple_list(self.ui.tableWidget_allergies_gs_7)
         msTupleList = convert_tw_2_tuple_list(self.ui.tableWidget_allergies_ms_7)
         lgg4TupleList = convert_tw_2_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
-        update_patient_detail_second_page(self.ui.lineEdit_ID_7, diseaseStr, gsTupleList, msTupleList, lgg4TupleList)
+        update_patient_detail_second_page(self.ui.lineEdit_ID_7.text(), diseaseStr, gsTupleList, msTupleList, lgg4TupleList)
 
     def register_client(self):
         if len(self.ui.lineEdit_ID_3.text()) == 0 or len(self.ui.lineEdit_name_3.text()) == 0:

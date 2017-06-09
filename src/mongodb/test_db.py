@@ -45,7 +45,7 @@ def print_all_nutrients():
     for nutrient in nutrients.find():
         pprint(nutrient)
 
-#print_all_patients()
+print_all_patients()
 #print_all_diseases()
 #print_all_ingredients()
 

@@ -71,8 +71,8 @@ def create_checkbox_level_tw(cursorToCollection, tableWidget, content, isNewPati
         ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         levelitem = QtWidgets.QTableWidgetItem("0")
-        if not isNewPatient:
-            if len(patientAllergyTupleList) != 0 and patientAllergyTupleList is not None:
+        if not isNewPatient and patientAllergyTupleList is not None:
+            if len(patientAllergyTupleList) != 0:
                 for allergicFoodLevelTuple in patientAllergyTupleList:
                     if item[content] == allergicFoodLevelTuple[0]:
                         ckbtnitem.setCheckState(QtCore.Qt.Checked)
