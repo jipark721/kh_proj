@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="page_0">
      <widget class="QLabel" name="label_2">
@@ -1644,7 +1644,7 @@
          <string>저장</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btn_saveNext_7">
+       <widget class="QPushButton" name="btn_save_next_7">
         <property name="geometry">
          <rect>
           <x>210</x>
@@ -2165,7 +2165,7 @@
          <string>뒤로</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btn_tempSave_8">
+       <widget class="QPushButton" name="btn_temp_save_8">
         <property name="geometry">
          <rect>
           <x>150</x>
@@ -2178,7 +2178,7 @@
          <string>임시저장</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btn_saveNext_8">
+       <widget class="QPushButton" name="btn_save_next_8">
         <property name="geometry">
          <rect>
           <x>260</x>
