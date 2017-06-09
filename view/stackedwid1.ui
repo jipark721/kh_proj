@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page_0">
      <widget class="QLabel" name="label_2">
@@ -68,7 +68,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="page_1">
-     <widget class="QPushButton" name="btn_go2Data_1">
+     <widget class="QPushButton" name="btn_goToData_1">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -81,7 +81,7 @@
        <string>데이터 수정</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_go2Client_1">
+     <widget class="QPushButton" name="btn_goToClient_1">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -109,7 +109,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="page_2">
-     <widget class="QPushButton" name="btn_registerNewClient_2">
+     <widget class="QPushButton" name="btn_registerNewPatient_2">
       <property name="geometry">
        <rect>
         <x>260</x>
@@ -122,7 +122,7 @@
        <string>신규 회원 등록</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_findExistingClient_2">
+     <widget class="QPushButton" name="btn_findExistingPatient_2">
       <property name="geometry">
        <rect>
         <x>260</x>

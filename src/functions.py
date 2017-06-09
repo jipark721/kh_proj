@@ -26,7 +26,7 @@ def make_lw_checkbox_item(content, isChecked):
     return item
 
 #for allergy table widgets, iterate through rows and return a list of tuple(알레르기음식, level)
-def convert_tw_2_tuple_list(tw):
+def convert_tw_to_tuple_list(tw):
     list = []
     for index in range(tw.rowCount()):
         if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
@@ -35,7 +35,7 @@ def convert_tw_2_tuple_list(tw):
     return list
 
 #for diagnosed diseases, iterate through rows and return a string separated by ","
-def convert_lw_2_string(lw):
+def convert_lw_to_string(lw):
     toReturn = ""
     isFirstCheckedFound = False
     for i in range(lw.count()):
@@ -66,7 +66,6 @@ def create_checkbox_level_tw(cursorToCollection, tableWidget, content, isNewPati
     tableWidget.setColumnCount(2)
     rowIndex = 0
     for item in cursorToCollection:
-        print(item[content])
         ckbtnitem = QtWidgets.QTableWidgetItem(item[content])
         ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
@@ -81,11 +80,48 @@ def create_checkbox_level_tw(cursorToCollection, tableWidget, content, isNewPati
         tableWidget.setItem(rowIndex, 1, levelitem)
         rowIndex = rowIndex + 1
 
+def clear_checkbox_lw(lw):
+    for index in range(lw.count()):
+        lw.item(index).setCheckState(QtCore.Qt.Unchecked)
+
+# def clear_ckbox_level_tw(tw):
+#     for rowIndex in range(tw.rowCount):
+#         tw.item(rowIndex, 0).setCheckState(QtCore.Qt.Unchecked)
+#         tw.item(rowIndex, 1).text()
+
+# iterate through listwidget and build a set of indices of checked diseases
+def build_disease_index_set_from_lw(lw):
+    s = set()
+    for i in range(lw.count()):
+        ckbtn = lw.item(i)
+        if ckbtn.checkState() == QtCore.Qt.Checked:
+            s.add(i)
+    return s
+
+# iterate through tablewidget and build a set of tuple(index, level) for each checked ingredient
+def build_allergy_index_level_tuple_set_from_tw(tw):
+    s = set()
+    for rowIndex in range(tw.rowCount()):
+        if tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked and int(tw.item(rowIndex, 1).text()) != 0:
+            mytup = tuple([rowIndex, tw.item(rowIndex, 1).text()])
+            s.add(mytup)
+    return s
+
 def convert_date_string_to_QDate_obj(dateStr):
     date = datetime.strptime(dateStr, '%Y-%m-%d')
     return QtCore.QDate(date.year, date.month, date.day)
+
+def convert_DateEditWidget_to_string(dateEditWidget):
+    return dateEditWidget.date().toString(format=QtCore.Qt.ISODate)
 
 def calculate_age_from_birthdate_string(birthdateStr):
     today = date.today()
     birthdate = datetime.strptime(birthdateStr, '%Y-%m-%d')
     return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+def create_warning_message(warnMsg):
+    msgbox = QtWidgets.QMessageBox()
+    msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+    msgbox.setText(warnMsg)
+    msgbox.setWindowTitle("Error")
+    msgbox.exec_()

@@ -34,24 +34,24 @@ class UI(object):
         self.stackedWidget.addWidget(self.page_0)
         self.page_1 = QtWidgets.QWidget()
         self.page_1.setObjectName("page_1")
-        self.btn_go2Data_1 = QtWidgets.QPushButton(self.page_1)
-        self.btn_go2Data_1.setGeometry(QtCore.QRect(250, 220, 151, 41))
-        self.btn_go2Data_1.setObjectName("btn_go2Data_1")
-        self.btn_go2Client_1 = QtWidgets.QPushButton(self.page_1)
-        self.btn_go2Client_1.setGeometry(QtCore.QRect(250, 270, 151, 41))
-        self.btn_go2Client_1.setObjectName("btn_go2Client_1")
+        self.btn_goToData_1 = QtWidgets.QPushButton(self.page_1)
+        self.btn_goToData_1.setGeometry(QtCore.QRect(250, 220, 151, 41))
+        self.btn_goToData_1.setObjectName("btn_goToData_1")
+        self.btn_goToPatient_1 = QtWidgets.QPushButton(self.page_1)
+        self.btn_goToPatient_1.setGeometry(QtCore.QRect(250, 270, 151, 41))
+        self.btn_goToPatient_1.setObjectName("btn_goToPatient_1")
         self.btn_logout_1 = QtWidgets.QPushButton(self.page_1)
         self.btn_logout_1.setGeometry(QtCore.QRect(530, 30, 113, 41))
         self.btn_logout_1.setObjectName("btn_logout_1")
         self.stackedWidget.addWidget(self.page_1)
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
-        self.btn_registerNewClient_2 = QtWidgets.QPushButton(self.page_2)
-        self.btn_registerNewClient_2.setGeometry(QtCore.QRect(260, 230, 151, 41))
-        self.btn_registerNewClient_2.setObjectName("btn_registerNewClient_2")
-        self.btn_findExistingClient_2 = QtWidgets.QPushButton(self.page_2)
-        self.btn_findExistingClient_2.setGeometry(QtCore.QRect(260, 280, 151, 41))
-        self.btn_findExistingClient_2.setObjectName("btn_findExistingClient_2")
+        self.btn_registerNewPatient_2 = QtWidgets.QPushButton(self.page_2)
+        self.btn_registerNewPatient_2.setGeometry(QtCore.QRect(260, 230, 151, 41))
+        self.btn_registerNewPatient_2.setObjectName("btn_registerNewPatient_2")
+        self.btn_findExistingPatient_2 = QtWidgets.QPushButton(self.page_2)
+        self.btn_findExistingPatient_2.setGeometry(QtCore.QRect(260, 280, 151, 41))
+        self.btn_findExistingPatient_2.setObjectName("btn_findExistingPatient_2")
         self.label = QtWidgets.QLabel(self.page_2)
         self.label.setGeometry(QtCore.QRect(250, 190, 60, 16))
         self.label.setObjectName("label")
@@ -833,163 +833,163 @@ class UI(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        self.setupFlow()
+        # self.setupFlow()
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(5)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def setupFlow(self):
-        # page 1
-        self.btn_enter_0.clicked.connect(self.checkPwd)
-        # page 2
-        self.btn_go2Client_1.clicked.connect(self.go2Client)
-        self.btn_go2Data_1.clicked.connect(self.go2Data)
-        self.btn_logout_1.clicked.connect(self.logout)
-        # page 3
-        self.btn_findExistingClient_2.clicked.connect(self.go2FindExistingClient)
-        self.btn_registerNewClient_2.clicked.connect(self.go2RegisterNewClientPage1)
-        self.btn_home_2.clicked.connect(self.goHome)
-        # page 4_1 - register new client page 1
-        self.btn_home_3.clicked.connect(self.goHomeFromPage3)
-        self.btn_cancel_3.clicked.connect(self.cancelRegisterNewClient)
-        self.btn_next_3.clicked.connect(self.go2RegisterNewClientPage2)
-        # page 4_1_1 register new client page 2
-        self.btn_cancel_4.clicked.connect(self.cancelRegisterNewClient)
-        self.btn_back_4.clicked.connect(self.go2RegisterNewClientPage1)
-        # page_5 - find existing client
-        self.btn_cancel_5.clicked.connect(self.cancelFindExistingClient)
-        self.btn_home_5.clicked.connect(self.goHomeFromPage5)
+    # def setupFlow(self):
+    #     # page 1
+    #     self.btn_enter_0.clicked.connect(self.checkPwd)
+    #     # page 2
+    #     self.btn_goToPatient_1.clicked.connect(self.go2Client)
+    #     self.btn_goToData_1.clicked.connect(self.go2Data)
+    #     self.btn_logout_1.clicked.connect(self.logout)
+    #     # page 3
+    #     self.btn_findExistingPatient_2.clicked.connect(self.go2FindExistingClient)
+    #     self.btn_registerNewPatient_2.clicked.connect(self.go2RegisterNewClientPage1)
+    #     self.btn_home_2.clicked.connect(self.goHome)
+    #     # page 4_1 - register new client page 1
+    #     self.btn_home_3.clicked.connect(self.goHomeFromPage3)
+    #     self.btn_cancel_3.clicked.connect(self.cancelRegisterNewClient)
+    #     self.btn_next_3.clicked.connect(self.go2RegisterNewClientPage2)
+    #     # page 4_1_1 register new client page 2
+    #     self.btn_cancel_4.clicked.connect(self.cancelRegisterNewClient)
+    #     self.btn_back_4.clicked.connect(self.go2RegisterNewClientPage1)
+    #     # page_5 - find existing client
+    #     self.btn_cancel_5.clicked.connect(self.cancelFindExistingClient)
+    #     self.btn_home_5.clicked.connect(self.goHomeFromPage5)
 
-    def goHomeFromPage5(self):
-        self.clearFindExistingClient()
-        self.goHome()
-
-    def go2RegisterNewClientPage2(self):
-        tempID = self.lineEdit_ID_3.text()
-        tempName = self.lineEdit_name_3.text()
-
-        if len(tempID) == 0 or len(tempName) == 0:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("ID, 이름, 생년월일은 필수입니다.")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
-        else:
-            self.stackedWidget.setCurrentIndex(4)
-
-            myCursor_dis = get_all_diseases()
-            create_checkbox_lw(myCursor_dis, self.listWidget_diseases_4, '질병명',  True, None)
-            # for dis in myCursor_dis:
-            #     ckbtnitem = QtWidgets.QListWidgetItem(dis["질병명"])
-            #     ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-            #     ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
-            #     self.listWidget_diseases_4.addItem(ckbtnitem)
-
-            myCursor_gs = get_ingredients_guepsung()
-            create_checkbox_level_tw(myCursor_gs, self.tableWidget_allergies_gs_4, "식품명", True, None)
-            myCursor_ms = get_ingredients_mansung()
-            create_checkbox_level_tw(myCursor_ms, self.tableWidget_allergies_ms_4, "식품명", True, None)
-            myCursor_lgg4 = get_ingredients_mansung_lgg4()
-            create_checkbox_level_tw(myCursor_lgg4, self.tableWidget_allergies_lgg4_4, "식품명", True, None)
-
-
-    def clearFindExistingClient(self):
-        self.lineEdit_ID_5.setText("")
-        self.lineEdit_name_5.setText("")
-        self.tableWidget_clientCandidates_5.setRowCount(0)
-
-    def cancelFindExistingClient(self):
-        self.clearFindExistingClient()
-        self.go2PreviousPage(3)
-
-    def goHomeFromPage3(self):
-        if self.warnBeforeHome() == False:
-            return
-        else:
-            self.clearRegisterNewClient()
-            self.goHome()
-
-    def warnBeforeHome(self):
-        msgbox = QtWidgets.QMessageBox()
-        msgbox.setWindowTitle("Warning")
-        msgbox.setText("현재 페이지 정보가 사라집니다. 홈으로 이동하시겠습니까?")
-        msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        msgbox.setDefaultButton(QtWidgets.QMessageBox.No)
-        ret = msgbox.exec_()
-        if ret == QtWidgets.QMessageBox.Yes:
-            return True
-        else:
-            return False
-
-    def clearRegisterNewClient(self):
-        self.lineEdit_ID_3.setText("")
-        self.lineEdit_name_3.setText("")
-        self.radioBtn_male_3.setChecked(True)
-        self.radioBtn_female_3.setChecked(False)
-        self.dateEdit_birthdate_3.setDate(QtCore.QDate(1900, 1, 1))
-        self.lineEdit_address_3.setText("")
-        self.lineEdit_height_3.setText("")
-        self.lineEdit_weight_3.setText("")
-        self.ckBox_preg_3.setChecked(False)
-        self.ckBox_bFeeding_3.setChecked(False)
-        self.dateEdit_lastOfficeVisit_3.setDate(QtCore.QDate.currentDate())
-        for index in range(self.listWidget_diseases_4.count()):
-            self.listWidget_diseases_4.item(index).setCheckState(QtCore.Qt.Unchecked)
-
-    def cancelRegisterNewClient(self):
-        self.clearRegisterNewClient()
-        self.go2PreviousPage(3)
-
-    def go2PreviousPage(self, currPage):
-        self.stackedWidget.setCurrentIndex(currPage - 1)
-
-    def logout(self):
-        self.stackedWidget.setCurrentIndex(0)
-
-    def goHome(self):
-        self.stackedWidget.setCurrentIndex(1)
-
-    def go2FindExistingClient(self):
-        self.stackedWidget.setCurrentIndex(5)
-        # self.lineEdit_ID_5.setText("")
-        # self.lineEdit_name_5.setText("")
-
-    def go2RegisterNewClientPage1(self):
-        self.stackedWidget.setCurrentIndex(3)
-
-    #############################
-    # TODO - NEED TO WORK ON DATA PAGE
-    #############################
-    def updatePatients(self):
-        # for patient in getAllPatients():
-        #     self.tableWidget_clientCandidates_5.
-        #     patient.
-        pass
-
-    def go2Data(self):
-        pass
-
-    def go2Client(self):
-        self.stackedWidget.setCurrentIndex(2)
-
-    def checkPwd(self):
-        pwd = self.lineEdit_pw_0.text()
-        if pwd == "kiho":
-            self.lineEdit_pw_0.setText("")
-            self.stackedWidget.setCurrentIndex(1)
-        elif len(pwd) != 0:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("Incorrect Password")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
-        else:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("Please enter password")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
+    # def goHomeFromPage5(self):
+    #     self.clearFindExistingClient()
+    #     self.goHome()
+    #
+    # def go2RegisterNewClientPage2(self):
+    #     tempID = self.lineEdit_ID_3.text()
+    #     tempName = self.lineEdit_name_3.text()
+    #
+    #     if len(tempID) == 0 or len(tempName) == 0:
+    #         msgbox = QtWidgets.QMessageBox()
+    #         msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+    #         msgbox.setText("ID, 이름, 생년월일은 필수입니다.")
+    #         msgbox.setWindowTitle("Error")
+    #         msgbox.exec_()
+    #     else:
+    #         self.stackedWidget.setCurrentIndex(4)
+    #
+    #         myCursor_dis = get_all_diseases()
+    #         create_checkbox_lw(myCursor_dis, self.listWidget_diseases_4, '질병명',  True, None)
+    #         # for dis in myCursor_dis:
+    #         #     ckbtnitem = QtWidgets.QListWidgetItem(dis["질병명"])
+    #         #     ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+    #         #     ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+    #         #     self.listWidget_diseases_4.addItem(ckbtnitem)
+    #
+    #         myCursor_gs = get_ingredients_guepsung()
+    #         create_checkbox_level_tw(myCursor_gs, self.tableWidget_allergies_gs_4, "식품명", True, None)
+    #         myCursor_ms = get_ingredients_mansung()
+    #         create_checkbox_level_tw(myCursor_ms, self.tableWidget_allergies_ms_4, "식품명", True, None)
+    #         myCursor_lgg4 = get_ingredients_mansung_lgg4()
+    #         create_checkbox_level_tw(myCursor_lgg4, self.tableWidget_allergies_lgg4_4, "식품명", True, None)
+    #
+    #
+    # def clearFindExistingClient(self):
+    #     self.lineEdit_ID_5.setText("")
+    #     self.lineEdit_name_5.setText("")
+    #     self.tableWidget_clientCandidates_5.setRowCount(0)
+    #
+    # def cancelFindExistingClient(self):
+    #     self.clearFindExistingClient()
+    #     self.go2PreviousPage(3)
+    #
+    # def goHomeFromPage3(self):
+    #     if self.warnBeforeHome() == False:
+    #         return
+    #     else:
+    #         self.clearRegisterNewClient()
+    #         self.goHome()
+    #
+    # def warnBeforeHome(self):
+    #     msgbox = QtWidgets.QMessageBox()
+    #     msgbox.setWindowTitle("Warning")
+    #     msgbox.setText("현재 페이지 정보가 사라집니다. 홈으로 이동하시겠습니까?")
+    #     msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+    #     msgbox.setDefaultButton(QtWidgets.QMessageBox.No)
+    #     ret = msgbox.exec_()
+    #     if ret == QtWidgets.QMessageBox.Yes:
+    #         return True
+    #     else:
+    #         return False
+    #
+    # def clearRegisterNewClient(self):
+    #     self.lineEdit_ID_3.setText("")
+    #     self.lineEdit_name_3.setText("")
+    #     self.radioBtn_male_3.setChecked(True)
+    #     self.radioBtn_female_3.setChecked(False)
+    #     self.dateEdit_birthdate_3.setDate(QtCore.QDate(1900, 1, 1))
+    #     self.lineEdit_address_3.setText("")
+    #     self.lineEdit_height_3.setText("")
+    #     self.lineEdit_weight_3.setText("")
+    #     self.ckBox_preg_3.setChecked(False)
+    #     self.ckBox_bFeeding_3.setChecked(False)
+    #     self.dateEdit_lastOfficeVisit_3.setDate(QtCore.QDate.currentDate())
+    #     for index in range(self.listWidget_diseases_4.count()):
+    #         self.listWidget_diseases_4.item(index).setCheckState(QtCore.Qt.Unchecked)
+    #
+    # def cancelRegisterNewClient(self):
+    #     self.clearRegisterNewClient()
+    #     self.go2PreviousPage(3)
+    #
+    # def go2PreviousPage(self, currPage):
+    #     self.stackedWidget.setCurrentIndex(currPage - 1)
+    #
+    # def logout(self):
+    #     self.stackedWidget.setCurrentIndex(0)
+    #
+    # def goHome(self):
+    #     self.stackedWidget.setCurrentIndex(1)
+    #
+    # def go2FindExistingClient(self):
+    #     self.stackedWidget.setCurrentIndex(5)
+    #     # self.lineEdit_ID_5.setText("")
+    #     # self.lineEdit_name_5.setText("")
+    #
+    # def go2RegisterNewClientPage1(self):
+    #     self.stackedWidget.setCurrentIndex(3)
+    #
+    # #############################
+    # # TODO - NEED TO WORK ON DATA PAGE
+    # #############################
+    # def updatePatients(self):
+    #     # for patient in getAllPatients():
+    #     #     self.tableWidget_clientCandidates_5.
+    #     #     patient.
+    #     pass
+    #
+    # def go2Data(self):
+    #     pass
+    #
+    # def go2Client(self):
+    #     self.stackedWidget.setCurrentIndex(2)
+    #
+    # def checkPwd(self):
+    #     pwd = self.lineEdit_pw_0.text()
+    #     if pwd == "kiho":
+    #         self.lineEdit_pw_0.setText("")
+    #         self.stackedWidget.setCurrentIndex(1)
+    #     elif len(pwd) != 0:
+    #         msgbox = QtWidgets.QMessageBox()
+    #         msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+    #         msgbox.setText("Incorrect Password")
+    #         msgbox.setWindowTitle("Error")
+    #         msgbox.exec_()
+    #     else:
+    #         msgbox = QtWidgets.QMessageBox()
+    #         msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+    #         msgbox.setText("Please enter password")
+    #         msgbox.setWindowTitle("Error")
+    #         msgbox.exec_()
 
 
     def retranslateUi(self, MainWindow):
@@ -997,11 +997,11 @@ class UI(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_2.setText(_translate("MainWindow", "비밀번호:"))
         self.btn_enter_0.setText(_translate("MainWindow", "Enter"))
-        self.btn_go2Data_1.setText(_translate("MainWindow", "데이터 수정"))
-        self.btn_go2Client_1.setText(_translate("MainWindow", "환자 보기"))
+        self.btn_goToData_1.setText(_translate("MainWindow", "데이터 수정"))
+        self.btn_goToPatient_1.setText(_translate("MainWindow", "환자 보기"))
         self.btn_logout_1.setText(_translate("MainWindow", "로그아웃"))
-        self.btn_registerNewClient_2.setText(_translate("MainWindow", "신규 회원 등록"))
-        self.btn_findExistingClient_2.setText(_translate("MainWindow", "기존 회원 찾기"))
+        self.btn_registerNewPatient_2.setText(_translate("MainWindow", "신규 회원 등록"))
+        self.btn_findExistingPatient_2.setText(_translate("MainWindow", "기존 회원 찾기"))
         self.label.setText(_translate("MainWindow", "환자 정보"))
         self.btn_home_2.setText(_translate("MainWindow", "HOME"))
         self.label_3.setText(_translate("MainWindow", "신규 회원 등록"))
