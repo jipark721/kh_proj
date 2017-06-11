@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-
+from utils import *
 from pymongo import MongoClient
 from pprint import pprint
-from utils import *
+import datetime
 
 ID = "kihoproject"
 PW = "!kiho1234"
@@ -14,19 +14,16 @@ print("\nPrinting mongodb configurations...\n")
 print("Databases:\n\n%s\n" % client.database_names())
 print("Collections under khdb:\n\n%s\n" % client.get_database("khdb").collection_names())
 
-khdb = client.khdb
-patients = khdb.patients
-diseases = khdb.diseases
-ingredients = khdb.ingredients
-nutrients = khdb.nutrients
+khdb = client.get_database("khdb")
+patients = khdb.get_collection("Patient")
+diseases = khdb.get_collection("diseases")
+ingredients = khdb.get_collection("ingredients")
+nutrients = khdb.get_collection("nutrients")
 
 print("There are %d many patients data" % patients.count())
 print("There are %d many diseases data" % diseases.count())
 print("There are %d many ingredients data" % ingredients.count())
 print("There are %d many nutrients data\n\n" % nutrients.count())
-
-#gs_ingred = get_ingredients_guepsung()
-#print("There are %d many ingredients data for guepsung allergy\n" % gs_ingred.count())
 
 
 def print_all_patients():
@@ -34,20 +31,25 @@ def print_all_patients():
         pprint(patient)
 
 def print_all_diseases():
-    for disease in diseases.find():
+    for disease in diseases.all():
         pprint(disease)
 
 def print_all_ingredients():
-    for ingredient in ingredients.find():
+    for ingredient in ingredients.all():
         pprint(ingredient)
 
 def print_all_nutrients():
-    for nutrient in nutrients.find():
+    for nutrient in nutrients.all():
         pprint(nutrient)
 
-print_all_patients()
+
+def add_dummy_patient():
+    Patient(ID="ID_1", 이름="상현", 성별="남", 생년월일=datetime.datetime.utcnow()).save()
+    Patient(ID="ID_2", 이름="지영", 성별="여", 생년월일=datetime.datetime.utcnow()).save()
+
+#print_all_patients()
 #print_all_diseases()
 #print_all_ingredients()
 
-reset_database()
-initialize_database()
+#reset_database()
+#initialize_database()
