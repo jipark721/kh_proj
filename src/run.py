@@ -7,6 +7,7 @@ from mongodb.utils import *
 from functions import *
 from mongodb.models import *
 
+
 class MyFoodRecommender(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(MyFoodRecommender, self).__init__(parent)
@@ -58,7 +59,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_home_5.clicked.connect(lambda x: self.go_home(5))
         self.ui.btn_findbyID_5.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_5.text()))
         self.ui.btn_findbyName_5.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_5.text()))
-        self.ui.btn_confirmClient_5.clicked.connect(lambda x: self.go_to_select_disease_and_allergies(self.get_selected_patient_id()))
+        self.ui.btn_confirmClient_5.clicked.connect(
+            lambda x: self.go_to_select_disease_and_allergies(self.get_selected_patient_id()))
 
         # page_6 - patient information view/edit
         # self.ui.btn_home_6.clicked.connect(lambda x: self.go_home(6))
@@ -68,14 +70,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_7 - patient information (diseases / allergies)
         self.ui.btn_back_7.clicked.connect(self.go_back_to_edit_existing_patient_page1)
-        self.ui.btn_save_next_7.clicked.connect(lambda x: self.save_and_go_to_nutrients_edit_page(self.ui.lineEdit_ID_7.text()))
+        self.ui.btn_save_next_7.clicked.connect(
+            lambda x: self.save_and_go_to_nutrients_edit_page(self.ui.lineEdit_ID_7.text()))
         # self.ui.btn_save_7.clicked.connect(lambda x: self.update_edit_existing_patient_data_page2())
 
         # page 8 - nutrients edit page
         self.ui.btn_back_8.clicked.connect(self.go_back_to_edit_existing_patient_page2)
-        #self.ui.btn_go2Rec_8.clicked.connect(self.update_recommended_nutrient)
-        #self.ui.btn_go2NotRec_8.clicked.connect(self.update_not_recommended_nutrient)
-        #self.ui.btn_save_next_8.clicked.connect()
+        self.ui.btn_go2Rec_8.clicked.connect(lambda x: self.add_nutrient_tw(self.ui.tableWidget_RecNut_8))
+        self.ui.btn_go2NotRec_8.clicked.connect(lambda x: self.add_nutrient_tw(self.ui.tableWidget_NotRecNut_8))
+        self.ui.btn_undo2Rec_8.clicked.connect(lambda x: self.remove_nutrient_tw(self.ui.tableWidget_RecNut_8))
+        self.ui.btn_undo2NotRec_8.clicked.connect(lambda x: self.remove_nutrient_tw(self.ui.tableWidget_NotRecNut_8))
+        # self.ui.btn_save_next_8.clicked.connect()
 
         # page_12 - data home
         self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
@@ -83,15 +88,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_edit_ingredients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
         self.ui.btn_edit_nutrients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(20))
         self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(24))
-        #page_13 - data ingredient home
+        # page_13 - data ingredient home
         self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home)
         self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
         self.ui.btn_register_new_ing_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
         self.ui.btn_edit_existing_ing_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(14))
         self.ui.btn_edit_gasung_allergy_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(18))
         self.ui.btn_edit_common_unrec_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(19))
-        #page_14 - find existing ingredient to look up/edit
-
+        # page_14 - find existing ingredient to look up/edit
 
     #############################
     # NAVIGATION - Go
@@ -129,7 +133,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.currPatientDiseaseIndexSet = build_disease_index_set_from_lw(self.ui.listWidget_diseases_4)
         self.currPatientGSIngTupleSet = build_allergy_index_level_tuple_set_from_tw(self.ui.tableWidget_allergies_gs_4)
         self.currPatientMSIngTupleSet = build_allergy_index_level_tuple_set_from_tw(self.ui.tableWidget_allergies_ms_4)
-        self.currPatientLGG4IngTupleSet = build_allergy_index_level_tuple_set_from_tw(self.ui.tableWidget_allergies_lgg4_4)
+        self.currPatientLGG4IngTupleSet = build_allergy_index_level_tuple_set_from_tw(
+            self.ui.tableWidget_allergies_lgg4_4)
         self.ui.stackedWidget.setCurrentIndex(3)
 
     def go_back_to_edit_existing_patient_page1(self):
@@ -154,7 +159,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             msgbox.exec_()
         else:
             try:
-                Patient(ID=tempID, 이름=tempName, 성별=tempGender).save()#, 성별=tempGender, 키=tempHeight).save()
+                Patient(ID=tempID, 이름=tempName, 성별=tempGender).save()  # , 성별=tempGender, 키=tempHeight).save()
                 self.ui.stackedWidget.setCurrentIndex(7)
                 self.populate_existing_patient_info_disease_and_allergies(tempID)
             except:
@@ -164,30 +169,30 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 msgbox.setWindowTitle("Error")
                 msgbox.exec_()
 
-            # self.ui.stackedWidget.setCurrentIndex(4)
-            # if self.currPatientDiseaseIndexSet and \
-            #         self.currPatientGSIngTupleSet and \
-            #         self.currPatientMSIngTupleSet and \
-            #         self.currPatientLGG4IngTupleSet:
-            # #     populate_checkbox_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명")
-            #     update_checkbox_state_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명", set())
-            #     myCursor_gs = get_ingredients_guepsung()
-            #     create_checkbox_level_tw(myCursor_gs, self.ui.tableWidget_allergies_gs_4, "식품명", True, None)
-            #     myCursor_ms = get_ingredients_mansung()
-            #     create_checkbox_level_tw(myCursor_ms, self.ui.tableWidget_allergies_ms_4, "식품명", True, None)
-            #     myCursor_lgg4 = get_ingredients_mansung_lgg4()
-            #     create_checkbox_level_tw(myCursor_lgg4, self.ui.tableWidget_allergies_lgg4_4, "식품명", True, None)
-            # else: #if coming from register_new_client_page2
-            #     if len(self.currPatientDiseaseIndexSet) != 0:
-            #         for index in self.currPatientDiseaseIndexSet:
-            #             ckbtn = self.ui.listWidget_diseases_4.item(index)
-            #             ckbtn.setCheckState(QtCore.Qt.Checked)
-            #     if len(self.currPatientGSIngTupleSet) != 0:
-            #         self.build_current_patient_tw(self.currPatientGSIngTupleSet, self.ui.tableWidget_allergies_gs_4)
-            #     if len(self.currPatientMSIngTupleSet) != 0:
-            #         self.build_current_patient_tw(self.currPatientMSIngTupleSet, self.ui.tableWidget_allergies_ms_4)
-            #     if len(self.currPatientLGG4IngTupleSet) != 0:
-            #         self.build_current_patient_tw(self.currPatientLGG4IngTupleSet, self.ui.tableWidget_allergies_lgg4_4)
+                # self.ui.stackedWidget.setCurrentIndex(4)
+                # if self.currPatientDiseaseIndexSet and \
+                #         self.currPatientGSIngTupleSet and \
+                #         self.currPatientMSIngTupleSet and \
+                #         self.currPatientLGG4IngTupleSet:
+                # #     populate_checkbox_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명")
+                #     update_checkbox_state_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명", set())
+                #     myCursor_gs = get_ingredients_guepsung()
+                #     create_checkbox_level_tw(myCursor_gs, self.ui.tableWidget_allergies_gs_4, "식품명", True, None)
+                #     myCursor_ms = get_ingredients_mansung()
+                #     create_checkbox_level_tw(myCursor_ms, self.ui.tableWidget_allergies_ms_4, "식품명", True, None)
+                #     myCursor_lgg4 = get_ingredients_mansung_lgg4()
+                #     create_checkbox_level_tw(myCursor_lgg4, self.ui.tableWidget_allergies_lgg4_4, "식품명", True, None)
+                # else: #if coming from register_new_client_page2
+                #     if len(self.currPatientDiseaseIndexSet) != 0:
+                #         for index in self.currPatientDiseaseIndexSet:
+                #             ckbtn = self.ui.listWidget_diseases_4.item(index)
+                #             ckbtn.setCheckState(QtCore.Qt.Checked)
+                #     if len(self.currPatientGSIngTupleSet) != 0:
+                #         self.build_current_patient_tw(self.currPatientGSIngTupleSet, self.ui.tableWidget_allergies_gs_4)
+                #     if len(self.currPatientMSIngTupleSet) != 0:
+                #         self.build_current_patient_tw(self.currPatientMSIngTupleSet, self.ui.tableWidget_allergies_ms_4)
+                #     if len(self.currPatientLGG4IngTupleSet) != 0:
+                #         self.build_current_patient_tw(self.currPatientLGG4IngTupleSet, self.ui.tableWidget_allergies_lgg4_4)
 
     def go_to_data_home(self):
         self.ui.stackedWidget.setCurrentIndex(12)
@@ -211,7 +216,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_found_patients(self, found_patients):
         self.ui.tableWidget_clientCandidates_5.setRowCount(found_patients.count())
-        i=0
+        i = 0
         for patient in found_patients:
             self.ui.tableWidget_clientCandidates_5.setItem(i, 0, make_tw_checkbox_item(patient.ID, False))
             self.ui.tableWidget_clientCandidates_5.setItem(i, 1, make_tw_str_item(patient.이름))
@@ -294,7 +299,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def logout(self):
         self.ui.stackedWidget.setCurrentIndex(0)
 
-
     #############################
     # TODO - NEED TO WORK ON DATA PAGE
     #############################
@@ -350,8 +354,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_address_6.setText(self.current_patient.주소)
             self.ui.lineEdit_height_6.setText(str(self.current_patient.키))
             self.ui.lineEdit_weight_6.setText(str(self.current_patient.몸무게))
-            self.ui.ckBox_preg_6.setChecked(True) if self.current_patient.임신여부 == True else self.ui.ckBox_preg_6.setChecked(False)
-            self.ui.ckBox_bFeeding_6.setChecked(True) if self.current_patient.수유여부 == True else self.ui.ckBox_bFeeding_6.setChecked(False)
+            self.ui.ckBox_preg_6.setChecked(
+                True) if self.current_patient.임신여부 == True else self.ui.ckBox_preg_6.setChecked(False)
+            self.ui.ckBox_bFeeding_6.setChecked(
+                True) if self.current_patient.수유여부 == True else self.ui.ckBox_bFeeding_6.setChecked(False)
             self.ui.dateEdit_lastOfficeVisit_6.setDate(QtCore.QDate(datetime.date.today()))
 
     def save_and_go_to_nutrients_edit_page(self, id):
@@ -402,10 +408,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             latest_date = ""
 
         populate_checkbox_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명")
-        create_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명", False, self.current_patient.급성알레르기음식[latest_date] if latest_date else set())
-        create_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명", False, self.current_patient.만성알레르기음식[latest_date] if latest_date else set())
-        create_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명", False, self.current_patient.만성lgG4과민반응음식[latest_date] if latest_date else set())
-        update_checkbox_state_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", self.current_patient.진단[latest_date] if latest_date else set())
+        create_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명", False,
+                                 self.current_patient.급성알레르기음식[latest_date] if latest_date else set())
+        create_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명", False,
+                                 self.current_patient.만성알레르기음식[latest_date] if latest_date else set())
+        create_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명", False,
+                                 self.current_patient.만성lgG4과민반응음식[latest_date] if latest_date else set())
+        update_checkbox_state_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명",
+                                 self.current_patient.진단[latest_date] if latest_date else set())
 
     def update_patient_basic_info(self, patient_id):
         id = self.ui.lineEdit_ID_6.text()
@@ -431,6 +441,29 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_만성lgG4과민반응음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_7)
         self.local_진단 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
 
+    def add_nutrient_tw(self, nutrient_tw_type):
+        selected_nutrients = convert_lw_to_str_list(self.ui.listWidget_nutrients_8)
+        selected_nutrients_with_lvl = [tuple([i, self.get_level()]) for i in selected_nutrients]
+        populate_checkbox_tw(nutrient_tw_type, selected_nutrients_with_lvl)
+        clear_checkbox_lw(self.ui.listWidget_nutrients_8)
+
+    def remove_nutrient_tw(self, nutrient_tw_type):
+        remove_checked_items_tw(nutrient_tw_type)
+
+    def get_level(self):
+        if self.ui.radioBtn_lv1_8.isChecked():
+            return 1
+        elif self.ui.radioBtn_lv2_8.isChecked():
+            return 2
+        elif self.ui.radioBtn_lv3_8.isChecked():
+            return 3
+        elif self.ui.radioBtn_lv4_8.isChecked():
+            return 4
+        elif self.ui.radioBtn_lv5_8.isChecked():
+            return 5
+        else:
+            return 0
+
     def register_client(self):
         if len(self.ui.lineEdit_ID_3.text()) == 0 or len(self.ui.lineEdit_name_3.text()) == 0:
             create_warning_message("ID, 이름, 생년월일은 필수입니다.")
@@ -443,7 +476,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             new_patient.성별 = "남" if self.ui.radioBtn_male_3.isChecked else "여"
             new_patient.생년월일 = convert_DateEditWidget_to_string(self.ui.dateEdit_birthdate_3)
             new_patient.주소 = self.ui.lineEdit_address_3.text()
-            진단 = {convert_DateEditWidget_to_string(self.ui.dateEdit_lastOfficeVisit_3) : convert_lw_to_str_list(self.ui.listWidget_diseases_4)}
+            진단 = {convert_DateEditWidget_to_string(self.ui.dateEdit_lastOfficeVisit_3): convert_lw_to_str_list(
+                self.ui.listWidget_diseases_4)}
             new_patient.진료 = 진단
             new_patient.방문횟수 = 1
             new_patient.키 = float(self.ui.lineEdit_height_3.text()) if self.ui.lineEdit_height_3.text() else 0
@@ -458,7 +492,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
             msgbox = QtWidgets.QMessageBox()
             msgbox.setWindowTitle("Information")
-            msgbox.setText("회원 "+name+" 등록되었습니다. 진단을 계속하시겠습니까?")
+            msgbox.setText("회원 " + name + " 등록되었습니다. 진단을 계속하시겠습니까?")
             msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
             msgbox.setDefaultButton(QtWidgets.QMessageBox.Yes)
             ret = msgbox.exec_()
@@ -498,6 +532,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_만성알레르기음식 = None
         self.local_만성lgG4과민반응음식 = None
         self.local_진단 = None
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

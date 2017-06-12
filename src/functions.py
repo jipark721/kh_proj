@@ -51,6 +51,27 @@ def populate_checkbox_lw(lw, content_collection, content_field_name):
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         lw.addItem(ckbtnitem)
 
+def populate_checkbox_tw(tw, content_collection):
+    tw.setRowCount(len(content_collection))
+    tw.setColumnCount(2)
+    rowIndex = 0
+    for item, lvl in content_collection:
+        ckbtnitem = QtWidgets.QTableWidgetItem(item)
+        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+        levelitem = QtWidgets.QTableWidgetItem(str(lvl))
+        tw.setItem(rowIndex, 0, ckbtnitem)
+        tw.setItem(rowIndex, 1, levelitem)
+        rowIndex+=1
+
+def remove_checked_items_tw(tw):
+    saved_content = []
+    for i in range(tw.rowCount()):
+        if not tw.item(i,0).checkState():
+            saved_content.append(tuple([tw.item(i, 0).text(), tw.item(i, 1).text()]))
+    populate_checkbox_tw(tw, saved_content)
+
+
 def update_checkbox_state_lw(lw, content_collection, content_field_name, checked_content):
     for i in range(lw.count()):
         if lw.item(i).text() in checked_content:
