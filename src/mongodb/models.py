@@ -15,13 +15,14 @@ class Patient(Document):
     몸무게 = DecimalField(default=0.0)
     임신여부 = BooleanField(default=False)
     수유여부 = BooleanField(default=False)
-    급성알레르기음식 = ListField(StringField(max_length=100))
-    만성알레르기음식 = ListField(StringField(max_length=100))
-    만성lgG4과민반응음식 = StringField()
-    진료 = DictField(default={})  # {진료일 : 진단명}
+    급성알레르기음식 = DictField() # Map of DateTimeField to list of tuples { 진료일 : [ ( 알레르기음식, 레벨 ) ] }
+    만성알레르기음식 = DictField()
+    만성lgG4과민반응음식 = DictField()
+    진단 = DictField() # Map of DateTimeField to list of strings { 진료일 : [ 질병명 ] }
+    진료일 = SortedListField(DateTimeField())
 
     def __str__(self):
-        return self.ID + ", " + self.이름 + ", " + self.성별 + ", " + self.생년월일.strftime('%Y/%m/%d')
+        return "ID: " + str(self.ID) + "\n" + "이름: " + str(self.이름) + "\n" + "성별: " + str(self.성별) + "\n" + "생년월일: " + str(self.생년월일) + "\n" + "주소: " + str(self.주소) + "\n" + "방문횟수: " + str(self.방문횟수) + "\n" + "키: " + str(self.키) + "\n" + "몸무게: " + str(self.몸무게) + "\n" + "임신여부: " + str(self.임신여부) + "\n" + "수유여부: " + str(self.수유여부) + "\n" + "급성알레르기음식: " + str(self.급성알레르기음식) + "\n" + "만성알레르기음식: " + str(self.만성알레르기음식) + "\n" + "만성lgG4과민반응음식: " + str(self.만성lgG4과민반응음식) + "\n" + "진단: " + str(self.진단) + "\n" + "진료일: " + str(self.진료일)
 
 class Disease(Document):
     질병명 = StringField(required=True, max_length=50)

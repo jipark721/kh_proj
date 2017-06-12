@@ -21,6 +21,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.setupLogic()
 
         # local classes
+        self.current_date = datetime.date.today()
         self.current_patient = None
         self.current_diagnosis = None
 
@@ -328,6 +329,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_lastOfficeVisit_8.setText(str(datetime.date.today()))
         self.ui.lineEdit_height_8.setText(str(self.current_patient.키))
         self.ui.lineEdit_weight_8.setText(str(self.current_patient.몸무게))
+        self.ui.lineEdit_nthVisit_8.setText(str(self.current_patient.방문횟수 + 1))
 
         # nutrient information
         populate_checkbox_lw(self.ui.listWidget_nutrients_8, Nutrient.objects, "영양소명")
@@ -348,6 +350,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_lastOfficeVisit_7.setText(str(datetime.date.today()))
         self.ui.lineEdit_height_7.setText(str(self.current_patient.키))
         self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
+        self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
 
         populate_checkbox_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명")
         # update_checkbox_state_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", convert_string_2_set(self.current_patient.진단명))

@@ -131,8 +131,7 @@ def convert_DateEditWidget_to_string(dateEditWidget):
 
 def calculate_age_from_birthdate_string(patient_birthdate):
     today = datetime.date.today()
-    print(today.strftime('%Y/%m/%d'))
-    difference = today.year - patient_birthdate.year
+    difference = today.year - patient_birthdate.year - ((today.month, today.day) < (patient_birthdate.month, patient_birthdate.day))
     return str(difference)
 
 def create_warning_message(warnMsg):
