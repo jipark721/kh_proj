@@ -38,23 +38,23 @@ def print_all_nutrients():
 def add_dummy_patient():
     Patient(ID="ID_1", 이름="상현", 성별="남", 생년월일=datetime.date(1992, 9, 17),
             주소="서울시 종로구 부암동", 방문횟수=1, 키=150, 몸무게=50, 임신여부=False, 수유여부=False,
-            급성알레르기음식={str(datetime.date(2017, 6, 10)): [tuple(["바나나", 3]), tuple(["우유", 1])]},
-            만성알레르기음식={str(datetime.date(2017, 6, 10)): [tuple(["홍어", 2]), tuple(["닭발", 4]), tuple(["꼬기", 1])]},
-            만성lgG4과민반응음식={str(datetime.date(2017, 6, 10)): [tuple(["생선", 1])]},
-            진단={str(datetime.date(2017, 6, 10)): ["우울증"]}, 진료일=[str(datetime.date(2017, 6, 10))]) \
+            급성알레르기음식={str(datetime.date(2017, 6, 10)): [tuple(["식품명_1", 3]), tuple(["식품명_2", 1])]},
+            만성알레르기음식={str(datetime.date(2017, 6, 10)): [tuple(["식품명_1", 2]), tuple(["식품명_2", 4]), tuple(["식품명_4", 1])]},
+            만성lgG4과민반응음식={str(datetime.date(2017, 6, 10)): [tuple(["식품명_5", 1])]},
+            진단={str(datetime.date(2017, 6, 10)): ["질병명_3"]}, 진료일=[datetime.date(2017, 6, 10)]) \
         .save()
 
     Patient(ID="ID_2", 이름="지영", 성별="여", 생년월일=datetime.date(1993, 7, 21),
             주소="서울시 송파구 잠실", 방문횟수=2, 키=170, 몸무게=49, 임신여부=False, 수유여부=False,
-            급성알레르기음식={str(datetime.date(2017, 6, 5)): [tuple(["아몬드", 3]), tuple(["연어", 1])],
-                      str(datetime.date(2017, 6, 8)): [tuple(["아몬드", 3])]},
-            만성알레르기음식={str(datetime.date(2017, 6, 5)): [tuple(["홍어", 2]), tuple(["돼지고기", 1])],
-                      str(datetime.date(2017, 6, 8)): [tuple(["홍어", 2]), tuple(["닭발", 4]), tuple(["돼지고기", 1])]},
-            만성lgG4과민반응음식={str(datetime.date(2017, 6, 5)): [tuple(["생선", 1])],
-                          str(datetime.date(2017, 6, 8)): [tuple(["생선", 1])]},
-            진단={str(datetime.date(2017, 6, 5)): ["행복합니다"],
-                str(datetime.date(2017, 6, 8)): ["행복해질겁니다"]},
-            진료일=[str(datetime.date(2017, 6, 5)), str(datetime.date(2017, 6, 8))]) \
+            급성알레르기음식={str(datetime.date(2017, 6, 5)): [tuple(["식품명_1", 3]), tuple(["식품명_3", 1])],
+                      str(datetime.date(2017, 6, 8)): [tuple(["식품명_1", 3])]},
+            만성알레르기음식={str(datetime.date(2017, 6, 5)): [tuple(["식품명_2", 2]), tuple(["식품명_4", 1])],
+                      str(datetime.date(2017, 6, 8)): [tuple(["식품명_2", 2]), tuple(["식품명_5", 4]), tuple(["식품명_4", 1])]},
+            만성lgG4과민반응음식={str(datetime.date(2017, 6, 5)): [tuple(["식품명_1", 1])],
+                          str(datetime.date(2017, 6, 8)): [tuple(["식품명_1", 1])]},
+            진단={str(datetime.date(2017, 6, 5)): ["질병명_4"],
+                str(datetime.date(2017, 6, 8)): ["질병명_5"]},
+            진료일=[datetime.date(2017, 6, 8), datetime.date(2017, 6, 5)]) \
         .save()
 
 
@@ -172,7 +172,7 @@ for i in range(10):
     add_dummy_disease(i)
 
 
-# print_all_patients()
+print_all_patients()
 # print_all_diseases()
 # print_all_ingredients()
 # print_all_nutrients()
