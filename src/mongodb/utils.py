@@ -38,34 +38,18 @@ def reset_database():
 #             nutrients_collection.insert_one(nutrient)
 
 
-def update_patient_detail_first_page(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding,
-                                     officeVisitDateList):
-    patient = Patient.objects(ID=id)
-    # tempDiagDis = patient.진단명
-    tempGSIng = patient.급성알레르기음식
-    tempMSIng = patient.만성알레르기음식
-    tempLGG4Ing = patient.만성lgG4과민반응음식
-    return patient.update(
-        {"ID": id},
-        {"$set":
-            {
-                "ID": id,
-                "이름": name,
-                "성별": sex,
-                "생년월일": birthdate,
-                "주소": address,
-                "키": height,
-                "몸무게": weight,
-                "임신여부": isPreg,
-                "수유여부": isBFeeding,
-                "진료일": officeVisitDateList,
-                # "진단명": tempDiagDis,
-                # "급성알레르기음식": tempGSIng,
-                # "만성알레르기음식": tempMSIng,
-                # "만성lgG4과민반응음식": tempLGG4Ing
-            }
-        }
-    ).save()
+def update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding):
+    patient = Patient.objects.get(ID=id)
+    patient.ID = id
+    patient.이름 = name
+    patient.성별 = sex
+    patient.생년월일 = birthdate
+    patient.주소 = address
+    patient.키 = height
+    patient.몸무게 = weight
+    patient.임신여부 = isPreg
+    patient.수유여부 = isBFeeding
+    patient.save()
 
 
 def update_patient_detail_second_page(id, diagDiseasesStr, ingredients_gs, ingredients_ms, ingredients_lgg4):
