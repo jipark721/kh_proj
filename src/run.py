@@ -29,6 +29,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_만성lgG4과민반응음식 = None
         self.local_진단 = None
 
+        self.current_ingredient = None
+
     def setupLogic(self):
         # page_0
         self.ui.btn_enter_0.clicked.connect(self.check_password)
@@ -60,7 +62,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_findbyID_5.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_5.text()))
         self.ui.btn_findbyName_5.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_5.text()))
         self.ui.btn_confirmClient_5.clicked.connect(
-            lambda x: self.go_to_select_disease_and_allergies(self.get_selected_patient_id()))
+            lambda x: self.go_to_select_disease_and_allergies(get_first_checked_btn_text_in_tw(self.ui.tableWidget_clientCandidates_5)))
 
         # page_6 - patient information view/edit
         # self.ui.btn_home_6.clicked.connect(lambda x: self.go_home(6))
@@ -91,13 +93,81 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page_13 - data ingredient home
         self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home)
         self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
-        self.ui.btn_register_new_ing_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
+        self.ui.btn_register_new_ing_13.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info(None))
         self.ui.btn_edit_existing_ing_13.clicked.connect(lambda x: self.go_to_edit_existing_ing())
         self.ui.btn_edit_gasung_allergy_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(18))
         self.ui.btn_edit_common_unrec_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(19))
         #page_14 - find existing ingredient to look up/edit
         self.ui.btn_findby_ing_name_14.clicked.connect(lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_14.text()))
         self.ui.btn_findby_ing_category_14.clicked.connect(lambda x: self.find_ingredients_by_category())
+        self.ui.btn_cancel_14.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
+        self.ui.btn_confirm_ing_14.clicked.connect(lambda x:self.go_to_register_or_edit_ingredient_info(get_first_checked_btn_text_in_tw(self.ui.tableWidget_ing_candidates_14)))
+        #page_15 - register/edit ingredient
+        self.ui.btn_check_uniq_ing_name_15.clicked.connect(lambda x: self.check_unique_ing_name(self.ui.lineEdit_ing_name_15))
+        self.ui.btn_cancel_15.clicked.connect(lambda x:self.go_to_pageN_with_warning_before_exiting(13))
+        self.ui.btn_next_15.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info_page2())
+
+    def go_to_register_or_edit_ingredient_info_page2(self):
+        pass
+
+    def go_to_pageN_with_warning_before_exiting(self, pageToGo):
+        if self.warn_before_leaving():
+            self.ui.stackedWidget.setCurrentIndex(pageToGo)
+
+    def check_unique_ing_name(self, nameCand):
+        try:
+            nameFound = Ingredient.objects.get(식품명 =nameCand)
+        except Ingredient.DoesNotExist:
+            nameFound = None
+        if nameFound:
+            self.ui.lineEdit_ID_3.setText("")
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+            msgbox.setText("동일한 식품명이 존재합니다. 다른 식품명을 시도해주세요")
+            msgbox.setWindowTitle("Error")
+            msgbox.exec_()
+        else:
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setText("사용가능한 식품명입니다")
+            msgbox.exec_()
+
+    def go_to_register_or_edit_ingredient_info(self, ing_name):
+        self.ui.stackedWidget.setCurrentIndex(15)
+        listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_15.addItem("")
+        self.ui.comboBox_ing_category1_15.addItems(listOfCat1)
+
+        if ing_name is not None: #if editing existing ingredient
+            self.populate_existing_ingredient_info1(ing_name)
+        else: # register new ingredient
+            pass
+
+
+    def populate_existing_ingredient_info1(self, ing_name):
+        self.current_ingredient = Ingredient.objects.get(식품명=ing_name)
+        self.ui.lineEdit_ing_name_15.setText(self.current_ingredient.식품명)
+        self.ui.comboBox_ing_category1_15.setCurrentText(self.current_ingredient.식품분류1)
+        self.ui.comboBox_ing_category2_15.setCurrentText(self.current_ingredient.식품분류2)
+        self.ui.comboBox_ing_category3_15.setCurrentText(self.current_ingredient.식품분류3)
+        self.ui.comboBox_ing_category4_15.setCurrentText(self.current_ingredient.식품분류4)
+        self.ui.comboBox_ing_category5_15.setCurrentText(self.current_ingredient.식품분류5)
+        self.ui.lineEdit_ing_description_15.setText(self.current_ingredient.식품설명)
+        self.ui.lineEdit_ing_academic_name_15.setText(self.current_ingredient.학명)
+        self.ui.lineEdit_ing_lang_english_15.setText(self.current_ingredient.식품명영어)
+        self.ui.lineEdit_ing_lang_chinese_15.setText(self.current_ingredient.식품명중국어)
+        self.ui.lineEdit_ing_lang_japanese_15.setText(self.current_ingredient.식품명일본어)
+        self.ui.lineEdit_ing_lang_russian_15.setText(self.current_ingredient.식품명러시아어)
+        self.ui.lineEdit_ing_lang_mongolian_15.setText(self.current_ingredient.식품명몽골어)
+        self.ui.lineEdit_ing_lang_arabic_15.setText(self.current_ingredient.식품명아랍어)
+        self.ui.lineEdit_ing_lang_spanish_15.setText(self.current_ingredient.식품명스페인어)
+        self.ui.lineEdit_ing_lang8_15.setText(self.current_ingredient.식품명외국어8)
+        self.ui.lineEdit_ing_lang9_15.setText(self.current_ingredient.식품명외국어9)
+        self.ui.lineEdit_ing_lang10_15.setText(self.current_ingredient.식품명외국어10)
+        self.ui.lineEdit_ing_lang11_15.setText(self.current_ingredient.식품명외국어11)
+        self.ui.lineEdit_ing_mortality_rate_15.setText(str(self.current_ingredient.폐기율))
+        self.ui.lineEdit_ing_protein_portion_15.setText(str(self.current_ingredient.단백질가식부))
+        self.ui.lineEdit_ing_one_portion_15.setText(str(self.current_ingredient.단일식사분량))
+        self.ui.plainTextEdit_one_portion_description_15.setPlainText(self.current_ingredient.단일식사분량설명)
 
     def go_to_edit_existing_ing(self):
         self.ui.stackedWidget.setCurrentIndex(14)
@@ -412,14 +482,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             msgbox.setWindowTitle("Error")
             msgbox.exec_()
 
-    def get_selected_patient_id(self):
-        for patient_idx in range(self.ui.tableWidget_clientCandidates_5.rowCount()):
-            if self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).checkState() == QtCore.Qt.Checked:
-                return self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).text()
-        return None
+    # def get_selected_patient_id(self):
+    #     for patient_idx in range(self.ui.tableWidget_clientCandidates_5.rowCount()):
+    #         if self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).checkState() == QtCore.Qt.Checked:
+    #             return self.ui.tableWidget_clientCandidates_5.item(patient_idx, 0).text()
+    #     return None
 
     def go_to_edit_patient_basic_info(self, id):
-        selected_patient_id = self.get_selected_patient_id()
+        selected_patient_id = get_first_checked_btn_text_in_tw(self.ui.tableWidget_clientCandidates_5)
         self.clear_find_existing_client()
         self.ui.stackedWidget.setCurrentIndex(6)
         if selected_patient_id:
@@ -472,7 +542,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             create_warning_message("진료할 회원을 선택해주세요.")
         else:
             self.ui.stackedWidget.setCurrentIndex(7)
-            self.populate_existing_patient_info_disease_and_allergies(self.get_selected_patient_id())
+            self.populate_existing_patient_info_disease_and_allergies(get_first_checked_btn_text_in_tw(self.ui.tableWidget_clientCandidates_5))
 
     def populate_existing_patient_info_disease_and_allergies(self, id):
         self.current_patient = Patient.objects.get(ID=id)

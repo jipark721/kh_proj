@@ -138,6 +138,12 @@ def build_allergy_index_level_tuple_set_from_tw(tw):
             s.add(mytup)
     return s
 
+def get_first_checked_btn_text_in_tw(tw):
+    for index in range(tw.rowCount()):
+        if tw.item(index, 0).checkState() == QtCore.Qt.Checked:
+            return tw.item(index, 0).text()
+    return None
+
 def convert_date_string_to_QDate_obj(dateStr):
     date = datetime.strptime(dateStr, '%Y/%m/%d')
     return QtCore.QDate(date.year, date.month, date.day)
