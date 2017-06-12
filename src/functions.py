@@ -51,25 +51,24 @@ def populate_checkbox_lw(lw, content_collection, content_field_name):
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         lw.addItem(ckbtnitem)
 
-def populate_checkbox_tw(tw, content_collection):
+def populate_checkbox_tw_from_dict(tw, content_collection):
     tw.setRowCount(len(content_collection))
     tw.setColumnCount(2)
     rowIndex = 0
-    for item, lvl in content_collection:
+    for item in content_collection.keys():
         ckbtnitem = QtWidgets.QTableWidgetItem(item)
         ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
-        levelitem = QtWidgets.QTableWidgetItem(str(lvl))
+        levelitem = QtWidgets.QTableWidgetItem(str(content_collection[item]))
         tw.setItem(rowIndex, 0, ckbtnitem)
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex+=1
 
-def remove_checked_items_tw(tw):
-    saved_content = []
-    for i in range(tw.rowCount()):
-        if not tw.item(i,0).checkState():
-            saved_content.append(tuple([tw.item(i, 0).text(), tw.item(i, 1).text()]))
-    populate_checkbox_tw(tw, saved_content)
+def remove_checked_items_from_tw(nutrient_tw, nutrient_dict):
+    for i in range(nutrient_tw.rowCount()):
+        if nutrient_tw.item(i,0).checkState():
+            nutrient_dict.pop(nutrient_tw.item(i,0).text(), None)
+    populate_checkbox_tw_from_dict(nutrient_tw, nutrient_dict)
 
 
 def update_checkbox_state_lw(lw, content_collection, content_field_name, checked_content):

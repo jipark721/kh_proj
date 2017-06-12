@@ -28,6 +28,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_만성알레르기음식 = None
         self.local_만성lgG4과민반응음식 = None
         self.local_진단 = None
+        # key - 영양소명 value - level
+        self.local_권고영양소레벨_dict = {}
+        self.local_비권고영양소레벨_dict = {}
 
         self.current_ingredient = None
 
@@ -78,10 +81,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page 8 - nutrients edit page
         self.ui.btn_back_8.clicked.connect(self.go_back_to_edit_existing_patient_page2)
-        self.ui.btn_go2Rec_8.clicked.connect(lambda x: self.add_nutrient_tw(self.ui.tableWidget_RecNut_8))
-        self.ui.btn_go2NotRec_8.clicked.connect(lambda x: self.add_nutrient_tw(self.ui.tableWidget_NotRecNut_8))
-        self.ui.btn_undo2Rec_8.clicked.connect(lambda x: self.remove_nutrient_tw(self.ui.tableWidget_RecNut_8))
-        self.ui.btn_undo2NotRec_8.clicked.connect(lambda x: self.remove_nutrient_tw(self.ui.tableWidget_NotRecNut_8))
+        self.ui.btn_go2Rec_8.clicked.connect(lambda x: self.add_selected_nutrients_to_tw(self.ui.tableWidget_RecNut_8, self.local_권고영양소레벨_dict))
+        self.ui.btn_go2NotRec_8.clicked.connect(lambda x: self.add_selected_nutrients_to_tw(self.ui.tableWidget_NotRecNut_8, self.local_비권고영양소레벨_dict))
+        self.ui.btn_undo2Rec_8.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_RecNut_8, self.local_권고영양소레벨_dict))
+        self.ui.btn_undo2NotRec_8.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_NotRecNut_8, self.local_비권고영양소레벨_dict))
         # self.ui.btn_save_next_8.clicked.connect()
 
         # page_12 - data home
@@ -594,14 +597,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_만성lgG4과민반응음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_7)
         self.local_진단 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
 
-    def add_nutrient_tw(self, nutrient_tw_type):
+    def add_selected_nutrients_to_tw(self, nutrient_tw, nutrient_dict):
         selected_nutrients = convert_lw_to_str_list(self.ui.listWidget_nutrients_8)
-        selected_nutrients_with_lvl = [tuple([i, self.get_level()]) for i in selected_nutrients]
-        populate_checkbox_tw(nutrient_tw_type, selected_nutrients_with_lvl)
+        level = self.get_level()
+        for nut in selected_nutrients:
+            nutrient_dict[nut] = level
+        #selected_nutrients_with_lvl = [tuple([nut, self.get_level()]) for nut in selected_nutrients]
+        populate_checkbox_tw_from_dict(nutrient_tw, nutrient_dict)
         clear_checkbox_lw(self.ui.listWidget_nutrients_8)
 
-    def remove_nutrient_tw(self, nutrient_tw_type):
-        remove_checked_items_tw(nutrient_tw_type)
+    def remove_selected_nutrients_from_tw(self, nutrient_tw, nutrient_dict):
+        remove_checked_items_from_tw(nutrient_tw, nutrient_dict)
 
     def get_level(self):
         if self.ui.radioBtn_lv1_8.isChecked():
