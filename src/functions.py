@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
-from datetime import datetime, date
+import datetime
 
 def make_tw_str_item(content):
     return QtWidgets.QTableWidgetItem(content)
@@ -47,6 +47,21 @@ def convert_lw_to_string(lw):
             else:
                 toReturn = toReturn + "," + ckbtn.text()
     return toReturn
+
+def populate_checkbox_lw(lw, content_collection, content_field_name):
+    lw.clear()
+    for item in content_collection:
+        ckbtnitem = QtWidgets.QListWidgetItem(item[content_field_name])
+        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+        lw.addItem(ckbtnitem)
+
+def update_checkbox_state_lw(lw, content_collection, content_field_name, checked_content):
+    for i in range(lw.count()):
+        if lw.item(i).text() in checked_content:
+            lw.item(i).setCheckState(QtCore.Qt.Checked)
+        else:
+            lw.item(i).setCheckState(QtCore.Qt.Unchecked)
 
 def create_checkbox_lw(cursorToCollection, lw, content, isNewPatient, patientDiseaseSet):
     for item in cursorToCollection:
@@ -108,16 +123,16 @@ def build_allergy_index_level_tuple_set_from_tw(tw):
     return s
 
 def convert_date_string_to_QDate_obj(dateStr):
-    date = datetime.strptime(dateStr, '%Y-%m-%d')
+    date = datetime.strptime(dateStr, '%Y/%m/%d')
     return QtCore.QDate(date.year, date.month, date.day)
 
 def convert_DateEditWidget_to_string(dateEditWidget):
     return dateEditWidget.date().toString(format=QtCore.Qt.ISODate)
 
-def calculate_age_from_birthdate_string(birthdateStr):
-    today = date.today()
-    birthdate = datetime.strptime(birthdateStr, '%Y-%m-%d')
-    return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+def calculate_age_from_birthdate_string(patient_birthdate):
+    today = datetime.date.today()
+    difference = today.year - patient_birthdate.year - ((today.month, today.day) < (patient_birthdate.month, patient_birthdate.day))
+    return str(difference)
 
 def create_warning_message(warnMsg):
     msgbox = QtWidgets.QMessageBox()
