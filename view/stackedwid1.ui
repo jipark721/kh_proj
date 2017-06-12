@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
+    <width>750</width>
     <height>613</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
+      <y>-1</y>
       <width>701</width>
       <height>571</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>25</number>
     </property>
     <widget class="QWidget" name="page_0">
      <widget class="QLabel" name="label_2">
@@ -81,7 +81,7 @@
        <string>데이터 수정</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_goToClient_1">
+     <widget class="QPushButton" name="btn_goToPatient_1">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -91,7 +91,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>환자 보기</string>
+       <string>환자 진료</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btn_logout_1">
@@ -119,7 +119,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>신규 회원 등록</string>
+       <string>신규 환자 등록 및 진료</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btn_findExistingPatient_2">
@@ -132,7 +132,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>기존 회원 찾기</string>
+       <string>기존 환자 진료</string>
       </property>
      </widget>
      <widget class="QLabel" name="label">
@@ -2326,7 +2326,7 @@
         <string>출력대표성 등급:</string>
        </property>
       </widget>
-      <widget class="QSpinBox" name="spinBox_printLevel_10">
+      <widget class="QSpinBox" name="spinBox_printingRep_level_10">
        <property name="geometry">
         <rect>
          <x>150</x>
@@ -2445,7 +2445,7 @@
         <string>가성알레르기 해당식품:</string>
        </property>
       </widget>
-      <widget class="QSpinBox" name="spinBox_allergyGaSungLevel_10">
+      <widget class="QSpinBox" name="spinBox_allergy_gasung_level_10">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -2516,7 +2516,7 @@
         <string>만성lgG4 과민반응 유발등급:</string>
        </property>
       </widget>
-      <widget class="QSpinBox" name="spinBox_allergyGeupSungLevel_10">
+      <widget class="QSpinBox" name="spinBox_allergy_gs_level_10">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -2535,7 +2535,7 @@
         <number>0</number>
        </property>
       </widget>
-      <widget class="QSpinBox" name="spinBox_allergyLGG4Level_10">
+      <widget class="QSpinBox" name="spinBox_allergy_lgg4_level_10">
        <property name="geometry">
         <rect>
          <x>210</x>
@@ -2554,7 +2554,7 @@
         <number>0</number>
        </property>
       </widget>
-      <widget class="QSpinBox" name="spinBox_allergyManSungLevel_10">
+      <widget class="QSpinBox" name="spinBox_allergy_ms_level_10">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -2670,19 +2670,6 @@
         <string>멸종등급:</string>
        </property>
       </widget>
-      <widget class="QToolButton" name="toolButton_origin_10">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>350</y>
-         <width>91</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_70">
        <property name="geometry">
         <rect>
@@ -2696,17 +2683,104 @@
         <string>특산지:</string>
        </property>
       </widget>
-      <widget class="QToolButton" name="toolButton_localSpecialty_10">
+      <widget class="QComboBox" name="comboBox_origin_2_10">
        <property name="geometry">
         <rect>
-         <x>100</x>
-         <y>390</y>
-         <width>91</width>
-         <height>22</height>
+         <x>200</x>
+         <y>350</y>
+         <width>104</width>
+         <height>26</height>
         </rect>
        </property>
-       <property name="text">
-        <string>...</string>
+      </widget>
+      <widget class="QComboBox" name="comboBox_origin_3_10">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>350</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_origin_4_10">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>350</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_origin_5_10">
+       <property name="geometry">
+        <rect>
+         <x>530</x>
+         <y>350</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_origin_1_10">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>350</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_specialty_2_10">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>390</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_specialty_1_10">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>390</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_specialty_3_10">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>390</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_specialty_5_10">
+       <property name="geometry">
+        <rect>
+         <x>530</x>
+         <y>390</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_specialty_4_10">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>390</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
        </property>
       </widget>
      </widget>
@@ -2766,7 +2840,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>671</width>
+        <width>701</width>
         <height>571</height>
        </rect>
       </property>
@@ -2959,7 +3033,7 @@
         <string>최대 권장량 (WHO)</string>
        </property>
       </widget>
-      <widget class="QRadioButton" name="radioButton_MFDS_11">
+      <widget class="QRadioButton" name="radioButton_FDA_11">
        <property name="geometry">
         <rect>
          <x>440</x>
@@ -2974,6 +3048,3716 @@
       </widget>
      </widget>
     </widget>
+    <widget class="QWidget" name="page_data_home_12">
+     <widget class="QWidget" name="widget_3" native="true">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>110</y>
+        <width>301</width>
+        <height>311</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="btn_edit_ingredients_data_12">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>80</y>
+         <width>121</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>식품 정보 수정</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_edit_nutrients_data_12">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>130</y>
+         <width>121</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소 정보 수정</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_edit_diseases_data_12">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>180</y>
+         <width>121</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병 정보 수정</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_88">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>30</y>
+         <width>101</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>데이터 마스터 홈</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="btn_home_12">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>20</y>
+        <width>71</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>HOME</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_ing_1_13">
+     <widget class="QWidget" name="widget_9" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="btn_edit_common_unrec_ing_list">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>300</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>공통비권고식품 리스트 수정</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_edit_gasung_allergy_ing_list">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>260</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>가성알레르기식품 리스트 수정</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_edit_existing_ing">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>220</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>기존 등록된 식품 수정</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_register_new_ing">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>180</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>새로운 식품 등록하기</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_37" native="true">
+       <property name="geometry">
+        <rect>
+         <x>550</x>
+         <y>20</y>
+         <width>141</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_home_13">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>0</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>HOME</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_data_home_13">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>데이터홈</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_ing_2_14">
+     <widget class="QWidget" name="widget_27" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QComboBox" name="comboBox_ing_category5_14">
+       <property name="geometry">
+        <rect>
+         <x>580</x>
+         <y>120</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_ing_category2_14">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>120</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_ing_category4_14">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>120</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_findby_ing_category_14">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>150</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>찾기</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_123">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>30</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>기존 식품 수정</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_124">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>110</y>
+         <width>101</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>식품 분류로 찾기:</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_ing_category1_14">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>120</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="currentText">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_ing_category3_14">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>120</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_ing_candidates_14">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>200</y>
+         <width>641</width>
+         <height>301</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>식품명</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류1</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류2</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류3</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류4</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류5</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_ing_name_14">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>70</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>식품명 입력</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_28" native="true">
+       <property name="geometry">
+        <rect>
+         <x>460</x>
+         <y>490</y>
+         <width>221</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_14">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_confirm_ing_14">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>20</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>해당 식품 보기</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="label_125">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>70</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>개별 식품 찾기:</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_findby_ing_name_14">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>70</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>찾기</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_ing_3_15">
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>30</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품 등록/수정</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_89">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>65</y>
+        <width>60</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_90">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>105</y>
+        <width>60</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품분류:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_ing_category2_15">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>100</y>
+        <width>104</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_ing_category1_15">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>100</y>
+        <width>104</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_ing_category3_15">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>100</y>
+        <width>104</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_ing_category5_15">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>100</y>
+        <width>104</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_ing_category4_15">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>100</y>
+        <width>104</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_92">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>220</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-영어:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_93">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>220</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-중국어:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_94">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>250</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-일본어:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang_english_15">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>220</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang_chinese_15">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>220</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang_japanese_15">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>250</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_95">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>250</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-러시아어:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang_russian_15">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>250</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_96">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>280</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-몽골어:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_name_15">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>70</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang_mongolian_15">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>280</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_97">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>310</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-스페인어:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang_spanish_15">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>310</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_98">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>340</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-외국어9:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang9_15">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>340</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang_arabic_15">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>280</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_99">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>280</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-아랍어:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_100">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>310</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-외국어8:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang8_15">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>310</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_101">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>340</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-외국어10:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang10_15">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>340</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_102">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>370</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명-외국어11:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_lang11_15">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>370</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_academic_name_15">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>190</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_91">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>190</y>
+        <width>60</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>학명:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_description_15">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>190</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_106">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>190</y>
+        <width>60</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품설명:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_112">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>430</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1회 식사분량:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_one_portion_15">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>430</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_113">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>430</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1회 식사분량 설명:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_mortality_rate_15">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>400</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_114">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>400</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>폐기율(%):</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_protein_portion_15">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>400</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_115">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>400</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>단백질 가식부(%):</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="widget_22" native="true">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>489</y>
+        <width>271</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="btn_cancel_15">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>30</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>취소</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_next_15">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>30</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>다음</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPlainTextEdit" name="plainTextEdit_one_portion_description_15">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>430</y>
+        <width>221</width>
+        <height>78</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_check_uniq_ing_name_15">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>70</y>
+        <width>131</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>식품명 사용가능?</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_116">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>120</y>
+        <width>60</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>or</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_category1_15">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>140</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>식품분류1</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_category2_15">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>140</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>식품분류2</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_category3_15">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>140</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>식품분류3</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_category4_15">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>140</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>식품분류4</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_ing_category5_15">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>140</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>식품분류5</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_ing_4_16">
+     <widget class="QPlainTextEdit" name="plainTextEdit_feature_16">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>50</y>
+        <width>261</width>
+        <height>81</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_105">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>50</y>
+        <width>60</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>특징:</string>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="plainTextEdit_cooking_feature_16">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>140</y>
+        <width>261</width>
+        <height>91</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="plainTextEdit_tale_16">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>50</y>
+        <width>261</width>
+        <height>81</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_103">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>140</y>
+        <width>60</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>보관법:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_104">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>50</y>
+        <width>60</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>이야기거리:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_107">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>140</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>조리식 특성:</string>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="plainTextEdit_storage_16">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>140</y>
+        <width>261</width>
+        <height>91</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_polishing_state_16">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>240</y>
+        <width>261</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_108">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>240</y>
+        <width>60</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>도정상태:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_109">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>240</y>
+        <width>60</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>가공상태:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_processing_state_16">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>240</y>
+        <width>261</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="ckBox_immediate_intake_16">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>290</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_110">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>290</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>즉시 섭취 여부:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_111">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>360</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>출력 대표성 등급:</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox_printingRep_level_16">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>360</y>
+        <width>48</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>5</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_117">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>400</y>
+        <width>111</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>가성 알레르기 등급:</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox_gasung_allergy_level_16">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>400</y>
+        <width>48</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>0</number>
+      </property>
+      <property name="maximum">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_118">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>290</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>급성알레르기 가능여부:</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="ckBox_gs_allergy_16">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>290</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_119">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>290</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>만성알레르기 가능여부:</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="ckBox_ms_allergy_16">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>290</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="ckBox_lgg4_allergy_16">
+      <property name="geometry">
+       <rect>
+        <x>630</x>
+        <y>290</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_120">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>290</y>
+        <width>151</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>만성lgG4알레르기 가능여부:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_121">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>440</y>
+        <width>61</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>멸종 등급:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_122">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>320</y>
+        <width>151</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>항상 비권고식품 여부:</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="ckBox_always_unrec_16">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>320</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>항상 비권고식품 여부:</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox_extinction_level_16">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>440</y>
+        <width>48</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>0</number>
+      </property>
+      <property name="maximum">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QWidget" name="widget_36" native="true">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>490</y>
+        <width>361</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="btn_cancel_20">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>취소</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_back_18">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>30</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>뒤로</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_save_19">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>30</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>다음</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_ing_5_17">
+     <widget class="QWidget" name="widget_35" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="widget_23" native="true">
+       <property name="geometry">
+        <rect>
+         <x>340</x>
+         <y>490</y>
+         <width>361</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_17">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_back_17">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>뒤로</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_save_17">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>저장/업데이트</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="label_29">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>50</y>
+         <width>111</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>식품-영양소 관계</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_nut_quant_17">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>110</y>
+         <width>411</width>
+         <height>261</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>영양소명</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>함량</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QPushButton" name="btn_show_popup_nut_17">
+       <property name="geometry">
+        <rect>
+         <x>380</x>
+         <y>80</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소 추가</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_popup_nut_17" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>80</y>
+         <width>571</width>
+         <height>451</height>
+        </rect>
+       </property>
+       <widget class="QComboBox" name="comboBox_nut_category2_17">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="comboBox_nut_category1_17">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="currentText">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_131">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>50</y>
+          <width>101</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>영양소 분류로 찾기:</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="tableWidget_nutCandidates_17">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>100</y>
+          <width>381</width>
+          <height>301</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>영양소명</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>거대영양소분류</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>영양소분류</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_nut_name_17">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>10</y>
+          <width>131</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>영양소명 입력</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_findby_nut_category_17">
+        <property name="geometry">
+         <rect>
+          <x>380</x>
+          <y>60</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>찾기</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_155">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>10</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>영양소명으로 찾기:</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_findby_nut_name_17">
+        <property name="geometry">
+         <rect>
+          <x>310</x>
+          <y>10</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>찾기</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_add_nut_17">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>410</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>추가</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QPushButton" name="btn_delete_selected_nut_17">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>80</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>선택영양소 제거</string>
+       </property>
+      </widget>
+      <zorder>widget_23</zorder>
+      <zorder>label_29</zorder>
+      <zorder>tableWidget_nut_quant_17</zorder>
+      <zorder>btn_show_popup_nut_17</zorder>
+      <zorder>btn_delete_selected_nut_17</zorder>
+      <zorder>widget_popup_nut_17</zorder>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_ing_6_18">
+     <widget class="QWidget" name="widget_21" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>30</y>
+         <width>221</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>가성알레르기식품 리스트 수정 (필요?)</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_gs_allergy_18">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>70</y>
+         <width>631</width>
+         <height>421</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>식품명</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류1</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류2</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류3</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류4</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류5</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QWidget" name="widget_24" native="true">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>490</y>
+         <width>221</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_18">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_save_18">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>20</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>업데이트</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_ing_7_19">
+     <widget class="QWidget" name="widget_25" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QLabel" name="label_28">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>30</y>
+         <width>211</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>공통비권고식품 리스트 수정(필요?)</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_common_unrec_19">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>70</y>
+         <width>631</width>
+         <height>421</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>식품명</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류1</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류2</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류3</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류4</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>식품분류5</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QWidget" name="widget_26" native="true">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>490</y>
+         <width>221</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_19">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_save_8">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>20</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>업데이트</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_nut_1_20">
+     <widget class="QWidget" name="widget_20" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="btn_edit_existing_nut_20">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>240</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>기존 등록된 영양소 수정</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_register_new_nut_20">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>200</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>새로운 영양소 등록하기</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_45" native="true">
+       <property name="geometry">
+        <rect>
+         <x>550</x>
+         <y>20</y>
+         <width>141</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_home_14">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>0</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>HOME</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_data_home_14">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>데이터홈</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_nut_2_21">
+     <widget class="QWidget" name="widget_29" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QComboBox" name="comboBox_nut_category2_21">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>120</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_findby_nut_category_21">
+       <property name="geometry">
+        <rect>
+         <x>370</x>
+         <y>120</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>찾기</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_126">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>30</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>기존 영양소 수정</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_127">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>110</y>
+         <width>101</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소 분류로 찾기:</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_nut_category1_21">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>120</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="currentText">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_nutCandidates_21">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>160</y>
+         <width>381</width>
+         <height>301</height>
+        </rect>
+       </property>
+       <column>
+        <property name="text">
+         <string>영양소명</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>거대영양소분류</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>영양소분류</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nutName_21">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>70</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>영양소명 입력</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_30" native="true">
+       <property name="geometry">
+        <rect>
+         <x>460</x>
+         <y>490</y>
+         <width>221</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_21">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>20</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_confirm_nut_21">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>20</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>해당 영양소 보기</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="label_128">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>70</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명으로 찾기:</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_findby_nut_name_21">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>70</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>찾기</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_nut_3_22">
+     <widget class="QWidget" name="widget_31" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QComboBox" name="comboBox_nut_category1_22">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>100</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_nut_category2_22">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>100</y>
+         <width>104</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_check_uniq_nut_name_22">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>70</y>
+         <width>131</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명 사용가능?</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang_japanese_22">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>200</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_32" native="true">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>489</y>
+         <width>271</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_22">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_next_22">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>다음</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang11_22">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>320</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_28">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>140</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>영양소분류</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_129">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>170</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-중국어:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_130">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>260</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-외국어8:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang_english_22">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>170</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_133">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>200</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-일본어:</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_description_22">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>400</y>
+         <width>231</width>
+         <height>111</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_22">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>30</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소 등록/수정</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_31">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>70</y>
+         <width>221</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_134">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>400</y>
+         <width>60</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>설명:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_135">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>320</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-외국어11:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_136">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>260</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-스페인어:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang_arabian_22">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>230</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_137">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>230</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-아랍어:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_138">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>120</y>
+         <width>60</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>or</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang_spanish_22">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>260</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_139">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>360</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>하루 권장량(RDA):</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_140">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>230</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-몽골어:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang8_22">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>260</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang10_22">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>290</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_141">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>105</y>
+         <width>60</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소분류:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_39">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>140</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>거대영양소분류</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang9_22">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>290</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_144">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>170</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-영어:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang_mongolian_22">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>230</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_145">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>200</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-러시아어:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_146">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>65</y>
+         <width>60</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_quant_RDA_22">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>360</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_147">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>290</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-외국어9:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_149">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>320</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-외국어12:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang12_22">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>320</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang_chinese_22">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>170</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nut_lang_russian_22">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>200</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_132">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>290</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>영양소명-외국어10:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_quant_WHO_22">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>360</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_150">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>360</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>최대권장량(WHO):</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_quant_FDA_22">
+       <property name="geometry">
+        <rect>
+         <x>560</x>
+         <y>360</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_151">
+       <property name="geometry">
+        <rect>
+         <x>450</x>
+         <y>360</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>최대권장량(식약처):</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_cooking_caution_22">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>400</y>
+         <width>241</width>
+         <height>111</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_142">
+       <property name="geometry">
+        <rect>
+         <x>319</x>
+         <y>400</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>조리시 주의할점:</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_nut_4_23">
+     <widget class="QWidget" name="widget_33" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QLabel" name="label_143">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>260</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>이야기2:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_148">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>60</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>이야기1:</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_story1_23">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>150</y>
+         <width>261</width>
+         <height>91</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_tale_23">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>50</y>
+         <width>261</width>
+         <height>91</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_story2_23">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>250</y>
+         <width>261</width>
+         <height>91</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_story3_23">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>350</y>
+         <width>261</width>
+         <height>91</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_152">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>360</y>
+         <width>60</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>이야기3:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_153">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>450</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>이야기4:</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_story4_23">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>450</y>
+         <width>261</width>
+         <height>91</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_154">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>이야기거리:</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_34" native="true">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>490</y>
+         <width>361</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_23">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_back_23">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>뒤로</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_save_23">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>저장/업데이트</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_dis_1_24">
+     <widget class="QWidget" name="widget_38" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="btn_edit_existing_dis_24">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>240</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>기존 등록된 질병 수정</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_register_new_dis_24">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>200</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>새로운 질병 등록하기</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_46" native="true">
+       <property name="geometry">
+        <rect>
+         <x>560</x>
+         <y>20</y>
+         <width>141</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_home_15">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>0</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>HOME</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_data_home_15">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>데이터홈</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_dis_2_25">
+     <widget class="QWidget" name="widget_39" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QLabel" name="label_156">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>30</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>기존 질병 수정</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_ID_13">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>70</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>질병명 입력</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_40" native="true">
+       <property name="geometry">
+        <rect>
+         <x>460</x>
+         <y>490</y>
+         <width>221</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="btn_cancel_25">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_confirmClient_13">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>20</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Look up</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="label_158">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>70</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병명으로 찾기:</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_findbyIngName_16">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>70</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>찾기</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="listWidget">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>120</y>
+         <width>331</width>
+         <height>351</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_data_dis_3_26">
+     <widget class="QWidget" name="widget_41" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>701</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="btn_checkUniqID_6">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>70</y>
+         <width>131</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병명 사용가능?</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_42" native="true">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>489</y>
+         <width>271</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="pushButton_20">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_21">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>저장/업데이트</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_33">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>100</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_33">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>30</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병 등록/수정</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_36">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>70</y>
+         <width>221</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_168">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>100</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병명-영어:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_171">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>65</y>
+         <width>60</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병명:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_169">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>120</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병-식품 관계:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_170">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>120</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>질병-영양소 관계:</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget_43" native="true">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>140</y>
+         <width>371</width>
+         <height>401</height>
+        </rect>
+       </property>
+       <widget class="QTableWidget" name="tableWidget_4">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>321</width>
+          <height>351</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>식품명</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>레벨</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QPushButton" name="pushButton_22">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>0</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>식품 추가</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_23">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>0</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>선택식품 제거</string>
+        </property>
+       </widget>
+       <zorder>tableWidget_4</zorder>
+       <zorder>pushButton_22</zorder>
+       <zorder>pushButton_23</zorder>
+       <zorder>widget_44</zorder>
+      </widget>
+      <widget class="QWidget" name="widget_44" native="true">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>140</y>
+         <width>371</width>
+         <height>401</height>
+        </rect>
+       </property>
+       <widget class="QTableWidget" name="tableWidget_6">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>321</width>
+          <height>351</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>영양소명</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>레벨</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QPushButton" name="pushButton_26">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>0</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>영양소 추가</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_27">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>0</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>선택영양소 제거</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="widget_popup_add_nut" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>70</y>
+         <width>571</width>
+         <height>451</height>
+        </rect>
+       </property>
+       <widget class="QComboBox" name="comboBox_origin_2_15">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="comboBox_origin_1_15">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="currentText">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_157">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>50</y>
+          <width>101</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>영양소 분류로 찾기:</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="tableWidget_clientCandidates_10">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>100</y>
+          <width>381</width>
+          <height>301</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>영양소명</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>거대영양소분류</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>영양소분류</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_ID_14">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>10</y>
+          <width>131</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>영양소명 입력</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_findbyName_10">
+        <property name="geometry">
+         <rect>
+          <x>380</x>
+          <y>60</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>찾기</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_159">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>10</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>영양소명으로 찾기:</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_findbyIngName_17">
+        <property name="geometry">
+         <rect>
+          <x>310</x>
+          <y>10</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>찾기</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_28">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>410</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>추가</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_31">
+        <property name="geometry">
+         <rect>
+          <x>310</x>
+          <y>410</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="widget_popup_add_ing" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>70</y>
+         <width>611</width>
+         <height>451</height>
+        </rect>
+       </property>
+       <widget class="QComboBox" name="comboBox_origin_2_16">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="comboBox_origin_1_16">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="currentText">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_160">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>101</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>식품 분류로 찾기:</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="tableWidget_clientCandidates_11">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>110</y>
+          <width>501</width>
+          <height>301</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>식품명</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>식품분류1</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>식품분류2</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>식품분류3</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>식품분류4</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>식품분류5</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_ID_15">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>10</y>
+          <width>131</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>식품명 입력</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_findbyName_11">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>80</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>찾기</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_161">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>식품명으로 찾기:</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_findbyIngName_18">
+        <property name="geometry">
+         <rect>
+          <x>230</x>
+          <y>10</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>찾기</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_29">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>420</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>추가</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="comboBox_origin_2_17">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="comboBox_origin_2_18">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="comboBox_origin_2_19">
+        <property name="geometry">
+         <rect>
+          <x>500</x>
+          <y>60</y>
+          <width>104</width>
+          <height>26</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_30">
+        <property name="geometry">
+         <rect>
+          <x>380</x>
+          <y>420</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>취소</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_21"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -2981,7 +6765,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>721</width>
+     <width>750</width>
      <height>22</height>
     </rect>
    </property>
