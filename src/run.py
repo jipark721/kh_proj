@@ -43,12 +43,12 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_home_2.clicked.connect(self.go_to_home_no_warning)
         self.ui.btn_home_3.clicked.connect(lambda x: self.go_home(3))
 
-        # page_3 - register new patient page 1
+        # page_3 - register new patient
         self.ui.btn_cancel_3.clicked.connect(self.cancel_register_new_patient)
-        self.ui.btn_next_3.clicked.connect(self.go_to_register_new_patient_page2)
+        self.ui.btn_next_3.clicked.connect(self.register_patient_and_go_to_select_diseases_and_allergies)
         self.ui.btn_checkUniqID_3.clicked.connect(self.check_unique_ID)
 
-        # # page_4 - register new patient page 2
+        # page_4 - register new patient page 2
         # self.ui.btn_cancel_4.clicked.connect(self.cancel_register_new_patient)
         # self.ui.btn_back_4.clicked.connect(self.go_back_to_register_new_patient_page1)
         # self.ui.btn_registerClient_4.clicked.connect(self.register_client)
@@ -138,9 +138,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def go_back_to_edit_existing_patient_page2(self):
         self.ui.stackedWidget.setCurrentIndex(7)
 
-    def go_to_register_new_patient_page2(self):
+    def register_patient_and_go_to_select_diseases_and_allergies(self):
         tempID = self.ui.lineEdit_ID_3.text()
         tempName = self.ui.lineEdit_name_3.text()
+        tempGender = "남" if self.ui.radioBtn_male_3.isChecked() else "여"
+        # TODO : fill in patient info
+        # tempBirthDate = self.ui.dateEdit_birthdate_3.text()
+        # tempHeight = float(self.ui.lineEdit_height_3.text()) if self.ui.lineEdit_height_3.text() != "" else 0.0
 
         if not tempID or not tempName:
             msgbox = QtWidgets.QMessageBox()
@@ -149,30 +153,41 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             msgbox.setWindowTitle("Error")
             msgbox.exec_()
         else:
-            self.ui.stackedWidget.setCurrentIndex(4)
-            if self.currPatientDiseaseIndexSet and \
-                    self.currPatientGSIngTupleSet and \
-                    self.currPatientMSIngTupleSet and \
-                    self.currPatientLGG4IngTupleSet:
-                populate_checkbox_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명")
-                update_checkbox_state_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명", set())
-                myCursor_gs = get_ingredients_guepsung()
-                create_checkbox_level_tw(myCursor_gs, self.ui.tableWidget_allergies_gs_4, "식품명", True, None)
-                myCursor_ms = get_ingredients_mansung()
-                create_checkbox_level_tw(myCursor_ms, self.ui.tableWidget_allergies_ms_4, "식품명", True, None)
-                myCursor_lgg4 = get_ingredients_mansung_lgg4()
-                create_checkbox_level_tw(myCursor_lgg4, self.ui.tableWidget_allergies_lgg4_4, "식품명", True, None)
-            else: #if coming from register_new_client_page2
-                if len(self.currPatientDiseaseIndexSet) != 0:
-                    for index in self.currPatientDiseaseIndexSet:
-                        ckbtn = self.ui.listWidget_diseases_4.item(index)
-                        ckbtn.setCheckState(QtCore.Qt.Checked)
-                if len(self.currPatientGSIngTupleSet) != 0:
-                    self.build_current_patient_tw(self.currPatientGSIngTupleSet, self.ui.tableWidget_allergies_gs_4)
-                if len(self.currPatientMSIngTupleSet) != 0:
-                    self.build_current_patient_tw(self.currPatientMSIngTupleSet, self.ui.tableWidget_allergies_ms_4)
-                if len(self.currPatientLGG4IngTupleSet) != 0:
-                    self.build_current_patient_tw(self.currPatientLGG4IngTupleSet, self.ui.tableWidget_allergies_lgg4_4)
+            try:
+                Patient(ID=tempID, 이름=tempName, 성별=tempGender).save()#, 성별=tempGender, 키=tempHeight).save()
+                self.ui.stackedWidget.setCurrentIndex(7)
+                self.populate_existing_patient_info_disease_and_allergies(tempID)
+            except:
+                msgbox = QtWidgets.QMessageBox()
+                msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+                msgbox.setText("잘못된 환자정보입니다. 다시 입력해주시길 바랍니다")
+                msgbox.setWindowTitle("Error")
+                msgbox.exec_()
+
+            # self.ui.stackedWidget.setCurrentIndex(4)
+            # if self.currPatientDiseaseIndexSet and \
+            #         self.currPatientGSIngTupleSet and \
+            #         self.currPatientMSIngTupleSet and \
+            #         self.currPatientLGG4IngTupleSet:
+            # #     populate_checkbox_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명")
+            #     update_checkbox_state_lw(self.ui.listWidget_diseases_4, Disease.objects, "식품명", set())
+            #     myCursor_gs = get_ingredients_guepsung()
+            #     create_checkbox_level_tw(myCursor_gs, self.ui.tableWidget_allergies_gs_4, "식품명", True, None)
+            #     myCursor_ms = get_ingredients_mansung()
+            #     create_checkbox_level_tw(myCursor_ms, self.ui.tableWidget_allergies_ms_4, "식품명", True, None)
+            #     myCursor_lgg4 = get_ingredients_mansung_lgg4()
+            #     create_checkbox_level_tw(myCursor_lgg4, self.ui.tableWidget_allergies_lgg4_4, "식품명", True, None)
+            # else: #if coming from register_new_client_page2
+            #     if len(self.currPatientDiseaseIndexSet) != 0:
+            #         for index in self.currPatientDiseaseIndexSet:
+            #             ckbtn = self.ui.listWidget_diseases_4.item(index)
+            #             ckbtn.setCheckState(QtCore.Qt.Checked)
+            #     if len(self.currPatientGSIngTupleSet) != 0:
+            #         self.build_current_patient_tw(self.currPatientGSIngTupleSet, self.ui.tableWidget_allergies_gs_4)
+            #     if len(self.currPatientMSIngTupleSet) != 0:
+            #         self.build_current_patient_tw(self.currPatientMSIngTupleSet, self.ui.tableWidget_allergies_ms_4)
+            #     if len(self.currPatientLGG4IngTupleSet) != 0:
+            #         self.build_current_patient_tw(self.currPatientLGG4IngTupleSet, self.ui.tableWidget_allergies_lgg4_4)
 
     def go_to_data_home(self):
         self.ui.stackedWidget.setCurrentIndex(12)
@@ -368,9 +383,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             create_warning_message("진료할 회원을 선택해주세요.")
         else:
             self.ui.stackedWidget.setCurrentIndex(7)
-            self.populate_existing_patient_detail(self.get_selected_patient_id())
+            self.populate_existing_patient_info_disease_and_allergies(self.get_selected_patient_id())
 
-    def populate_existing_patient_detail(self, id):
+    def populate_existing_patient_info_disease_and_allergies(self, id):
         self.current_patient = Patient.objects.get(ID=id)
         self.ui.lineEdit_name_7.setText(self.current_patient.이름)
         self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
@@ -381,13 +396,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
         self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
 
-        latest_date = str(self.current_patient.진료일[-1]).split()[0]
+        if (self.current_patient.진료일):
+            latest_date = str(self.current_patient.진료일[-1]).split()[0]
+        else:
+            latest_date = ""
 
         populate_checkbox_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명")
-        create_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명", False, self.current_patient.급성알레르기음식[latest_date])
-        create_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명", False, self.current_patient.만성알레르기음식[latest_date])
-        create_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명", False, self.current_patient.만성lgG4과민반응음식[latest_date])
-        update_checkbox_state_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", self.current_patient.진단[latest_date])
+        create_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명", False, self.current_patient.급성알레르기음식[latest_date] if latest_date else set())
+        create_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명", False, self.current_patient.만성알레르기음식[latest_date] if latest_date else set())
+        create_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명", False, self.current_patient.만성lgG4과민반응음식[latest_date] if latest_date else set())
+        update_checkbox_state_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", self.current_patient.진단[latest_date] if latest_date else set())
 
     def update_patient_basic_info(self, patient_id):
         id = self.ui.lineEdit_ID_6.text()
