@@ -361,8 +361,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         update_checkbox_state_lw(self.ui.listWidget_nutrients_8, Nutrient.objects, "영양소명", set())
 
     def go_to_select_disease_and_allergies(self, id):
-        self.ui.stackedWidget.setCurrentIndex(7)
-        self.populate_existing_patient_detail(self.get_selected_patient_id())
+        if id == None:
+            create_warning_message("진료할 회원을 선택해주세요.")
+        else:
+            self.ui.stackedWidget.setCurrentIndex(7)
+            self.populate_existing_patient_detail(self.get_selected_patient_id())
 
     def populate_existing_patient_detail(self, id):
         self.current_patient = Patient.objects.get(ID=id)
