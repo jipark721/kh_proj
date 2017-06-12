@@ -35,17 +35,12 @@ def convert_tw_to_tuple_list(tw):
     return list
 
 #for diagnosed diseases, iterate through rows and return a string separated by ","
-def convert_lw_to_string(lw):
-    toReturn = ""
-    isFirstCheckedFound = False
+def convert_lw_to_str_list(lw):
+    toReturn =  []
     for i in range(lw.count()):
         ckbtn = lw.item(i)
         if ckbtn.checkState() == QtCore.Qt.Checked:
-            if not isFirstCheckedFound:
-                toReturn = ckbtn.text()
-                isFirstCheckedFound = True
-            else:
-                toReturn = toReturn + "," + ckbtn.text()
+            toReturn.append(ckbtn.text())
     return toReturn
 
 def populate_checkbox_lw(lw, content_collection, content_field_name):

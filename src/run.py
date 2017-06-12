@@ -23,7 +23,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # local classes
         self.current_date = datetime.date.today()
         self.current_patient = None
-        self.current_diagnosis = None
+        self.local_급성알레르기음식 = None
+        self.local_만성알레르기음식 = None
+        self.local_만성lgG4과민반응음식 = None
+        self.local_진단 = None
 
     def setupLogic(self):
         # page_0
@@ -103,7 +106,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 self.clear_find_existing_client()
             elif currPage == 6:
                 self.clear_edit_existing_client()
-            else: 
+            else:
                 pass
             self.ui.stackedWidget.setCurrentIndex(1)
 
@@ -337,7 +340,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.dateEdit_lastOfficeVisit_6.setDate(QtCore.QDate(datetime.date.today()))
 
     def save_and_go_to_nutrients_edit_page(self, id):
-        self.update_edit_existing_patient_data_page2()
+        self.update_selected_disease_and_allergies()
         self.go_to_nutrients_edit_page(id)
 
     def go_to_nutrients_edit_page(self, id):
@@ -404,12 +407,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         isBFeeding = True if self.ui.ckBox_bFeeding_6.isChecked() else False
         update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding)
 
-    def update_edit_existing_patient_data_page2(self):
-        diseaseStr = convert_lw_to_string(self.ui.listWidget_diseases_7)
-        gsTupleList = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_gs_7)
-        msTupleList = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_7)
-        lgg4TupleList = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
-        #update_patient_detail_second_page(self.ui.lineEdit_ID_7.text(), diseaseStr, gsTupleList, msTupleList, lgg4TupleList)
+    def update_selected_disease_and_allergies(self):
+        self.local_급성알레르기음식 = convert_lw_to_str_list(self.ui.listWidget_diseases_7)
+        self.local_만성알레르기음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_gs_7)
+        self.local_만성lgG4과민반응음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_7)
+        self.local_진단 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
 
     def register_client(self):
         if len(self.ui.lineEdit_ID_3.text()) == 0 or len(self.ui.lineEdit_name_3.text()) == 0:
@@ -423,7 +425,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             new_patient.성별 = "남" if self.ui.radioBtn_male_3.isChecked else "여"
             new_patient.생년월일 = convert_DateEditWidget_to_string(self.ui.dateEdit_birthdate_3)
             new_patient.주소 = self.ui.lineEdit_address_3.text()
-            진단 = {convert_DateEditWidget_to_string(self.ui.dateEdit_lastOfficeVisit_3) : convert_lw_to_string(self.ui.listWidget_diseases_4)}
+            진단 = {convert_DateEditWidget_to_string(self.ui.dateEdit_lastOfficeVisit_3) : convert_lw_to_str_list(self.ui.listWidget_diseases_4)}
             new_patient.진료 = 진단
             new_patient.방문횟수 = 1
             new_patient.키 = float(self.ui.lineEdit_height_3.text()) if self.ui.lineEdit_height_3.text() else 0
@@ -464,6 +466,20 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 msgbox.setText("사용가능한 아이디입니다")
                 msgbox.exec_()
                 uniqIDChecked = True
+
+    def save_local_data_to_patient(self, patient):
+        patient.급성알레르기음식[self.current_date] = self.local_급성알레르기음식
+        patient.만성알레르기음식[self.current_date] = self.local_만성알레르기음식
+        patient.만성lgG4과민반응음식[self.current_date] = self.local_만성lgG4과민반응음식
+        patient.진단[self.current_date] = self.local_진단
+        patient.save()
+
+    def reset_local_data(self):
+        self.current_patient = None
+        self.local_급성알레르기음식 = None
+        self.local_만성알레르기음식 = None
+        self.local_만성lgG4과민반응음식 = None
+        self.local_진단 = None
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
