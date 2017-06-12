@@ -41,10 +41,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_cancel_3.clicked.connect(self.cancel_register_new_patient)
         self.ui.btn_next_3.clicked.connect(self.go_to_register_new_patient_page2)
         self.ui.btn_checkUniqID_3.clicked.connect(self.check_unique_ID)
-        # page_4 - register new patient page 2
-        self.ui.btn_cancel_4.clicked.connect(self.cancel_register_new_patient)
-        self.ui.btn_back_4.clicked.connect(self.go_back_to_register_new_patient_page1)
-        self.ui.btn_registerClient_4.clicked.connect(self.register_client)
+        # # page_4 - register new patient page 2
+        # self.ui.btn_cancel_4.clicked.connect(self.cancel_register_new_patient)
+        # self.ui.btn_back_4.clicked.connect(self.go_back_to_register_new_patient_page1)
+        # self.ui.btn_registerClient_4.clicked.connect(self.register_client)
         # page_5 - find existing patient
         self.ui.btn_cancel_5.clicked.connect(self.cancel_find_existing_client)
         self.ui.btn_home_5.clicked.connect(lambda x: self.go_home(5))
@@ -65,6 +65,21 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         #self.ui.btn_go2Rec_8.clicked.connect(self.update_recommended_nutrient)
         #self.ui.btn_go2NotRec_8.clicked.connect(self.update_not_recommended_nutrient)
         #self.ui.btn_save_next_8.clicked.connect()
+
+        # page_12 - data home
+        self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
+        self.ui.btn_edit_patients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(27))
+        self.ui.btn_edit_ingredients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
+        self.ui.btn_edit_nutrients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(20))
+        self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(24))
+        #page_13 - data ingredient home
+        self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home)
+        self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
+        self.ui.btn_register_new_ing_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
+        self.ui.btn_edit_existing_ing_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(14))
+        self.ui.btn_edit_gasung_allergy_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(18))
+        self.ui.btn_edit_common_unrec_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(19))
+        #page_14 - find existing ingredient to look up/edit
 
 
     #############################
@@ -148,6 +163,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 if len(self.currPatientLGG4IngTupleSet) != 0:
                     self.build_current_patient_tw(self.currPatientLGG4IngTupleSet, self.ui.tableWidget_allergies_lgg4_4)
 
+    def go_to_data_home(self):
+        self.ui.stackedWidget.setCurrentIndex(12)
 
     #############################
     # Page 1 - find patient
@@ -262,7 +279,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         pass
 
     def go_to_data(self):
-        pass
+        self.ui.stackedWidget.setCurrentIndex(12)
 
     def check_password(self):
         pwd = self.ui.lineEdit_pw_0.text()
