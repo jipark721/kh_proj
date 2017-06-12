@@ -92,10 +92,93 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home)
         self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
         self.ui.btn_register_new_ing_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
-        self.ui.btn_edit_existing_ing_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(14))
+        self.ui.btn_edit_existing_ing_13.clicked.connect(lambda x: self.go_to_edit_existing_ing())
         self.ui.btn_edit_gasung_allergy_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(18))
         self.ui.btn_edit_common_unrec_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(19))
-        # page_14 - find existing ingredient to look up/edit
+        #page_14 - find existing ingredient to look up/edit
+        self.ui.btn_findby_ing_name_14.clicked.connect(lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_14.text()))
+        self.ui.btn_findby_ing_category_14.clicked.connect(lambda x: self.find_ingredients_by_category())
+
+    def go_to_edit_existing_ing(self):
+        self.ui.stackedWidget.setCurrentIndex(14)
+        self.render_ing_category1_dropdown_menu()
+
+    def render_ing_category1_dropdown_menu(self):
+        listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_14.addItem("")
+        self.ui.comboBox_ing_category1_14.addItems(listOfCat1)
+        self.ui.comboBox_ing_category1_14.activated[str].connect(self.on_ing_cat1_changed)
+
+    def on_ing_cat1_changed(self, inputText):
+        listOfCat2 = Ingredient.objects(식품분류1 = inputText).distinct("식품분류2")
+        self.ui.comboBox_ing_category2_14.clear()
+        self.ui.comboBox_ing_category3_14.clear()
+        self.ui.comboBox_ing_category4_14.clear()
+        self.ui.comboBox_ing_category5_14.clear()
+
+        self.ui.comboBox_ing_category2_14.addItem("")
+        self.ui.comboBox_ing_category2_14.addItems(listOfCat2)
+        self.ui.comboBox_ing_category2_14.activated[str].connect(self.on_ing_cat2_changed)
+
+    def on_ing_cat2_changed(self, inputText):
+        listOfCat3 = Ingredient.objects(식품분류2=inputText).distinct("식품분류3")
+        self.ui.comboBox_ing_category3_14.clear()
+        self.ui.comboBox_ing_category4_14.clear()
+        self.ui.comboBox_ing_category5_14.clear()
+
+        self.ui.comboBox_ing_category3_14.addItem("")
+        self.ui.comboBox_ing_category3_14.addItems(listOfCat3)
+        self.ui.comboBox_ing_category3_14.activated[str].connect(self.on_ing_cat3_changed)
+
+    def on_ing_cat3_changed(self, inputText):
+        listOfCat4 = Ingredient.objects(식품분류3=inputText).distinct("식품분류4")
+        self.ui.comboBox_ing_category4_14.clear()
+        self.ui.comboBox_ing_category5_14.clear()
+
+        self.ui.comboBox_ing_category4_14.addItem("")
+        self.ui.comboBox_ing_category4_14.addItems(listOfCat4)
+        self.ui.comboBox_ing_category4_14.activated[str].connect(self.on_ing_cat4_changed)
+
+    def on_ing_cat4_changed(self, inputText):
+        listOfCat5 = Ingredient.objects(식품분류4=inputText).distinct("식품분류5")
+        self.ui.comboBox_ing_category5_14.clear()
+        self.ui.comboBox_ing_category5_14.addItem("")
+        self.ui.comboBox_ing_category5_14.addItems(listOfCat5)
+        #self.ui.comboBox_ing_category5_14.activated[str].connect(self.on_ing_cat3_changed)
+
+    def find_ingredients_by_name(self, name):
+        if not name:
+            found_ingredients = Ingredient.objects.all()
+        else:
+            found_ingredients = Ingredient.objects(식품명__icontains=name)
+        self.render_found_ingredients(found_ingredients)
+
+    def find_ingredients_by_category(self):
+        if self.ui.comboBox_ing_category5_14.currentText() != "":
+            found_ingredients = Ingredient.objects(식품분류5=self.ui.comboBox_ing_category5_14.currentText())
+        elif self.ui.comboBox_ing_category4_14.currentText() != "":
+            found_ingredients = Ingredient.objects(식품분류4=self.ui.comboBox_ing_category4_14.currentText())
+        elif self.ui.comboBox_ing_category3_14.currentText() != "":
+            found_ingredients = Ingredient.objects(식품분류3=self.ui.comboBox_ing_category3_14.currentText())
+        elif self.ui.comboBox_ing_category2_14.currentText() != "":
+            found_ingredients = Ingredient.objects(식품분류2=self.ui.comboBox_ing_category2_14.currentText())
+        elif self.ui.comboBox_ing_category1_14.currentText() != "":
+            found_ingredients = Ingredient.objects(식품분류1=self.ui.comboBox_ing_category1_14.currentText())
+        else:
+            found_ingredients = Ingredient.objects.all()
+        self.render_found_ingredients(found_ingredients)
+
+    def render_found_ingredients(self, found_ingredients):
+        self.ui.tableWidget_ing_candidates_14.setRowCount(found_ingredients.count())
+        i = 0
+        for ingredient in found_ingredients:
+            self.ui.tableWidget_ing_candidates_14.setItem(i, 0, make_tw_checkbox_item(ingredient.식품명, False))
+            self.ui.tableWidget_ing_candidates_14.setItem(i, 1, make_tw_str_item(ingredient.식품분류1))
+            self.ui.tableWidget_ing_candidates_14.setItem(i, 2, make_tw_str_item(ingredient.식품분류2))
+            self.ui.tableWidget_ing_candidates_14.setItem(i, 3, make_tw_str_item(ingredient.식품분류3))
+            self.ui.tableWidget_ing_candidates_14.setItem(i, 4, make_tw_str_item(ingredient.식품분류4))
+            self.ui.tableWidget_ing_candidates_14.setItem(i, 5, make_tw_str_item(ingredient.식품분류5))
+            i += 1
 
     #############################
     # NAVIGATION - Go
@@ -501,12 +584,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             else:
                 self.ui.stackedWidget.setCurrentIndex(1)
 
+
     def check_unique_ID(self):
         uniqIDChecked = False
         while (uniqIDChecked == False):
             idCand = self.ui.lineEdit_ID_3.text()
-            idFound = Patient.objects.get(ID=idCand)
-            if idFound.count() != 0:
+            try:
+                idFound = Patient.objects.get(ID=idCand)
+            except Patient.DoesNotExist:
+                idFound = None
+            if idFound:
                 self.ui.lineEdit_ID_3.setText("")
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setIcon(QtWidgets.QMessageBox.Warning)
