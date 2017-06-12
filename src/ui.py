@@ -477,9 +477,9 @@ class UI(object):
         self.widget_7 = QtWidgets.QWidget(self.widget_5)
         self.widget_7.setGeometry(QtCore.QRect(0, 80, 661, 431))
         self.widget_7.setObjectName("widget_7")
-        self.nutrientList_8 = QtWidgets.QListWidget(self.widget_7)
-        self.nutrientList_8.setGeometry(QtCore.QRect(10, 30, 256, 391))
-        self.nutrientList_8.setObjectName("nutrientList_8")
+        self.listWidget_nutrients_8 = QtWidgets.QListWidget(self.widget_7)
+        self.listWidget_nutrients_8.setGeometry(QtCore.QRect(10, 30, 256, 391))
+        self.listWidget_nutrients_8.setObjectName("listWidget_nutrients_8")
         self.label_49 = QtWidgets.QLabel(self.widget_7)
         self.label_49.setGeometry(QtCore.QRect(110, 10, 60, 21))
         self.label_49.setObjectName("label_49")
@@ -1901,7 +1901,7 @@ class UI(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(6)
+        self.stackedWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

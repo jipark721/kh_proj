@@ -45,10 +45,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_next_3.clicked.connect(self.go_to_register_new_patient_page2)
         self.ui.btn_checkUniqID_3.clicked.connect(self.check_unique_ID)
 
-        # page_4 - register new patient page 2
-        self.ui.btn_cancel_4.clicked.connect(self.cancel_register_new_patient)
-        self.ui.btn_back_4.clicked.connect(self.go_back_to_register_new_patient_page1)
-        self.ui.btn_registerClient_4.clicked.connect(self.register_client)
+        # # page_4 - register new patient page 2
+        # self.ui.btn_cancel_4.clicked.connect(self.cancel_register_new_patient)
+        # self.ui.btn_back_4.clicked.connect(self.go_back_to_register_new_patient_page1)
+        # self.ui.btn_registerClient_4.clicked.connect(self.register_client)
 
         # page_5 - find existing patient
         self.ui.btn_cancel_5.clicked.connect(self.cancel_find_existing_client)
