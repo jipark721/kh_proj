@@ -33,6 +33,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_비권고영양소레벨_dict = {}
 
         self.current_ingredient = None
+        self.current_nutrient = None
+        self.current_disease = None
+        self.lang_to_print=['영어', '중국어', '일본어', '러시아어', '몽골어', '아랍어', '스페인어', '외국어8', '외국어9', '외국어10', '외국어11']
+        self.nut_info_to_print = []
+
 
     def setupLogic(self):
         # page_0
@@ -80,12 +85,20 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_save_7.clicked.connect(lambda x: self.update_edit_existing_patient_data_page2())
 
         # page 8 - nutrients edit page
+        self.ui.btn_home_8.clicked.connect(lambda x:self.go_home(8))
         self.ui.btn_back_8.clicked.connect(self.go_back_to_edit_existing_patient_page2)
         self.ui.btn_go2Rec_8.clicked.connect(lambda x: self.add_selected_nutrients_to_tw(self.ui.tableWidget_RecNut_8, self.local_권고영양소레벨_dict))
         self.ui.btn_go2NotRec_8.clicked.connect(lambda x: self.add_selected_nutrients_to_tw(self.ui.tableWidget_NotRecNut_8, self.local_비권고영양소레벨_dict))
         self.ui.btn_undo2Rec_8.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_RecNut_8, self.local_권고영양소레벨_dict))
         self.ui.btn_undo2NotRec_8.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_NotRecNut_8, self.local_비권고영양소레벨_dict))
-        # self.ui.btn_save_next_8.clicked.connect()
+        self.ui.btn_save_next_8.clicked.connect(lambda x: self.save_and_go_to_filtering_page())
+        # page 10 - filtering page1
+        self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
+        self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
+        self.ui.btn_calculate_10.clicked.connect(lambda x: self.go_to_calculated_page())
+        # page 11 - print-filtering page2
+        # self.ui.btn_PRINT_11.clicked.connect()
+
 
         # page_12 - data home
         self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
@@ -109,6 +122,212 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_check_uniq_ing_name_15.clicked.connect(lambda x: self.check_unique_ing_name(self.ui.lineEdit_ing_name_15))
         self.ui.btn_cancel_15.clicked.connect(lambda x:self.go_to_pageN_with_warning_before_exiting(13))
         self.ui.btn_next_15.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info_page2())
+
+    def go_to_calculated_page(self):
+        printing_rep_level = int(self.ui.spinBox_printingRep_level_10.text())
+        gram_first = self.ui.ckBox_100gFirst_10.isChecked() #1회 분량 출력조건
+        portion_first = self.ui.ckBox_onePortionFirst_10.isChecked()
+        mortality_rate_first = self.ui.ckBox_mortalityFirst_10.isChecked()
+        protein_rate_first = self.ui.ckBox_proteinFirst_10.isChecked()
+
+        gasung_level = int(self.ui.spinBox_allergy_gasung_level_10.text())
+        gs_level = int(self.ui.spinBox_allergy_gs_level_10.text())
+        ms_level = int(self.ui.spinBox_allergy_ms_level_10.text())
+        lgg4_level = int(self.ui.spinBox_allergy_lgg4_level_10.text())
+        extinction_level = int(self.ui.spinBox_extinctionLevel_10.text())
+
+        origin, origin_level = self.get_most_specified_origin_and_level()
+        specialty, specialty_level = self.get_most_specified_specialty_and_level()
+
+        isManuallyDeletingDupicates = True if self.ui.radioBtn_dup_manual_10.isChecked() else False
+        isManuallyManipulatingHigherLevel = True if self.ui.radioBtn_upperLevel_manual_10.isChecked() else False
+
+        self.ui.stackedWidget.setCurrentIndex(9) #BLANK AT THIS MOMENT AHHH
+        copy_and_paste_tw(self.ui.tableWidget_RecNut_8, self.ui.tableWidget_rec_nut_9)
+        copy_and_paste_tw(self.ui.tableWidget_NotRecNut_8, self.ui.tableWidget_unrec_nut_9)
+
+        if (self.current_patient.진료일):
+            latest_date = str(self.current_patient.진료일[-1]).split()[0]
+            current_patient_disease_list = self.current_patient.진단[latest_date]
+            level_dis_dict = {} # dict of level - set of 질병명
+            for d in current_patient_disease_list:
+                dis_ing_rel = Disease.objects.get(질병명 = d).질병식품관계
+                print(dis_ing_rel.keys())
+                dis_nut_rel = Disease.objects.get(질병명 = d).질병영양소관계
+                for diagDis in dis_ing_rel.keys():
+                    level = dis_ing_rel[diagDis]
+                    print("currlevel = "+str(level))
+                    if level not in level_dis_dict:
+                        tempSet = set()
+                        tempSet.add(diagDis)
+                        level_dis_dict[level] = tempSet
+                    else:
+                        tempSet = level_dis_dict[level]
+                        if diagDis not in tempSet:
+                            tempSet.add(diagDis)
+                            level_dis_dict[level] = tempSet
+        currRowIndexRec = 0
+        self.ui.tableWidget_rec_ing_9.setRowCount(20)
+        currRowIndexUnrec = 0
+        self.ui.tableWidget_unrec_ing_9.setRowCount(20)
+        for l in reversed(range(1, 5)):
+            if l in level_dis_dict:
+                print("level" + str(l))
+                for item in level_dis_dict[l]:
+                    print("item:" + item)
+                for dis_name in level_dis_dict[l]:
+                    print("dis_name:" + dis_name)
+                    ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
+                    ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    ckbtnitem.setCheckState(QtCore.Qt.Checked)
+                    self.ui.tableWidget_rec_ing_9.setItem(currRowIndexRec, 0, ckbtnitem)
+                    item = QtWidgets.QTableWidgetItem(str(l))
+                    self.ui.tableWidget_rec_ing_9.setItem(currRowIndexRec, 1, item)
+                    currRowIndexRec += 1
+
+                        # self.populate_rec_or_unrec_ing_tw(self.ui.tableWidget_rec_ing_9, l,level_dis_dict[l], currRowIndex)
+            neg_l = l * (-1)
+            if neg_l in level_dis_dict:
+                for item in level_dis_dict[l]:
+                    print("item:" + item)
+                for dis_name in level_dis_dict[l]:
+                    print("dis_name:" + dis_name)
+                    ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
+                    ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    ckbtnitem.setCheckState(QtCore.Qt.Checked)
+                    self.ui.tableWidget_unrec_ing_9.setItem(currRowIndexUnrec, 0, ckbtnitem)
+                    item = QtWidgets.QTableWidgetItem(str(l))
+                    self.ui.tableWidget_rec_ing_9.setItem(currRowIndexUnrec, 1, item)
+                    currRowIndexUnrec += 1
+
+    def populate_rec_or_unrec_ing_tw(self, tw, level, dis_set, currRowIndex):
+        rowIndex = currRowIndex
+        for dis_name in dis_set:
+            print("dis_name:"+dis_name)
+            ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
+            ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            ckbtnitem.setCheckState(QtCore.Qt.Checked)
+            tw.setItem(rowIndex, 0, ckbtnitem)
+            item = QtWidgets.QTableWidgetItem(str(level))
+            tw.setItem(rowIndex, 1, item)
+            rowIndex +=1
+
+    def get_most_specified_origin_and_level(self):
+        if self.ui.comboBox_origin_5_10.currentText() != "":
+            return self.ui.comboBox_origin_5_10.currentText(), 5
+        elif self.ui.comboBox_origin_4_10.currentText() != "":
+            return self.ui.comboBox_origin_4_10.currentText(), 4
+        elif self.ui.comboBox_origin_3_10.currentText() != "":
+            return self.ui.comboBox_origin_3_10.currentText(), 3
+        elif self.ui.comboBox_origin_2_10.currentText() != "":
+            return self.ui.comboBox_origin_2_10.currentText(), 2
+        elif self.ui.comboBox_origin_1_10.currentText() != "":
+            return self.ui.comboBox_origin_1_10.currentText(), 1
+        else:
+            return "", -1
+
+    def get_most_specified_specialty_and_level(self):
+        if self.ui.comboBox_specialty_5_10.currentText() != "":
+            return self.ui.comboBox_specialty_5_10.currentText(), 5
+        elif self.ui.comboBox_specialty_4_10.currentText() != "":
+            return self.ui.comboBox_specialty_4_10.currentText(), 4
+        elif self.ui.comboBox_specialty_3_10.currentText() != "":
+            return self.ui.comboBox_specialty_3_10.currentText(), 3
+        elif self.ui.comboBox_specialty_2_10.currentText() != "":
+            return self.ui.comboBox_specialty_2_10.currentText(), 2
+        elif self.ui.comboBox_specialty_1_10.currentText() != "":
+            return self.ui.comboBox_specialty_1_10.currentText(), 1
+        else:
+            return "", -1
+
+    def go_to_filtering_page2(self):
+        self.ui.stackedWidget.setCurrentIndex(11)
+        populate_checkbox_lw()
+
+    def save_and_go_to_filtering_page(self):
+        #saveed nutrient in local권고비권고 영양소?
+        self.ui.stackedWidget.setCurrentIndex(10)
+
+        listOfOrigin1 = Ingredient.objects.distinct("원산지분류1")
+        self.ui.comboBox_origin_1_10.addItem("")
+        self.ui.comboBox_origin_1_10.addItems(listOfOrigin1)
+        self.ui.comboBox_origin_1_10.activated[str].connect(self.on_origin1_changed)
+        listOfSpecialty1 = Ingredient.objects.distinct("특산지분류1")
+        self.ui.comboBox_specialty_1_10.addItem("")
+        self.ui.comboBox_specialty_1_10.addItems(listOfSpecialty1)
+        self.ui.comboBox_specialty_1_10.activated[str].connect(self.on_specialty1_changed)
+
+    def on_origin1_changed(self, inputText):
+        listOfOrigin2 = Ingredient.objects(원산지분류1=inputText).distinct("원산지분류2")
+        self.ui.comboBox_origin_2_10.clear()
+        self.ui.comboBox_origin_3_10.clear()
+        self.ui.comboBox_origin_4_10.clear()
+        self.ui.comboBox_origin_5_10.clear()
+
+        self.ui.comboBox_origin_2_10.addItem("")
+        self.ui.comboBox_origin_2_10.addItems(listOfOrigin2)
+        self.ui.comboBox_origin_2_10.activated[str].connect(self.on_origin2_changed)
+
+    def on_origin2_changed(self, inputText):
+        listOfOrigin3 = Ingredient.objects(원산지분류2=inputText).distinct("원산지분류3")
+        self.ui.comboBox_origin_3_10.clear()
+        self.ui.comboBox_origin_4_10.clear()
+        self.ui.comboBox_origin_5_10.clear()
+
+        self.ui.comboBox_origin_3_10.addItem("")
+        self.ui.comboBox_origin_3_10.addItems(listOfOrigin3)
+        self.ui.comboBox_origin_3_10.activated[str].connect(self.on_origin3_changed)
+
+    def on_origin3_changed(self, inputText):
+        listOfOrigin4 = Ingredient.objects(원산지분류3=inputText).distinct("원산지분류4")
+        self.ui.comboBox_origin_4_10.clear()
+        self.ui.comboBox_origin_5_10.clear()
+
+        self.ui.comboBox_origin_4_10.addItem("")
+        self.ui.comboBox_origin_4_10.addItems(listOfOrigin4)
+        self.ui.comboBox_origin_4_10.activated[str].connect(self.on_origin4_changed)
+
+    def on_origin4_changed(self, inputText):
+        listOfOrigin5 = Ingredient.objects(원산지분류4=inputText).distinct("원산지분류5")
+        self.ui.comboBox_origin_5_10.clear()
+        self.ui.comboBox_origin_5_10.addItem("")
+        self.ui.comboBox_origin_5_10.addItems(listOfOrigin5)
+
+    def on_specialty1_changed(self, inputText):
+        listOfSpecialty2 = Ingredient.objects(특산지분류1=inputText).distinct("특산지분류2")
+        self.ui.comboBox_specialty_2_10.clear()
+        self.ui.comboBox_specialty_3_10.clear()
+        self.ui.comboBox_specialty_4_10.clear()
+        self.ui.comboBox_specialty_5_10.clear()
+
+        self.ui.comboBox_specialty_2_10.addItem("")
+        self.ui.comboBox_specialty_2_10.addItems(listOfSpecialty2)
+        self.ui.comboBox_specialty_2_10.activated[str].connect(self.on_specialty2_changed)
+
+    def on_specialty2_changed(self, inputText):
+        listOfSpecialty3 = Ingredient.objects(특산지분류2=inputText).distinct("특산지분류3")
+        self.ui.comboBox_specialty_3_10.clear()
+        self.ui.comboBox_specialty_4_10.clear()
+        self.ui.comboBox_specialty_5_10.clear()
+
+        self.ui.comboBox_specialty_3_10.addItem("")
+        self.ui.comboBox_specialty_3_10.addItems(listOfSpecialty3)
+        self.ui.comboBox_specialty_3_10.activated[str].connect(self.on_specialty3_changed)
+
+    def on_specialty3_changed(self, inputText):
+        listOfSpecialty4 = Ingredient.objects(특산지분류3=inputText).distinct("특산지분류4")
+        self.ui.comboBox_specialty_4_10.clear()
+        self.ui.comboBox_specialty_5_10.clear()
+
+        self.ui.comboBox_specialty_4_10.addItem("")
+        self.ui.comboBox_specialty_4_10.addItems(listOfSpecialty4)
+        self.ui.comboBox_specialty_4_10.activated[str].connect(self.on_specialty4_changed)
+
+    def on_specialty4_changed(self, inputText):
+        listOfSpecialty5 = Ingredient.objects(특산지분류4=inputText).distinct("특산지분류5")
+        self.ui.comboBox_specialty_5_10.clear()
+        self.ui.comboBox_specialty_5_10.addItem("")
+        self.ui.comboBox_specialty_5_10.addItems(listOfSpecialty5)
 
     def go_to_register_or_edit_ingredient_info_page2(self):
         pass
@@ -517,7 +736,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.dateEdit_lastOfficeVisit_6.setDate(QtCore.QDate(datetime.date.today()))
 
     def save_and_go_to_nutrients_edit_page(self, id):
-        self.update_selected_disease_and_allergies()
+        self.update_selected_disease_and_allergies(id)
         self.go_to_nutrients_edit_page(id)
 
     def go_to_nutrients_edit_page(self, id):
@@ -526,7 +745,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_nutrient_edit_page_content(self, id):
         # patient information
-        patient = Patient.objects.get(ID=id)
+        #patient = Patient.objects.get(ID=id)
         self.ui.lineEdit_name_8.setText(self.current_patient.이름)
         self.ui.lineEdit_ID_8.setText(self.current_patient.ID)
         self.ui.lineEdit_birthdate_8.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
@@ -591,12 +810,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         isBFeeding = True if self.ui.ckBox_bFeeding_6.isChecked() else False
         update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding)
 
-    def update_selected_disease_and_allergies(self):
-        self.local_급성알레르기음식 = convert_lw_to_str_list(self.ui.listWidget_diseases_7)
-        self.local_만성알레르기음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_gs_7)
-        self.local_만성lgG4과민반응음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_7)
-        self.local_진단 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
-
+    def update_selected_disease_and_allergies(self, id):
+        self.local_진단 = convert_lw_to_str_list(self.ui.listWidget_diseases_7)
+        self.local_급성알레르기음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_gs_7)
+        self.local_만성알레르기음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_7)
+        self.local_만성lgG4과민반응음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
+        self.save_local_data_to_patient(Patient.objects.get(ID = id))
+        진단 = Patient.objects.get(ID=id).진단
+        print(진단)
     def add_selected_nutrients_to_tw(self, nutrient_tw, nutrient_dict):
         selected_nutrients = convert_lw_to_str_list(self.ui.listWidget_nutrients_8)
         level = self.get_level()
@@ -683,10 +904,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 uniqIDChecked = True
 
     def save_local_data_to_patient(self, patient):
-        patient.급성알레르기음식[self.current_date] = self.local_급성알레르기음식
-        patient.만성알레르기음식[self.current_date] = self.local_만성알레르기음식
-        patient.만성lgG4과민반응음식[self.current_date] = self.local_만성lgG4과민반응음식
-        patient.진단[self.current_date] = self.local_진단
+        patient.급성알레르기음식[str(self.current_date)] = self.local_급성알레르기음식
+        patient.만성알레르기음식[str(self.current_date)] = self.local_만성알레르기음식
+        patient.만성lgG4과민반응음식[str(self.current_date)] = self.local_만성lgG4과민반응음식
+        patient.진단[str(self.current_date)] = self.local_진단
+        local_진료일 = patient.진료일
+        local_진료일.append(self.current_date)
+        patient.진료일 = local_진료일
         patient.save()
 
     def reset_local_data(self):

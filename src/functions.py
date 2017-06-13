@@ -13,6 +13,20 @@ def make_tw_checkbox_item(content, isChecked):
         item.setCheckState(QtCore.Qt.Unchecked)
     return item
 
+def copy_and_paste_tw(twToCopy, twToPaste):
+    twToPaste.setRowCount(twToCopy.rowCount())
+    twToPaste.setColumnCount(twToCopy.columnCount())
+    for rowIndex in range(twToCopy.rowCount()):
+        keyitem = twToCopy.item(rowIndex, 0).text()
+        ckbtnitem = QtWidgets.QTableWidgetItem(keyitem)
+        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        ckbtnitem.setCheckState(QtCore.Qt.Checked)
+        twToPaste.setItem(rowIndex, 0, ckbtnitem)
+        for colIndex in range(1, twToCopy.columnCount()):
+            itemText = twToCopy.item(rowIndex, colIndex).text()
+            item = QtWidgets.QTableWidgetItem(itemText)
+            twToPaste.setItem(rowIndex, colIndex, item)
+
 def make_lw_str_item(content):
     return QtWidgets.QListWidgetItem(content)
 
@@ -42,6 +56,14 @@ def convert_lw_to_str_list(lw):
         if ckbtn.checkState() == QtCore.Qt.Checked:
             toReturn.append(ckbtn.text())
     return toReturn
+
+def populate_lw_from_str_list(str_list, lw):
+    lw.clear()
+    for item in str_list:
+        ckbtnitem = QtWidgets.QListWidgetItem(item)
+        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+        lw.addItem(ckbtnitem)
 
 def populate_checkbox_lw(lw, content_collection, content_field_name):
     lw.clear()
