@@ -240,10 +240,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             return self.ui.comboBox_specialty_1_10.currentText(), 1
         else:
             return "", -1
-
-    def go_to_filtering_page2(self):
-        self.ui.stackedWidget.setCurrentIndex(11)
-        populate_checkbox_lw()
+    #
+    # def go_to_filtering_page2(self):
+    #     self.ui.stackedWidget.setCurrentIndex(11)
+    #     populate_checkbox_lw()
 
     def save_and_go_to_filtering_page(self):
         #saveed nutrient in local권고비권고 영양소?
