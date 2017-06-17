@@ -40,37 +40,30 @@ def make_lw_checkbox_item(content, isChecked):
     return item
 
 #for allergy table widgets, iterate through rows and return a list of tuple(알레르기음식, level)
-def convert_tw_to_tuple_list(tw):
-    list = []
+def convert_tw_to_dict(tw):
+    dict = {}
     for index in range(tw.rowCount()):
         if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
-            mytup = tuple([tw.item(index, 0).text(), int(tw.item(index, 1).text())])
-            list.append(mytup)
-    return list
+            dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
+    return dict
 
 #for diagnosed diseases, iterate through rows and return a string separated by ","
-def convert_lw_to_str_list(lw):
-    toReturn =  []
+def convert_lw_to_str_set(lw):
+    toReturn =  set()
     for i in range(lw.count()):
         ckbtn = lw.item(i)
         if ckbtn.checkState() == QtCore.Qt.Checked:
-            toReturn.append(ckbtn.text())
+            toReturn.add(ckbtn.text())
     return toReturn
 
-def populate_lw_from_str_list(str_list, lw):
-    lw.clear()
-    for item in str_list:
-        ckbtnitem = QtWidgets.QListWidgetItem(item)
-        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
-        lw.addItem(ckbtnitem)
-
-def populate_checkbox_lw(lw, content_collection, content_field_name):
+def render_checkbox_lw(lw, content_collection, content_field_name, checked_content):
     lw.clear()
     for item in content_collection:
         ckbtnitem = QtWidgets.QListWidgetItem(item[content_field_name])
         ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+        if checked_content and item[content_field_name] in checked_content:
+            ckbtnitem.setCheckState(QtCore.Qt.Checked)
         lw.addItem(ckbtnitem)
 
 def populate_checkbox_tw_from_dict(tw, content_collection):
@@ -86,19 +79,23 @@ def populate_checkbox_tw_from_dict(tw, content_collection):
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex+=1
 
+def update_checkbox_state_and_level_tw(tw, checked_content_dict):
+    for index in range(tw.rowCount()):
+        field_name = tw.item(index, 0).text()
+        if field_name in checked_content_dict:
+            tw.item(index, 0).setCheckState(QtCore.Qt.Checked)
+            tw.item(index, 1).setText(str(checked_content_dict[field_name]))
+        else:
+            tw.item(index, 0).setCheckState(QtCore.Qt.Unchecked)
+            tw.item(index, 1).setText("0")
+
+
 def remove_checked_items_from_tw(nutrient_tw, nutrient_dict):
     for i in range(nutrient_tw.rowCount()):
         if nutrient_tw.item(i,0).checkState():
             nutrient_dict.pop(nutrient_tw.item(i,0).text(), None)
     populate_checkbox_tw_from_dict(nutrient_tw, nutrient_dict)
 
-
-def update_checkbox_state_lw(lw, content_collection, content_field_name, checked_content):
-    for i in range(lw.count()):
-        if lw.item(i).text() in checked_content:
-            lw.item(i).setCheckState(QtCore.Qt.Checked)
-        else:
-            lw.item(i).setCheckState(QtCore.Qt.Unchecked)
 
 def create_checkbox_lw(cursorToCollection, lw, content, isNewPatient, patientDiseaseSet):
     for item in cursorToCollection:
@@ -113,23 +110,20 @@ def create_checkbox_lw(cursorToCollection, lw, content, isNewPatient, patientDis
                 ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         lw.addItem(ckbtnitem)
 
-def create_checkbox_level_tw(cursorToCollection, tableWidget, content, isNewPatient, patientAllergyTupleList):
-    tableWidget.setRowCount(cursorToCollection.count())
-    tableWidget.setColumnCount(2)
+def render_checkbox_level_tw(content_collection, tw, content_field_name, checked_content_dict):
+    tw.setRowCount(content_collection.count())
+    tw.setColumnCount(2)
     rowIndex = 0
-    for item in cursorToCollection:
-        ckbtnitem = QtWidgets.QTableWidgetItem(item[content])
+    for item in content_collection:
+        ckbtnitem = QtWidgets.QTableWidgetItem(item[content_field_name])
         ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         levelitem = QtWidgets.QTableWidgetItem("0")
-        if not isNewPatient and patientAllergyTupleList is not None:
-            if len(patientAllergyTupleList) != 0:
-                for allergicFoodLevelTuple in patientAllergyTupleList:
-                    if item[content] == allergicFoodLevelTuple[0]:
-                        ckbtnitem.setCheckState(QtCore.Qt.Checked)
-                        levelitem = QtWidgets.QTableWidgetItem(str(allergicFoodLevelTuple[1]))
-        tableWidget.setItem(rowIndex, 0, ckbtnitem)
-        tableWidget.setItem(rowIndex, 1, levelitem)
+        if checked_content_dict and item[content_field_name] in checked_content_dict:
+            ckbtnitem.setCheckState(QtCore.Qt.Checked)
+            levelitem.setText(str(checked_content_dict[item[content_field_name]]))
+        tw.setItem(rowIndex, 0, ckbtnitem)
+        tw.setItem(rowIndex, 1, levelitem)
         rowIndex = rowIndex + 1
 
 def clear_checkbox_lw(lw):
