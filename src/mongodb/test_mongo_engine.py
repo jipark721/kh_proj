@@ -184,14 +184,16 @@ def add_dummy_relations():
 
 
 # populate dummy data
-reset_database()
-add_dummy_patient()
-for i in range(10):
-    add_dummy_nutrient(i)
-    add_dummy_ingredient(i)
-for i in range(10):
-    add_dummy_disease(i)
-add_dummy_relations()
+reset = False
+if reset:
+    reset_database()
+    add_dummy_patient()
+    for i in range(10):
+        add_dummy_nutrient(i)
+        add_dummy_ingredient(i)
+    for i in range(10):
+        add_dummy_disease(i)
+    add_dummy_relations()
 
 # print_all_patients()
 # print_all_diseases()
