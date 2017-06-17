@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>7</number>
+       <number>10</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="gridLayoutWidget">
@@ -1018,15 +1018,15 @@
            <x>0</x>
            <y>0</y>
            <width>1191</width>
-           <height>51</height>
+           <height>41</height>
           </rect>
          </property>
          <widget class="QLineEdit" name="lineEdit_name_7">
           <property name="geometry">
            <rect>
-            <x>50</x>
+            <x>60</x>
             <y>10</y>
-            <width>101</width>
+            <width>113</width>
             <height>21</height>
            </rect>
           </property>
@@ -1037,10 +1037,10 @@
          <widget class="QLabel" name="label_14">
           <property name="geometry">
            <rect>
-            <x>19</x>
+            <x>30</x>
             <y>10</y>
-            <width>31</width>
-            <height>21</height>
+            <width>60</width>
+            <height>16</height>
            </rect>
           </property>
           <property name="text">
@@ -1050,10 +1050,10 @@
          <widget class="QLabel" name="label_15">
           <property name="geometry">
            <rect>
-            <x>169</x>
+            <x>190</x>
             <y>10</y>
-            <width>21</width>
-            <height>21</height>
+            <width>60</width>
+            <height>16</height>
            </rect>
           </property>
           <property name="text">
@@ -1063,7 +1063,7 @@
          <widget class="QLineEdit" name="lineEdit_ID_7">
           <property name="geometry">
            <rect>
-            <x>190</x>
+            <x>210</x>
             <y>10</y>
             <width>113</width>
             <height>21</height>
@@ -1076,9 +1076,9 @@
          <widget class="QLabel" name="label_16">
           <property name="geometry">
            <rect>
-            <x>320</x>
+            <x>330</x>
             <y>10</y>
-            <width>61</width>
+            <width>60</width>
             <height>21</height>
            </rect>
           </property>
@@ -1102,7 +1102,7 @@
          <widget class="QLineEdit" name="lineEdit_weight_7">
           <property name="geometry">
            <rect>
-            <x>740</x>
+            <x>730</x>
             <y>10</y>
             <width>51</width>
             <height>21</height>
@@ -1115,7 +1115,7 @@
          <widget class="QLabel" name="label_17">
           <property name="geometry">
            <rect>
-            <x>830</x>
+            <x>820</x>
             <y>10</y>
             <width>60</width>
             <height>21</height>
@@ -1128,9 +1128,9 @@
          <widget class="QLabel" name="label_18">
           <property name="geometry">
            <rect>
-            <x>1040</x>
+            <x>1030</x>
             <y>10</y>
-            <width>61</width>
+            <width>60</width>
             <height>21</height>
            </rect>
           </property>
@@ -1143,7 +1143,7 @@
            <rect>
             <x>550</x>
             <y>10</y>
-            <width>21</width>
+            <width>60</width>
             <height>21</height>
            </rect>
           </property>
@@ -1154,7 +1154,7 @@
          <widget class="QLabel" name="label_20">
           <property name="geometry">
            <rect>
-            <x>700</x>
+            <x>690</x>
             <y>10</y>
             <width>60</width>
             <height>21</height>
@@ -1169,7 +1169,7 @@
            <rect>
             <x>580</x>
             <y>10</y>
-            <width>21</width>
+            <width>60</width>
             <height>21</height>
            </rect>
           </property>
@@ -1193,9 +1193,9 @@
          <widget class="QLineEdit" name="lineEdit_nthVisit_7">
           <property name="geometry">
            <rect>
-            <x>1000</x>
+            <x>990</x>
             <y>10</y>
-            <width>31</width>
+            <width>41</width>
             <height>21</height>
            </rect>
           </property>
@@ -1206,7 +1206,7 @@
          <widget class="QLineEdit" name="lineEdit_birthdate_7">
           <property name="geometry">
            <rect>
-            <x>370</x>
+            <x>380</x>
             <y>10</y>
             <width>113</width>
             <height>21</height>
@@ -1219,7 +1219,7 @@
          <widget class="QLineEdit" name="lineEdit_lastOfficeVisit_7">
           <property name="geometry">
            <rect>
-            <x>870</x>
+            <x>860</x>
             <y>10</y>
             <width>113</width>
             <height>21</height>
@@ -1232,9 +1232,9 @@
          <widget class="QLabel" name="label_73">
           <property name="geometry">
            <rect>
-            <x>660</x>
+            <x>650</x>
             <y>10</y>
-            <width>21</width>
+            <width>60</width>
             <height>21</height>
            </rect>
           </property>
@@ -1245,9 +1245,9 @@
          <widget class="QLabel" name="label_86">
           <property name="geometry">
            <rect>
-            <x>800</x>
+            <x>780</x>
             <y>10</y>
-            <width>21</width>
+            <width>60</width>
             <height>21</height>
            </rect>
           </property>
@@ -1272,9 +1272,9 @@
         <widget class="QWidget" name="widget_18" native="true">
          <property name="geometry">
           <rect>
-           <x>0</x>
-           <y>50</y>
-           <width>1251</width>
+           <x>20</x>
+           <y>40</y>
+           <width>1221</width>
            <height>631</height>
           </rect>
          </property>
@@ -1359,7 +1359,7 @@
            <rect>
             <x>950</x>
             <y>40</y>
-            <width>291</width>
+            <width>271</width>
             <height>551</height>
            </rect>
           </property>
@@ -1398,29 +1398,6 @@
           </property>
           <property name="text">
            <string>만성 알레르기 lgG4 음식 </string>
-          </property>
-         </widget>
-         <widget class="QComboBox" name="past_diagnosis_combobox_7">
-          <property name="geometry">
-           <rect>
-            <x>70</x>
-            <y>595</y>
-            <width>131</width>
-            <height>31</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_189">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>590</y>
-            <width>51</width>
-            <height>41</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>이전 진료</string>
           </property>
          </widget>
         </widget>

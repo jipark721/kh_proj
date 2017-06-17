@@ -95,8 +95,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page 10 - filtering page1
         self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
-        self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
-        self.ui.btn_calculate_10.clicked.connect(lambda x: self.go_to_calculated_page())
+        # self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
+        # self.ui.btn_calculate_10.clicked.connect(lambda x: self.go_to_calculated_page())
         # page 11 - print-filtering page2
         # self.ui.btn_PRINT_11.clicked.connect()
 
@@ -743,9 +743,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def save_and_go_to_nutrients_edit_page(self):
         self.update_selected_disease_and_allergies()
-        self.go_to_nutrients_edit_page()
+        self.go_to_filtering_page()
 
-    def go_to_nutrients_edit_page(self):
+    def go_to_filtering_page(self):
         self.ui.stackedWidget.setCurrentIndex(8)
 
     def go_to_select_disease_and_allergies(self, id):
@@ -878,10 +878,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
             msgbox.setDefaultButton(QtWidgets.QMessageBox.Yes)
             ret = msgbox.exec_()
-            if ret == QtWidgets.QMessageBox.Yes:
-                self.go_to_nutrients_edit_page(id)
-            else:
-                self.ui.stackedWidget.setCurrentIndex(1)
+            # if ret == QtWidgets.QMessageBox.Yes:
+            #     self.go_to_filtering_page(id)
+            # else:
+            #     self.ui.stackedWidget.setCurrentIndex(1)
 
     def check_unique_ID(self):
         uniqIDChecked = False
