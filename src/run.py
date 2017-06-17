@@ -24,15 +24,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # local classes
         self.current_date = datetime.date.today()
         self.current_patient = None
-        self.local_급성알레르기음식 = None
-        self.local_만성알레르기음식 = None
-        self.local_만성lgG4과민반응음식 = None
-        self.local_진단 = None
+
+        self.local_급성알레르기음식 = {}
+        self.local_만성알레르기음식 = {}
+        self.local_만성lgG4과민반응음식 = {}
+        self.local_진단 = {}
         # key - 영양소명 value - level
         self.local_권고영양소레벨_dict = {}
         self.local_비권고영양소레벨_dict = {}
-
-        self.current_ingredient = None
 
     def setupLogic(self):
         # page_0
@@ -85,7 +84,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_go2NotRec_8.clicked.connect(lambda x: self.add_selected_nutrients_to_tw(self.ui.tableWidget_NotRecNut_8, self.local_비권고영양소레벨_dict))
         self.ui.btn_undo2Rec_8.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_RecNut_8, self.local_권고영양소레벨_dict))
         self.ui.btn_undo2NotRec_8.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_NotRecNut_8, self.local_비권고영양소레벨_dict))
-        # self.ui.btn_save_next_8.clicked.connect()
+        # self.ui.btn_save_next_8.clicked.connect(self.print_current_patient())
 
         # page_12 - data home
         self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
@@ -458,6 +457,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     #############################
     # TODO - NEED TO WORK ON DATA PAGE
     #############################
+    # def print_current_patient(self):
+        # print(self.current_patient)
+
     def updatePatients(self):
         # for patient in getAllPatients():
         #     self.tableWidget_clientCandidates_5.
@@ -525,8 +527,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.render_nutrient_edit_page_content(id)
 
     def render_nutrient_edit_page_content(self, id):
-        # patient information
-        patient = Patient.objects.get(ID=id)
         self.ui.lineEdit_name_8.setText(self.current_patient.이름)
         self.ui.lineEdit_ID_8.setText(self.current_patient.ID)
         self.ui.lineEdit_birthdate_8.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
@@ -535,6 +535,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_height_8.setText(str(self.current_patient.키))
         self.ui.lineEdit_weight_8.setText(str(self.current_patient.몸무게))
         self.ui.lineEdit_nthVisit_8.setText(str(self.current_patient.방문횟수 + 1))
+        # print(self.current_patient)
+        self.print_local_data()
 
         # nutrient information
         populate_checkbox_lw(self.ui.listWidget_nutrients_8, Nutrient.objects, "영양소명")
@@ -592,13 +594,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding)
 
     def update_selected_disease_and_allergies(self):
-        self.local_급성알레르기음식 = convert_lw_to_str_list(self.ui.listWidget_diseases_7)
-        self.local_만성알레르기음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_gs_7)
-        self.local_만성lgG4과민반응음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_7)
-        self.local_진단 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_7)
+        self.local_급성알레르기음식 = convert_lw_to_str_set(self.ui.listWidget_diseases_7)
+        self.local_만성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_7)
+        self.local_만성lgG4과민반응음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_7)
+        self.local_진단 = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_7)
 
     def add_selected_nutrients_to_tw(self, nutrient_tw, nutrient_dict):
-        selected_nutrients = convert_lw_to_str_list(self.ui.listWidget_nutrients_8)
+        selected_nutrients = convert_lw_to_str_set(self.ui.listWidget_nutrients_8)
         level = self.get_level()
         for nut in selected_nutrients:
             nutrient_dict[nut] = level
@@ -635,7 +637,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             new_patient.성별 = "남" if self.ui.radioBtn_male_3.isChecked else "여"
             new_patient.생년월일 = convert_DateEditWidget_to_string(self.ui.dateEdit_birthdate_3)
             new_patient.주소 = self.ui.lineEdit_address_3.text()
-            진단 = {convert_DateEditWidget_to_string(self.ui.dateEdit_lastOfficeVisit_3): convert_lw_to_str_list(
+            진단 = {convert_DateEditWidget_to_string(self.ui.dateEdit_lastOfficeVisit_3): convert_lw_to_str_set(
                 self.ui.listWidget_diseases_4)}
             new_patient.진료 = 진단
             new_patient.방문횟수 = 1
@@ -643,9 +645,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             new_patient.몸무게 = float(self.ui.lineEdit_weight_3.text()) if self.ui.lineEdit_weight_3.text() else 0
             new_patient.임신여부 = True if self.ui.ckBox_preg_3.isChecked() else False
             new_patient.수유여부 = True if self.ui.ckBox_bFeeding_3.isChecked() else False
-            new_patient.급성알레르기음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_gs_4)
-            new_patient.만성알레르기음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_ms_4)
-            new_patient.만성lgG4과민반응음식 = convert_tw_to_tuple_list(self.ui.tableWidget_allergies_lgg4_4)
+            new_patient.급성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_4)
+            new_patient.만성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_4)
+            new_patient.만성lgG4과민반응음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_4)
             new_patient.save()
             self.current_patient = new_patient
 
@@ -695,6 +697,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_만성알레르기음식 = None
         self.local_만성lgG4과민반응음식 = None
         self.local_진단 = None
+
+    def print_local_data(self):
+        print("급성알레르기음식: " + str(self.local_급성알레르기음식))
+        print("local_만성알레르기음식: " + str(self.local_만성알레르기음식))
+        print("local_만성lgG4과민반응음식: " + str(self.local_만성lgG4과민반응음식))
+        print("local_진단: " + str(self.local_진단))
+        print("local_권고영양소레벨_dict: " + str(self.local_권고영양소레벨_dict))
+        print("local_비권고영양소레벨_dict: " + str(self.local_비권고영양소레벨_dict))
 
 
 def main():

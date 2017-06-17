@@ -26,21 +26,20 @@ def make_lw_checkbox_item(content, isChecked):
     return item
 
 #for allergy table widgets, iterate through rows and return a list of tuple(알레르기음식, level)
-def convert_tw_to_tuple_list(tw):
-    list = []
+def convert_tw_to_dict(tw):
+    dict = {}
     for index in range(tw.rowCount()):
         if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
-            mytup = tuple([tw.item(index, 0).text(), int(tw.item(index, 1).text())])
-            list.append(mytup)
-    return list
+            dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
+    return dict
 
 #for diagnosed diseases, iterate through rows and return a string separated by ","
-def convert_lw_to_str_list(lw):
-    toReturn =  []
+def convert_lw_to_str_set(lw):
+    toReturn =  set()
     for i in range(lw.count()):
         ckbtn = lw.item(i)
         if ckbtn.checkState() == QtCore.Qt.Checked:
-            toReturn.append(ckbtn.text())
+            toReturn.add(ckbtn.text())
     return toReturn
 
 def populate_checkbox_lw(lw, content_collection, content_field_name):

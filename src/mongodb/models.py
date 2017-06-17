@@ -15,10 +15,10 @@ class Patient(Document):
     몸무게 = DecimalField(default=0.0)
     임신여부 = BooleanField(default=False)
     수유여부 = BooleanField(default=False)
-    급성알레르기음식 = DictField() # Map of DateTimeField to list of tuples { 진료일 : [ ( 알레르기음식, 레벨 ) ] }
+    급성알레르기음식 = DictField() # Map of DateTimeField to Map of Alg:lvl { 진료일 : { 알레르기음식: 레벨 } }
     만성알레르기음식 = DictField()
     만성lgG4과민반응음식 = DictField()
-    진단 = DictField() # Map of DateTimeField to list of strings { 진료일 : [ 질병명 ] }
+    진단 = DictField() # Map of DateTimeField to set of strings { 진료일 : { 질병명 } }
     진료일 = SortedListField(DateTimeField())
 
     def __str__(self):
@@ -27,8 +27,8 @@ class Patient(Document):
 class Disease(Document):
     질병명 = StringField(required=True, max_length=50)
     질병명영어 = StringField(max_length=50)
-    질병식품관계 = DictField(default={})
-    질병영양소관계 = DictField(default={})
+    질병식품관계 = DictField()
+    질병영양소관계 = DictField()
 
     def __str__(self):
         return self.질병명
@@ -37,7 +37,7 @@ class Disease(Document):
 class Ingredient(Document):
     식품명 = StringField(required=True, max_length=100)
     식품명영어 = StringField(max_length=100)
-    식품영양소관계 = StringField(max_length=100)
+    식품영양소관계 = DictField() # Map of DateTimeField to list of tuples { 진료일 : [ ( 알레르기음식, 레벨 ) ] }
     식품분류1 = StringField(max_length=100)
     식품분류2 = StringField(max_length=100)
     식품분류3 = StringField(max_length=100)
