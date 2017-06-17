@@ -4,7 +4,7 @@
 
 ## Scores:
 ### Ji : 2
-### Alex : 1
+### Alex : 2
 
 ## Simple Set Up & Check up:
 
