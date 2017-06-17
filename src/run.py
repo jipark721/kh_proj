@@ -82,8 +82,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_7 - patient information (diseases / allergies)
         self.ui.btn_back_7.clicked.connect(self.go_back_to_edit_existing_patient_page1)
-        self.ui.btn_save_next_7.clicked.connect(
-            lambda x: self.save_and_go_to_nutrients_edit_page(self.ui.lineEdit_ID_7.text()))
+        self.ui.btn_save_next_7.clicked.connect(self.save_and_go_to_nutrients_edit_page)
         # self.ui.btn_save_7.clicked.connect(lambda x: self.update_edit_existing_patient_data_page2())
 
         # page 8 - nutrients edit page
@@ -746,23 +745,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def go_to_nutrients_edit_page(self):
         self.ui.stackedWidget.setCurrentIndex(8)
-        self.render_nutrient_edit_page_content()
-
-    def render_nutrient_edit_page_content(self):
-        self.ui.lineEdit_name_8.setText(self.current_patient.이름)
-        self.ui.lineEdit_ID_8.setText(self.current_patient.ID)
-        self.ui.lineEdit_birthdate_8.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
-        self.ui.lineEdit_age_8.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-        self.ui.lineEdit_lastOfficeVisit_8.setText(str(datetime.date.today()))
-        self.ui.lineEdit_height_8.setText(str(self.current_patient.키))
-        self.ui.lineEdit_weight_8.setText(str(self.current_patient.몸무게))
-        self.ui.lineEdit_nthVisit_8.setText(str(self.current_patient.방문횟수 + 1))
-        # print(self.current_patient)
-        self.print_local_data()
-
-        # nutrient information
-        render_checkbox_lw(self.ui.listWidget_nutrients_8, Nutrient.objects, "영양소명", set())
-        #update_checkbox_state_lw(self.ui.listWidget_nutrients_8, Nutrient.objects, "영양소명", set())
 
     def go_to_select_disease_and_allergies(self, id):
         if id == None:
