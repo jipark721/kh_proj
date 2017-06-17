@@ -2,9 +2,9 @@
 
 ### Collaborators: Alex Ahn, Ji Park
 
-### Scores:
-# Ji : 1
-# Alex : 0
+## Scores:
+### Ji : 1
+### Alex : 0
 
 ## Simple Set Up & Check up:
 
