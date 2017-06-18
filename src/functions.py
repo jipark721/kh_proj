@@ -1,4 +1,5 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
+from mongodb.models import *
 import datetime
 
 def make_tw_str_item(content):
@@ -130,6 +131,30 @@ def clear_checkbox_lw(lw):
     for index in range(lw.count()):
         lw.item(index).setCheckState(QtCore.Qt.Unchecked)
 
+def render_rec_nutrient_tw(tw, diseases):
+    relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases)
+    print(relevant_nutrients)
+    tw.setRowCount(Nutrient.objects.count())
+    tw.setColumnCount(3)
+    rowIndex = 0
+    for nutrient in Nutrient.objects:
+        rec_ckbtn = QtWidgets.QTableWidgetItem()
+        rec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        rec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
+        nonrec_ckbtn = QtWidgets.QTableWidgetItem()
+        nonrec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        nonrec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
+        nutrient_item = QtWidgets.QTableWidgetItem(nutrient.영양소명)
+        if nutrient.영양소명 in relevant_nutrients:
+            if relevant_nutrients[nutrient.영양소명] > 0:
+                rec_ckbtn.setCheckState(QtCore.Qt.Checked)
+            else:
+                nonrec_ckbtn.setCheckState(QtCore.Qt.Checked)
+        tw.setItem(rowIndex, 0, rec_ckbtn)
+        tw.setItem(rowIndex, 1, nonrec_ckbtn)
+        tw.setItem(rowIndex, 2, nutrient_item)
+        rowIndex+=1
+
 # def clear_ckbox_level_tw(tw):
 #     for rowIndex in range(tw.rowCount):
 #         tw.item(rowIndex, 0).setCheckState(QtCore.Qt.Unchecked)
@@ -178,19 +203,19 @@ def create_warning_message(warnMsg):
     msgbox.setWindowTitle("Error")
     msgbox.exec_()
 
-def get_relevant_nutrients_from_diseases(diseases):
-    relevant_nutrient = []
+def get_relevant_nutrients_from_diseases_str(diseases):
+    relevant_nutrient = {}
     for disease in diseases:
+        disease = Disease.objects.get(질병명=disease)
         for rel_nutrient, level in disease.질병영양소관계.items():
-            relevant_nutrient.append(tuple(rel_nutrient, level))
-    sorted(relevant_nutrient, key=lambda x: x[1])
+            relevant_nutrient[rel_nutrient] = level
     return relevant_nutrient
 
-def get_relevant_ingredient_from_diseases(diseases):
-    relevant_ingredient = []
+def get_relevant_ingredient_from_diseases_str(diseases):
+    relevant_ingredient = {}
     for disease in diseases:
+        Disease.objects.get(질병명=disease)
         for rel_ingredient, level in disease.질병영양소관계.items():
-            relevant_ingredient.append(tuple(rel_ingredient, level))
-    sorted(relevant_ingredient, key=lambda x: x[1])
+            relevant_ingredient[rel_ingredient] =  level
     return relevant_ingredient
 
