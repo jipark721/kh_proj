@@ -1413,7 +1413,7 @@
          <widget class="QPushButton" name="btn_back_7">
           <property name="geometry">
            <rect>
-            <x>10</x>
+            <x>100</x>
             <y>20</y>
             <width>101</width>
             <height>31</height>
@@ -1423,30 +1423,17 @@
            <string>뒤로</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="btn_save_7">
+         <widget class="QPushButton" name="btn_next_7">
           <property name="geometry">
            <rect>
-            <x>110</x>
+            <x>200</x>
             <y>20</y>
             <width>101</width>
             <height>31</height>
            </rect>
           </property>
           <property name="text">
-           <string>저장</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_save_next_7">
-          <property name="geometry">
-           <rect>
-            <x>210</x>
-            <y>20</y>
-            <width>101</width>
-            <height>31</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>저장 후 다음</string>
+           <string>다음</string>
           </property>
          </widget>
         </widget>
@@ -1462,42 +1449,6 @@
           <height>721</height>
          </rect>
         </property>
-        <widget class="QWidget" name="widget_49" native="true">
-         <property name="geometry">
-          <rect>
-           <x>1020</x>
-           <y>650</y>
-           <width>221</width>
-           <height>61</height>
-          </rect>
-         </property>
-         <widget class="QPushButton" name="btn_cancel_8">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>20</y>
-            <width>101</width>
-            <height>31</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>취소</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_confirm_8">
-          <property name="geometry">
-           <rect>
-            <x>110</x>
-            <y>20</y>
-            <width>101</width>
-            <height>31</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>확인</string>
-          </property>
-         </widget>
-        </widget>
         <widget class="QPushButton" name="btn_home_8">
          <property name="geometry">
           <rect>
@@ -1998,7 +1949,7 @@
            </rect>
           </property>
           <property name="text">
-           <string>1. 질병 관련 영양소 level 몇까지 권고/비권고에 포함시킬지? (0은 아예 포함시키지 않음)</string>
+           <string>1. 질병 관련 식품 level 몇까지 권고/비권고에 포함시킬지? (0은 아예 포함시키지 않음)</string>
           </property>
          </widget>
          <widget class="QSpinBox" name="spinBox">
@@ -2215,6 +2166,42 @@
           </property>
           <property name="text">
            <string>등급 이상 비권고로 표시</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="widget_49" native="true">
+         <property name="geometry">
+          <rect>
+           <x>940</x>
+           <y>650</y>
+           <width>311</width>
+           <height>71</height>
+          </rect>
+         </property>
+         <widget class="QPushButton" name="btn_back_8">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>20</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>뒤로</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_next_8">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>20</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>다음</string>
           </property>
          </widget>
         </widget>
@@ -3058,36 +3045,36 @@
         <widget class="QWidget" name="widget_50" native="true">
          <property name="geometry">
           <rect>
-           <x>1020</x>
-           <y>670</y>
-           <width>221</width>
-           <height>31</height>
+           <x>940</x>
+           <y>650</y>
+           <width>311</width>
+           <height>71</height>
           </rect>
          </property>
-         <widget class="QPushButton" name="btn_cancel_9">
+         <widget class="QPushButton" name="btn_back_9">
           <property name="geometry">
            <rect>
-            <x>10</x>
-            <y>0</y>
+            <x>100</x>
+            <y>20</y>
             <width>101</width>
             <height>31</height>
            </rect>
           </property>
           <property name="text">
-           <string>취소</string>
+           <string>뒤로</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="btn_confirm_9">
+         <widget class="QPushButton" name="btn_next_9">
           <property name="geometry">
            <rect>
-            <x>110</x>
-            <y>0</y>
+            <x>200</x>
+            <y>20</y>
             <width>101</width>
             <height>31</height>
            </rect>
           </property>
           <property name="text">
-           <string>확인</string>
+           <string>다음</string>
           </property>
          </widget>
         </widget>
@@ -3351,42 +3338,6 @@
          </property>
         </widget>
        </widget>
-       <widget class="QWidget" name="widget_52" native="true">
-        <property name="geometry">
-         <rect>
-          <x>1030</x>
-          <y>670</y>
-          <width>221</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <widget class="QPushButton" name="btn_cancel_10">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>0</y>
-           <width>101</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>취소</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="btn_confirm_10">
-         <property name="geometry">
-          <rect>
-           <x>110</x>
-           <y>0</y>
-           <width>101</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>확인</string>
-         </property>
-        </widget>
-       </widget>
        <widget class="QWidget" name="widget_4" native="true">
         <property name="geometry">
          <rect>
@@ -3468,7 +3419,7 @@
          <rect>
           <x>610</x>
           <y>40</y>
-          <width>611</width>
+          <width>631</width>
           <height>661</height>
          </rect>
         </property>
@@ -3560,6 +3511,42 @@
          <property name="text">
           <string>과거 리스트 가져오기</string>
          </property>
+        </widget>
+        <widget class="QWidget" name="widget_52" native="true">
+         <property name="geometry">
+          <rect>
+           <x>330</x>
+           <y>610</y>
+           <width>311</width>
+           <height>71</height>
+          </rect>
+         </property>
+         <widget class="QPushButton" name="btn_back_10">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>20</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>뒤로</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_next_10">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>20</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>다음</string>
+          </property>
+         </widget>
         </widget>
        </widget>
       </widget>
