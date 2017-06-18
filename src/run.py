@@ -52,17 +52,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_findExistingPatient_2.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(5))
         self.ui.btn_registerNewPatient_2.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(3))
         self.ui.btn_home_2.clicked.connect(self.go_to_home_no_warning)
-        self.ui.btn_home_3.clicked.connect(lambda x: self.go_home(3))
 
         # page_3 - register new patient
+        self.ui.btn_home_3.clicked.connect(lambda x: self.go_home(3))
         self.ui.btn_cancel_3.clicked.connect(self.cancel_register_new_patient)
         self.ui.btn_next_3.clicked.connect(self.register_patient_and_go_to_select_diseases_and_allergies)
         self.ui.btn_checkUniqID_3.clicked.connect(self.check_unique_ID)
 
-        # page_4 - register new patient page 2
-        # self.ui.btn_cancel_4.clicked.connect(self.cancel_register_new_patient)
-        # self.ui.btn_back_4.clicked.connect(self.go_back_to_register_new_patient_page1)
-        # self.ui.btn_registerClient_4.clicked.connect(self.register_client)
+        # page_4
 
         # page_5 - find existing patient
         self.ui.btn_cancel_5.clicked.connect(self.cancel_find_existing_client)
@@ -80,9 +77,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_save_next_6.clicked.connect(lambda x: self.go_to_edit_existing_patient_page2(self.ui.lineEdit_ID_6.text()))
 
         # page_7 - patient information (diseases / allergies)
-        self.ui.btn_back_7.clicked.connect(self.go_back_to_edit_existing_patient_page1)
+        self.ui.btn_back_7.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(5))
         self.ui.btn_next_7.clicked.connect(self.save_disease_and_allergies_locally_and_go_to_filtering_page)
-        # self.ui.btn_save_7.clicked.connect(lambda x: self.update_edit_existing_patient_data_page2())
+        self.ui.btn_home_7.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(1))
 
         # page 8 - filtering page
         self.ui.btn_back_8.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(7))
@@ -125,14 +122,24 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_findby_ing_name_14.clicked.connect(
             lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_14.text()))
         self.ui.btn_findby_ing_category_14.clicked.connect(lambda x: self.find_ingredients_by_category())
-        self.ui.btn_cancel_14.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
+        self.ui.btn_cancel_14.clicked.connect(lambda x: self.cancel_find_existing_ingredient())
         self.ui.btn_confirm_ing_14.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info(
             get_first_checked_btn_text_in_tw(self.ui.tableWidget_ing_candidates_14)))
         # page_15 - register/edit ingredient
         self.ui.btn_check_uniq_ing_name_15.clicked.connect(
-            lambda x: self.check_unique_ing_name(self.ui.lineEdit_ing_name_15))
+            lambda x: self.check_unique_ing_name(self.ui.lineEdit_ing_name_15.text()))
         self.ui.btn_cancel_15.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(13))
         self.ui.btn_next_15.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info_page2())
+
+    def cancel_find_existing_ingredient(self):
+        self.ui.lineEdit_ing_name_14.setText("")
+        self.ui.comboBox_ing_category1_14.setCurrentIndex(0)
+        self.ui.comboBox_ing_category2_14.setCurrentIndex(0)
+        self.ui.comboBox_ing_category3_14.setCurrentIndex(0)
+        self.ui.comboBox_ing_category4_14.setCurrentIndex(0)
+        self.ui.comboBox_ing_category5_14.setCurrentIndex(0)
+        self.ui.tableWidget_ing_candidates_14.setRowCount(0)
+        self.ui.stackedWidget.setCurrentIndex(13)
 
     def go_to_calculated_page(self):
         printing_rep_level = int(self.ui.spinBox_printingRep_level_10.text())
@@ -384,6 +391,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_ing_category3_15.setCurrentText(self.current_ingredient.식품분류3)
         self.ui.comboBox_ing_category4_15.setCurrentText(self.current_ingredient.식품분류4)
         self.ui.comboBox_ing_category5_15.setCurrentText(self.current_ingredient.식품분류5)
+        self.ui.
         self.ui.lineEdit_ing_description_15.setText(self.current_ingredient.식품설명)
         self.ui.lineEdit_ing_academic_name_15.setText(self.current_ingredient.학명)
         self.ui.lineEdit_ing_lang_english_15.setText(self.current_ingredient.식품명영어)
@@ -706,17 +714,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_pw_0.setText("")
             self.ui.stackedWidget.setCurrentIndex(1)
         elif len(pwd) != 0:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("비밀번호가 틀립니다.")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
+            create_warning_message("비밀번호가 틀립니다.")
         else:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("비밀번호를 입력해주세요.")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
+            create_warning_message("비밀번호를 입력해주세요.")
 
     # def get_selected_patient_id(self):
     #     for patient_idx in range(self.ui.tableWidget_clientCandidates_5.rowCount()):
