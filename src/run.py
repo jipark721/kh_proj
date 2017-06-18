@@ -144,6 +144,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     ####################
     def render_page_9(self):
         render_rec_nutrient_tw(self.ui.tableWidget_nutrients_9, self.local_diseases)
+        # render_recd
 
 
     def go_to_calculated_page(self):

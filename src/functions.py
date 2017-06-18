@@ -135,7 +135,8 @@ def render_rec_nutrient_tw(tw, diseases):
     relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases)
     print(relevant_nutrients)
     tw.setRowCount(Nutrient.objects.count())
-    tw.setColumnCount(3)
+    tw.setColumnCount(4)
+
     rowIndex = 0
     for nutrient in Nutrient.objects:
         rec_ckbtn = QtWidgets.QTableWidgetItem()
@@ -145,15 +146,22 @@ def render_rec_nutrient_tw(tw, diseases):
         nonrec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         nonrec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
         nutrient_item = QtWidgets.QTableWidgetItem(nutrient.영양소명)
+        level_item = QtWidgets.QTableWidgetItem("0")
         if nutrient.영양소명 in relevant_nutrients:
             if relevant_nutrients[nutrient.영양소명] > 0:
                 rec_ckbtn.setCheckState(QtCore.Qt.Checked)
             else:
                 nonrec_ckbtn.setCheckState(QtCore.Qt.Checked)
+            level_item.setText(str(relevant_nutrients[nutrient.영양소명]))
         tw.setItem(rowIndex, 0, rec_ckbtn)
         tw.setItem(rowIndex, 1, nonrec_ckbtn)
         tw.setItem(rowIndex, 2, nutrient_item)
+        tw.setItem(rowIndex, 3, level_item)
         rowIndex+=1
+
+    tw.resizeColumnToContents(0)
+    tw.resizeColumnToContents(1)
+    tw.resizeColumnToContents(3)
 
 # def clear_ckbox_level_tw(tw):
 #     for rowIndex in range(tw.rowCount):
