@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>10</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="gridLayoutWidget">
@@ -1275,7 +1275,7 @@
            <x>20</x>
            <y>40</y>
            <width>1221</width>
-           <height>631</height>
+           <height>641</height>
           </rect>
          </property>
          <widget class="QListWidget" name="listWidget_diseases_7">
@@ -1398,6 +1398,29 @@
           </property>
           <property name="text">
            <string>만성 알레르기 lgG4 음식 </string>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="past_diagnosis_combobox_7">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>605</y>
+            <width>104</width>
+            <height>31</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_69">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>610</y>
+            <width>71</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>이전 진료</string>
           </property>
          </widget>
         </widget>

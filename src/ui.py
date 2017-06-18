@@ -380,7 +380,7 @@ class Ui_MainWindow(object):
         self.btn_home_7.setGeometry(QtCore.QRect(1180, 0, 71, 51))
         self.btn_home_7.setObjectName("btn_home_7")
         self.widget_18 = QtWidgets.QWidget(self.widget)
-        self.widget_18.setGeometry(QtCore.QRect(20, 40, 1221, 631))
+        self.widget_18.setGeometry(QtCore.QRect(20, 40, 1221, 641))
         self.widget_18.setObjectName("widget_18")
         self.listWidget_diseases_7 = QtWidgets.QListWidget(self.widget_18)
         self.listWidget_diseases_7.setGeometry(QtCore.QRect(0, 40, 281, 551))
@@ -424,6 +424,12 @@ class Ui_MainWindow(object):
         self.label_85 = QtWidgets.QLabel(self.widget_18)
         self.label_85.setGeometry(QtCore.QRect(1010, 10, 131, 21))
         self.label_85.setObjectName("label_85")
+        self.past_diagnosis_combobox_7 = QtWidgets.QComboBox(self.widget_18)
+        self.past_diagnosis_combobox_7.setGeometry(QtCore.QRect(80, 605, 104, 31))
+        self.past_diagnosis_combobox_7.setObjectName("past_diagnosis_combobox_7")
+        self.label_69 = QtWidgets.QLabel(self.widget_18)
+        self.label_69.setGeometry(QtCore.QRect(20, 610, 71, 21))
+        self.label_69.setObjectName("label_69")
         self.widget_19 = QtWidgets.QWidget(self.widget)
         self.widget_19.setGeometry(QtCore.QRect(940, 650, 311, 71))
         self.widget_19.setObjectName("widget_19")
@@ -2206,7 +2212,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(10)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -2302,6 +2308,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "알레르기 레벨"))
         self.label_84.setText(_translate("MainWindow", "만성 알레르기 음식"))
         self.label_85.setText(_translate("MainWindow", "만성 알레르기 lgG4 음식 "))
+        self.label_69.setText(_translate("MainWindow", "이전 진료"))
         self.btn_back_7.setText(_translate("MainWindow", "뒤로"))
         self.btn_next_7.setText(_translate("MainWindow", "다음"))
         self.btn_home_8.setText(_translate("MainWindow", "HOME"))
