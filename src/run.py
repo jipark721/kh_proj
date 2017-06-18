@@ -25,14 +25,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.current_date = datetime.date.today()
         self.current_patient = None
 
-        self.local_급성알레르기음식 = {}
-        self.local_만성알레르기음식 = {}
-        self.local_만성lgG4과민반응음식 = {}
-        self.local_진단 = {}
-
-        # key - 영양소명 value - level
-        self.local_권고영양소레벨_dict = {}
-        self.local_비권고영양소레벨_dict = {}
+        self.local_gs_allergic_ingredients = {}
+        self.local_ms_allergic_ingredients = {}
+        self.local_lgG4_allergic_ingredients = {}
+        self.local_diseases = {}
 
         self.current_ingredient = None
         self.current_nutrient = None
@@ -77,13 +73,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_save_next_6.clicked.connect(lambda x: self.go_to_edit_existing_patient_page2(self.ui.lineEdit_ID_6.text()))
 
         # page_7 - patient information (diseases / allergies)
-        self.ui.btn_back_7.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(5))
-        self.ui.btn_next_7.clicked.connect(self.save_disease_and_allergies_locally_and_go_to_filtering_page)
+        self.ui.btn_back_7.clicked.connect(self.go_back_to_edit_existing_patient_page1)
+        self.ui.btn_next_7.clicked.connect(self.go_to_page_8)
         self.ui.btn_home_7.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(1))
 
         # page 8 - filtering page
         self.ui.btn_back_8.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(7))
-        self.ui.btn_next_8.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(9))
+        self.ui.btn_next_8.clicked.connect(self.go_to_page_9)
         # self.ui.btn_home_8.clicked.connect(lambda x:self.go_home(8))
         # self.ui.btn_back_8.clicked.connect(self.go_back_to_edit_existing_patient_page2)
         # self.ui.btn_go2Rec_8.clicked.connect(lambda x: self.add_selected_nutrients_to_tw(self.ui.tableWidget_RecNut_8, self.local_권고영양소레벨_dict))
@@ -140,6 +136,21 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_ing_category5_14.setCurrentIndex(0)
         self.ui.tableWidget_ing_candidates_14.setRowCount(0)
         self.ui.stackedWidget.setCurrentIndex(13)
+
+    ####################
+    # GO TO
+    ####################
+
+    def go_to_page_9(self):
+        self.ui.stackedWidget.setCurrentIndex(9)
+        self.render_page_9()
+
+    ####################
+    # RENDER
+    ####################
+    def render_page_9(self):
+        render_rec_nutrient_tw(self.ui.tableWidget_nutrients_9, self.local_diseases)
+        # render_recd
 
     def go_to_calculated_page(self):
         printing_rep_level = int(self.ui.spinBox_printingRep_level_10.text())
@@ -391,7 +402,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_ing_category3_15.setCurrentText(self.current_ingredient.식품분류3)
         self.ui.comboBox_ing_category4_15.setCurrentText(self.current_ingredient.식품분류4)
         self.ui.comboBox_ing_category5_15.setCurrentText(self.current_ingredient.식품분류5)
-        self.ui.
         self.ui.lineEdit_ing_description_15.setText(self.current_ingredient.식품설명)
         self.ui.lineEdit_ing_academic_name_15.setText(self.current_ingredient.학명)
         self.ui.lineEdit_ing_lang_english_15.setText(self.current_ingredient.식품명영어)
@@ -749,11 +759,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 True) if self.current_patient.수유여부 == True else self.ui.ckBox_bFeeding_6.setChecked(False)
             self.ui.dateEdit_lastOfficeVisit_6.setDate(QtCore.QDate(datetime.date.today()))
 
-    def save_disease_and_allergies_locally_and_go_to_filtering_page(self):
+    def go_to_page_8(self):
         self.update_selected_disease_and_allergies_locally()
-        self.go_to_filtering_page()
-
-    def go_to_filtering_page(self):
         self.ui.stackedWidget.setCurrentIndex(8)
 
     def go_to_select_disease_and_allergies(self, id):
@@ -820,10 +827,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding)
 
     def update_selected_disease_and_allergies_locally(self):
-        self.local_진단 = convert_lw_to_str_set(self.ui.listWidget_diseases_7)
-        self.local_급성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_7)
-        self.local_만성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_7)
-        self.local_만성lgG4과민반응음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_7)
+        self.local_diseases = convert_lw_to_str_set(self.ui.listWidget_diseases_7)
+        self.local_gs_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_7)
+        self.local_ms_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_7)
+        self.local_lgG4_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_7)
         #self.save_local_data_to_patient(self.current_patient)
         # 진단 = Patient.objects.get(ID=id).진단
         # print(진단)
@@ -913,10 +920,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 uniqIDChecked = True
 
     def save_local_data_to_patient(self, patient):
-        patient.급성알레르기음식[str(self.current_date)] = self.local_급성알레르기음식
-        patient.만성알레르기음식[str(self.current_date)] = self.local_만성알레르기음식
-        patient.만성lgG4과민반응음식[str(self.current_date)] = self.local_만성lgG4과민반응음식
-        patient.진단[str(self.current_date)] = self.local_진단
+        patient.급성알레르기음식[str(self.current_date)] = self.local_gs_allergic_ingredients
+        patient.만성알레르기음식[str(self.current_date)] = self.local_ms_allergic_ingredients
+        patient.만성lgG4과민반응음식[str(self.current_date)] = self.local_lgG4_allergic_ingredients
+        patient.진단[str(self.current_date)] = self.local_diseases
         local_진료일 = patient.진료일
         local_진료일.append(self.current_date)
         patient.진료일 = local_진료일
@@ -924,16 +931,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def reset_local_data(self):
         self.current_patient = None
-        self.local_급성알레르기음식 = None
-        self.local_만성알레르기음식 = None
-        self.local_만성lgG4과민반응음식 = None
-        self.local_진단 = None
+        self.local_gs_allergic_ingredients = None
+        self.local_ms_allergic_ingredients = None
+        self.local_lgG4_allergic_ingredients = None
+        self.local_diseases = None
 
     def print_local_data(self):
-        print("local_급성알레르기음식: " + str(self.local_급성알레르기음식))
-        print("local_만성알레르기음식: " + str(self.local_만성알레르기음식))
-        print("local_만성lgG4과민반응음식: " + str(self.local_만성lgG4과민반응음식))
-        print("local_진단: " + str(self.local_진단))
+        print("local_급성알레르기음식: " + str(self.local_gs_allergic_ingredients))
+        print("local_만성알레르기음식: " + str(self.local_ms_allergic_ingredients))
+        print("local_만성lgG4과민반응음식: " + str(self.local_lgG4_allergic_ingredients))
+        print("local_진단: " + str(self.local_diseases))
         print("local_권고영양소레벨_dict: " + str(self.local_권고영양소레벨_dict))
         print("local_비권고영양소레벨_dict: " + str(self.local_비권고영양소레벨_dict))
 
