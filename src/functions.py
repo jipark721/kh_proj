@@ -177,3 +177,20 @@ def create_warning_message(warnMsg):
     msgbox.setText(warnMsg)
     msgbox.setWindowTitle("Error")
     msgbox.exec_()
+
+def get_relevant_nutrients_from_diseases(diseases):
+    relevant_nutrient = []
+    for disease in diseases:
+        for rel_nutrient, level in disease.질병영양소관계.items():
+            relevant_nutrient.append(tuple(rel_nutrient, level))
+    sorted(relevant_nutrient, key=lambda x: x[1])
+    return relevant_nutrient
+
+def get_relevant_ingredient_from_diseases(diseases):
+    relevant_ingredient = []
+    for disease in diseases:
+        for rel_ingredient, level in disease.질병영양소관계.items():
+            relevant_ingredient.append(tuple(rel_ingredient, level))
+    sorted(relevant_ingredient, key=lambda x: x[1])
+    return relevant_ingredient
+
