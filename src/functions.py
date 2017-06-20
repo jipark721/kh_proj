@@ -40,13 +40,29 @@ def make_lw_checkbox_item(content, isChecked):
         item.setCheckState(QtCore.Qt.Unchecked)
     return item
 
-#for allergy table widgets, iterate through rows and return a list of tuple(알레르기음식, level)
-def convert_tw_to_dict(tw):
+#for allergy table widgets and nut_quant tablewidgets, iterate through rows and return a list of tuple(알레르기음식, level)
+#0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything
+def convert_tw_to_dict(tw, fetchItemCode):
     dict = {}
     for index in range(tw.rowCount()):
-        if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
-            dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
+        if fetchItemCode == 1:
+            if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
+                dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
+        elif fetchItemCode == 0:
+            if tw.item(index, 0).checkState() == QtCore.Qt.Unchecked and float(tw.item(index, 1).text()) != 0:
+                dict[tw.item(index, 0).text()] = float(tw.item(index, 1).text())
+        else:
+            dict[tw.item(index, 0).text()] = float(tw.item(index, 1).text())
     return dict
+
+#for table widgets, iterate through rows and return a set of checked items
+def convert_checked_item_in_tw_to_str_set(tw):
+    toReturn = set()
+    for i in range(tw.rowCount()):
+        ckbtn = tw.item(i, 0)
+        if ckbtn.checkState() == QtCore.Qt.Checked:
+            toReturn.add(ckbtn.text())
+    return toReturn
 
 #for diagnosed diseases, iterate through rows and return a string separated by ","
 def convert_lw_to_str_set(lw):
@@ -211,6 +227,13 @@ def create_warning_message(warnMsg):
     msgbox.setWindowTitle("Error")
     msgbox.exec_()
 
+def get_relevant_nutrients_from_ingredient_str(ingredient):
+    relevant_nutrient = {}
+    for rel_nut, quant in Ingredient.objects.get(식품명=ingredient).식품영양소관계.items():
+        relevant_nutrient[rel_nut] = quant
+    return relevant_nutrient
+
+
 def get_relevant_nutrients_from_diseases_str(diseases):
     relevant_nutrient = {}
     for disease in diseases:
@@ -219,7 +242,7 @@ def get_relevant_nutrients_from_diseases_str(diseases):
             relevant_nutrient[rel_nutrient] = level
     return relevant_nutrient
 
-def get_relevant_ingredient_from_diseases_str(diseases):
+def get_relevant_ingredients_from_diseases_str(diseases):
     relevant_ingredient = {}
     for disease in diseases:
         Disease.objects.get(질병명=disease)
@@ -227,3 +250,25 @@ def get_relevant_ingredient_from_diseases_str(diseases):
             relevant_ingredient[rel_ingredient] =  level
     return relevant_ingredient
 
+def get_five_combobox_texts(cb1, cb2, cb3, cb4, cb5, le1, le2, le3, le4, le5):
+    if le1.text() != "":
+        str1 = le1.text()
+    else:
+        str1 = cb1.currentText()
+    if le2.text() != "":
+        str2 = le2.text()
+    else:
+        str2 = cb2.currentText()
+    if le3.text() != "":
+        str3 = le3.text()
+    else:
+        str3 = cb3.currentText()
+    if le4.text() != "":
+        str4 = le4.text()
+    else:
+        str4 = cb4.currentText()
+    if le5.text() != "":
+        str5 = le5.text()
+    else:
+        str5 = cb5.currentText()
+    return str1, str2, str3, str4, str5
