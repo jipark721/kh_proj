@@ -141,12 +141,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_cancel_16.clicked.connect(lambda x: self.cancel_edit_existing_ingredient())
         self.ui.btn_save_16.clicked.connect(lambda x: self.save_or_update_ingredient())
 
-
-
-
-
-
-
     ####################
     # GO TO
     ####################
