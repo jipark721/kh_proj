@@ -37,7 +37,7 @@ class Disease(Document):
 class Ingredient(Document):
     식품명 = StringField(required=True, max_length=100)
     식품명영어 = StringField(max_length=100)
-    식품영양소관계 = DictField() # Map of DatTimeField to list of tuples { 진료일 : [ ( 알레르기음식, 레벨 ) ] }
+    식품영양소관계 = DictField() # { 영양소명 : 함량 }
     식품분류1 = StringField(max_length=100)
     식품분류2 = StringField(max_length=100)
     식품분류3 = StringField(max_length=100)

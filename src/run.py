@@ -48,17 +48,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_findExistingPatient_2.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(5))
         self.ui.btn_registerNewPatient_2.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(3))
         self.ui.btn_home_2.clicked.connect(self.go_to_home_no_warning)
-        self.ui.btn_home_3.clicked.connect(lambda x: self.go_home(3))
 
         # page_3 - register new patient
+        self.ui.btn_home_3.clicked.connect(lambda x: self.go_home(3))
         self.ui.btn_cancel_3.clicked.connect(self.cancel_register_new_patient)
         self.ui.btn_next_3.clicked.connect(self.register_patient_and_go_to_select_diseases_and_allergies)
         self.ui.btn_checkUniqID_3.clicked.connect(self.check_unique_ID)
 
-        # page_4 - register new patient page 2
-        # self.ui.btn_cancel_4.clicked.connect(self.cancel_register_new_patient)
-        # self.ui.btn_back_4.clicked.connect(self.go_back_to_register_new_patient_page1)
-        # self.ui.btn_registerClient_4.clicked.connect(self.register_client)
+        # page_4
 
         # page_5 - find existing patient
         self.ui.btn_cancel_5.clicked.connect(self.cancel_find_existing_client)
@@ -78,7 +75,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page_7 - patient information (diseases / allergies)
         self.ui.btn_back_7.clicked.connect(self.go_back_to_edit_existing_patient_page1)
         self.ui.btn_next_7.clicked.connect(self.go_to_page_8)
-        # self.ui.btn_save_7.clicked.connect(lambda x: self.update_edit_existing_patient_data_page2())
+        self.ui.btn_home_7.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(1))
 
         # page 8 - filtering page
         self.ui.btn_back_8.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(7))
@@ -111,25 +108,38 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_edit_nutrients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(20))
         self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(24))
         # page_13 - data ingredient home
-        self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home)
         self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
+        self.ui.btn_data_home_13.clicked.connect(lambda x: self.go_to_data_home(13))
         self.ui.btn_register_new_ing_13.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info(None))
         self.ui.btn_edit_existing_ing_13.clicked.connect(lambda x: self.go_to_edit_existing_ing())
         self.ui.btn_edit_gasung_allergy_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(18))
         self.ui.btn_edit_common_unrec_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(19))
         # page_14 - find existing ingredient to look up/edit
+        self.ui.btn_home_14.clicked.connect(lambda x: self.go_home(14))
+        self.ui.btn_data_home_14.clicked.connect(lambda x: self.go_to_data_home(14))
         self.ui.btn_findby_ing_name_14.clicked.connect(
             lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_14.text()))
         self.ui.btn_findby_ing_category_14.clicked.connect(lambda x: self.find_ingredients_by_category())
-        self.ui.btn_cancel_14.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
+        self.ui.btn_cancel_14.clicked.connect(lambda x: self.cancel_find_existing_ingredient())
         self.ui.btn_confirm_ing_14.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info(
             get_first_checked_btn_text_in_tw(self.ui.tableWidget_ing_candidates_14)))
         # page_15 - register/edit ingredient
-        self.ui.btn_check_uniq_ing_name_15.clicked.connect(
-            lambda x: self.check_unique_ing_name(self.ui.lineEdit_ing_name_15))
-        self.ui.btn_cancel_15.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(13))
+        self.ui.btn_home_15.clicked.connect(lambda x: self.go_home(15))
+        self.ui.btn_data_home_15.clicked.connect(lambda x: self.go_to_data_home(15))
+        self.ui.btn_check_uniq_ing_name_15.clicked.connect(lambda x: self.check_unique_ing_name(self.ui.lineEdit_ing_name_15.text()))
+        self.ui.btn_cancel_15.clicked.connect(lambda x: self.cancel_edit_existing_ingredient())
         self.ui.btn_next_15.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info_page2())
-
+        #page_16 - register/edit ingredient page 2, adding ing-nut relationship
+        self.ui.btn_home_16.clicked.connect(lambda x: self.go_home(16))
+        self.ui.btn_data_home_16.clicked.connect(lambda x: self.go_to_data_home(16))
+        self.ui.btn_show_popup_nut_16.clicked.connect(lambda x: self.show_popup_nut_for_ing_nut_rel())
+        self.ui.btn_findby_nut_name_16.clicked.connect(lambda x: self.find_nutrients_by_name(self.ui.lineEdit_nut_name_16.text(), self.ui.tableWidget_nutCandidates_16))
+        self.ui.btn_findby_nut_category_16.clicked.connect(lambda x: self.find_nutrients_by_category())
+        self.ui.btn_add_nut_16.clicked.connect(lambda x: self.add_selected_nutrients_to_tw_and_clear_and_hide_popup())
+        self.ui.btn_delete_selected_nut_16.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_nut_quant_16))
+        self.ui.btn_back_16.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
+        self.ui.btn_cancel_16.clicked.connect(lambda x: self.cancel_edit_existing_ingredient())
+        self.ui.btn_save_16.clicked.connect(lambda x: self.save_or_update_ingredient())
 
     ####################
     # GO TO
@@ -375,7 +385,24 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_specialty_5_10.addItems(listOfSpecialty5)
 
     def go_to_register_or_edit_ingredient_info_page2(self):
-        pass
+        self.ui.stackedWidget.setCurrentIndex(16)
+        self.ui.widget_popup_nut_16.hide()
+        if self.current_ingredient is not None: #already existing ingredient
+            self.populate_existing_ingredient_nut_relationship()
+
+    def populate_existing_ingredient_nut_relationship(self):
+        relevant_nutrients = get_relevant_nutrients_from_ingredient_str(self.current_ingredient.식품명)
+        self.ui.tableWidget_nut_quant_16.setRowCount(len(relevant_nutrients))
+        rowIndex = 0
+        for nut in relevant_nutrients.keys():
+            quant = relevant_nutrients[nut]
+            ckbtnitem = make_tw_checkbox_item(nut, False)
+            self.ui.tableWidget_nut_quant_16.setItem(rowIndex, 0, ckbtnitem)
+            item = make_tw_str_item(str(quant))
+            self.ui.tableWidget_nut_quant_16.setItem(rowIndex, 1, item)
+            rowIndex+=1
+        self.ui.tableWidget_nut_quant_16.resizeColumnToContents(0)
+        self.ui.tableWidget_nut_quant_16.resizeColumnToContents(1)
 
     def go_to_pageN_with_warning_before_exiting(self, pageToGo):
         if self.warn_before_leaving():
@@ -399,25 +426,83 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             msgbox.exec_()
 
     def go_to_register_or_edit_ingredient_info(self, ing_name):
+        if ing_name is not None:
+            self.clear_find_existing_ingredient()
         self.ui.stackedWidget.setCurrentIndex(15)
         listOfCat1 = Ingredient.objects.distinct("식품분류1")
         self.ui.comboBox_ing_category1_15.addItem("")
         self.ui.comboBox_ing_category1_15.addItems(listOfCat1)
+        listOfOrigin1 = Ingredient.objects.distinct("원산지분류1")
+        self.ui.comboBox_ing_origin1_15.addItem("")
+        self.ui.comboBox_ing_origin1_15.addItems(listOfOrigin1)
+        listOfSpecialty1 = Ingredient.objects.distinct("특산지분류1")
+        self.ui.comboBox_ing_specialty1_15.addItem("")
+        self.ui.comboBox_ing_specialty1_15.addItems(listOfSpecialty1)
 
         if ing_name is not None:  # if editing existing ingredient
             self.populate_existing_ingredient_info1(ing_name)
-        else:  # register new ingredient
-            pass
 
     def populate_existing_ingredient_info1(self, ing_name):
         self.current_ingredient = Ingredient.objects.get(식품명=ing_name)
         self.ui.lineEdit_ing_name_15.setText(self.current_ingredient.식품명)
+
+        listOfCat2 = Ingredient.objects(식품분류1=self.current_ingredient.식품분류1).distinct("식품분류2")
+        self.ui.comboBox_ing_category2_15.addItem("")
+        self.ui.comboBox_ing_category2_15.addItems(listOfCat2)
+        listOfCat3 = Ingredient.objects(식품분류2=self.current_ingredient.식품분류2).distinct("식품분류3")
+        self.ui.comboBox_ing_category3_15.addItem("")
+        self.ui.comboBox_ing_category3_15.addItems(listOfCat3)
+        listOfCat4 = Ingredient.objects(식품분류3=self.current_ingredient.식품분류3).distinct("식품분류4")
+        self.ui.comboBox_ing_category4_15.addItem("")
+        self.ui.comboBox_ing_category4_15.addItems(listOfCat4)
+        listOfCat5 = Ingredient.objects(식품분류4=self.current_ingredient.식품분류4).distinct("식품분류5")
+        self.ui.comboBox_ing_category5_15.addItem("")
+        self.ui.comboBox_ing_category5_15.addItems(listOfCat5)
+
+        listOfOrigin2 = Ingredient.objects(원산지분류1=self.current_ingredient.원산지분류1).distinct("원산지분류2")
+        self.ui.comboBox_ing_origin2_15.addItem("")
+        self.ui.comboBox_ing_origin2_15.addItems(listOfOrigin2)
+        listOfOrigin3 = Ingredient.objects(원산지분류2=self.current_ingredient.원산지분류2).distinct("원산지분류3")
+        self.ui.comboBox_ing_origin3_15.addItem("")
+        self.ui.comboBox_ing_origin3_15.addItems(listOfOrigin3)
+        listOfOrigin4 = Ingredient.objects(원산지분류3=self.current_ingredient.원산지분류3).distinct("원산지분류4")
+        self.ui.comboBox_ing_origin4_15.addItem("")
+        self.ui.comboBox_ing_origin4_15.addItems(listOfOrigin4)
+        listOfOrigin5 = Ingredient.objects(원산지분류4=self.current_ingredient.원산지분류4).distinct("원산지분류5")
+        self.ui.comboBox_ing_origin5_15.addItem("")
+        self.ui.comboBox_ing_origin5_15.addItems(listOfOrigin5)
+        listOfSpecialty2 = Ingredient.objects(특산지분류1=self.current_ingredient.특산지분류1).distinct("특산지분류2")
+        self.ui.comboBox_ing_specialty2_15.addItem("")
+        self.ui.comboBox_ing_specialty2_15.addItems(listOfSpecialty2)
+        listOfSpecialty3 = Ingredient.objects(특산지분류2=self.current_ingredient.특산지분류2).distinct("특산지분류3")
+        self.ui.comboBox_ing_specialty3_15.addItem("")
+        self.ui.comboBox_ing_specialty3_15.addItems(listOfSpecialty3)
+        listOfSpecialty4 = Ingredient.objects(특산지분류3=self.current_ingredient.특산지분류3).distinct("특산지분류4")
+        self.ui.comboBox_ing_specialty4_15.addItem("")
+        self.ui.comboBox_ing_specialty4_15.addItems(listOfSpecialty4)
+        listOfSpecialty5 = Ingredient.objects(특산지분류4=self.current_ingredient.특산지분류4).distinct("특산지분류5")
+        self.ui.comboBox_ing_specialty5_15.addItem("")
+        self.ui.comboBox_ing_specialty5_15.addItems(listOfSpecialty5)
+
         self.ui.comboBox_ing_category1_15.setCurrentText(self.current_ingredient.식품분류1)
         self.ui.comboBox_ing_category2_15.setCurrentText(self.current_ingredient.식품분류2)
         self.ui.comboBox_ing_category3_15.setCurrentText(self.current_ingredient.식품분류3)
         self.ui.comboBox_ing_category4_15.setCurrentText(self.current_ingredient.식품분류4)
         self.ui.comboBox_ing_category5_15.setCurrentText(self.current_ingredient.식품분류5)
-        self.ui.lineEdit_ing_description_15.setText(self.current_ingredient.식품설명)
+
+        self.ui.comboBox_ing_origin1_15.setCurrentText(self.current_ingredient.원산지분류1)
+        self.ui.comboBox_ing_origin2_15.setCurrentText(self.current_ingredient.원산지분류2)
+        self.ui.comboBox_ing_origin3_15.setCurrentText(self.current_ingredient.원산지분류3)
+        self.ui.comboBox_ing_origin4_15.setCurrentText(self.current_ingredient.원산지분류4)
+        self.ui.comboBox_ing_origin5_15.setCurrentText(self.current_ingredient.원산지분류5)
+
+        self.ui.comboBox_ing_specialty1_15.setCurrentText(self.current_ingredient.특산지분류1)
+        self.ui.comboBox_ing_specialty2_15.setCurrentText(self.current_ingredient.특산지분류2)
+        self.ui.comboBox_ing_specialty3_15.setCurrentText(self.current_ingredient.특산지분류3)
+        self.ui.comboBox_ing_specialty4_15.setCurrentText(self.current_ingredient.특산지분류4)
+        self.ui.comboBox_ing_specialty5_15.setCurrentText(self.current_ingredient.특산지분류5)
+
+        self.ui.plainTextEdit_ing_description_15.setPlainText(self.current_ingredient.식품설명)
         self.ui.lineEdit_ing_academic_name_15.setText(self.current_ingredient.학명)
         self.ui.lineEdit_ing_lang_english_15.setText(self.current_ingredient.식품명영어)
         self.ui.lineEdit_ing_lang_chinese_15.setText(self.current_ingredient.식품명중국어)
@@ -430,14 +515,120 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_ing_lang9_15.setText(self.current_ingredient.식품명외국어9)
         self.ui.lineEdit_ing_lang10_15.setText(self.current_ingredient.식품명외국어10)
         self.ui.lineEdit_ing_lang11_15.setText(self.current_ingredient.식품명외국어11)
-        self.ui.lineEdit_ing_mortality_rate_15.setText(str(self.current_ingredient.폐기율))
-        self.ui.lineEdit_ing_protein_portion_15.setText(str(self.current_ingredient.단백질가식부))
         self.ui.lineEdit_ing_one_portion_15.setText(str(self.current_ingredient.단일식사분량))
         self.ui.plainTextEdit_one_portion_description_15.setPlainText(self.current_ingredient.단일식사분량설명)
+        self.ui.lineEdit_ing_mortality_rate_15.setText(str(self.current_ingredient.폐기율))
+        self.ui.lineEdit_ing_protein_portion_15.setText(str(self.current_ingredient.단백질가식부))
+        self.ui.spinBox_printingRep_level_15.setValue(self.current_ingredient.출력대표성등급)
+        self.ui.spinBox_extinction_level_15.setValue(self.current_ingredient.멸종등급)
+        self.determine_check_state_for_ckbtn(self.ui.ckBox_immediate_intake_15, self.current_ingredient.즉시섭취)
+        self.determine_check_state_for_ckbtn(self.ui.ckBox_always_unrec_15, self.current_ingredient.항상비권고식품여부)
+        self.determine_check_state_for_ckbtn(self.ui.ckBox_gs_allergy_15, self.current_ingredient.급성알레르기가능여부)
+        self.determine_check_state_for_ckbtn(self.ui.ckBox_ms_allergy_15, self.current_ingredient.만성알레르기가능여부)
+        self.determine_check_state_for_ckbtn(self.ui.ckBox_lgg4_allergy_15, self.current_ingredient.만성lgG4과민반응가능여부)
+        self.ui.spinBox_gasung_allergy_level_15.setValue(self.current_ingredient.가성알레르기등급)
+        self.ui.plainTextEdit_tale_15.setPlainText(self.current_ingredient.이야기거리)
+        self.ui.plainTextEdit_feature_15.setPlainText(self.current_ingredient.특징)
+        self.ui.plainTextEdit_cooking_feature_15.setPlainText(self.current_ingredient.조리시특성)
+        self.ui.plainTextEdit_storage_15.setPlainText(self.current_ingredient.보관법)
+        self.ui.lineEdit_polishing_state_15.setText(self.current_ingredient.도정상태)
+        self.ui.lineEdit_processing_state_15.setText(self.current_ingredient.가공상태)
+
+    def determine_check_state_for_ckbtn(self, ckbtn, shouldCheck):
+        if shouldCheck:
+            ckbtn.setCheckState(QtCore.Qt.Checked)
+        else:
+            ckbtn.setCheckState(QtCore.Qt.Unchecked)
 
     def go_to_edit_existing_ing(self):
         self.ui.stackedWidget.setCurrentIndex(14)
         self.render_ing_category1_dropdown_menu()
+        self.render_ing_origin1_dropdown_menu()
+        self.render_ing_specialty1_dropdown_menu()
+
+    def render_ing_specialty1_dropdown_menu(self):
+        listOfSpecialty1 = Ingredient.objects.distinct("특산지분류1")
+        self.ui.comboBox_ing_specialty1_15.addItem("")
+        self.ui.comboBox_ing_specialty1_15.addItems(listOfSpecialty1)
+        self.ui.comboBox_ing_specialty1_15.activated[str].connect(self.on_ing_specialty1_changed)
+
+    def on_ing_specialty1_changed(self, inputText):
+        listOfSpecialty2 = Ingredient.objects(특산지분류1=inputText).distinct("특산지분류2")
+        self.ui.comboBox_ing_specialty2_15.clear()
+        self.ui.comboBox_ing_specialty3_15.clear()
+        self.ui.comboBox_ing_specialty4_15.clear()
+        self.ui.comboBox_ing_specialty5_15.clear()
+
+        self.ui.comboBox_ing_specialty2_15.addItem("")
+        self.ui.comboBox_ing_specialty2_15.addItems(listOfSpecialty2)
+        self.ui.comboBox_ing_specialty2_15.activated[str].connect(self.on_ing_specialty2_changed)
+
+    def on_ing_specialty2_changed(self, inputText):
+        listOfSpecialty3 = Ingredient.objects(특산지분류2=inputText).distinct("특산지분류3")
+        self.ui.comboBox_ing_specialty3_15.clear()
+        self.ui.comboBox_ing_specialty4_15.clear()
+        self.ui.comboBox_ing_specialty5_15.clear()
+
+        self.ui.comboBox_ing_specialty3_15.addItem("")
+        self.ui.comboBox_ing_specialty3_15.addItems(listOfSpecialty3)
+        self.ui.comboBox_ing_specialty3_15.activated[str].connect(self.on_ing_specialty3_changed)
+
+    def on_ing_specialty3_changed(self, inputText):
+        listOfSpecialty4 = Ingredient.objects(특산지분류3=inputText).distinct("특산지분류4")
+        self.ui.comboBox_ing_specialty4_15.clear()
+        self.ui.comboBox_ing_specialty5_15.clear()
+
+        self.ui.comboBox_ing_specialty4_15.addItem("")
+        self.ui.comboBox_ing_specialty4_15.addItems(listOfSpecialty4)
+        self.ui.comboBox_ing_specialty4_15.activated[str].connect(self.on_ing_specialty4_changed)
+
+    def on_ing_specialty4_changed(self, inputText):
+        listOfSpecialty5 = Ingredient.objects(특산지분류4=inputText).distinct("특산지분류5")
+        self.ui.comboBox_ing_specialty5_15.clear()
+        self.ui.comboBox_ing_specialty5_15.addItem("")
+        self.ui.comboBox_ing_specialty5_15.addItems(listOfSpecialty5)
+
+    def render_ing_origin1_dropdown_menu(self):
+        listOfOrigin1 = Ingredient.objects.distinct("원산지분류1")
+        self.ui.comboBox_ing_origin1_15.addItem("")
+        self.ui.comboBox_ing_origin1_15.addItems(listOfOrigin1)
+        self.ui.comboBox_ing_origin1_15.activated[str].connect(self.on_ing_origin1_changed)
+
+    def on_ing_origin1_changed(self, inputText):
+        listOfOrigin2 = Ingredient.objects(원산지분류1=inputText).distinct("원산지분류2")
+        self.ui.comboBox_ing_origin2_15.clear()
+        self.ui.comboBox_ing_origin3_15.clear()
+        self.ui.comboBox_ing_origin4_15.clear()
+        self.ui.comboBox_ing_origin5_15.clear()
+
+        self.ui.comboBox_ing_origin2_15.addItem("")
+        self.ui.comboBox_ing_origin2_15.addItems(listOfOrigin2)
+        self.ui.comboBox_ing_origin2_15.activated[str].connect(self.on_ing_origin2_changed)
+
+    def on_ing_origin2_changed(self, inputText):
+        listOfOrigin3 = Ingredient.objects(원산지분류2=inputText).distinct("원산지분류3")
+        self.ui.comboBox_ing_origin3_15.clear()
+        self.ui.comboBox_ing_origin4_15.clear()
+        self.ui.comboBox_ing_origin5_15.clear()
+
+        self.ui.comboBox_ing_origin3_15.addItem("")
+        self.ui.comboBox_ing_origin3_15.addItems(listOfOrigin3)
+        self.ui.comboBox_ing_origin3_15.activated[str].connect(self.on_ing_origin3_changed)
+
+    def on_ing_origin3_changed(self, inputText):
+        listOfOrigin4 = Ingredient.objects(원산지분류3=inputText).distinct("원산지분류4")
+        self.ui.comboBox_ing_origin4_15.clear()
+        self.ui.comboBox_ing_origin5_15.clear()
+
+        self.ui.comboBox_ing_origin4_15.addItem("")
+        self.ui.comboBox_ing_origin4_15.addItems(listOfOrigin4)
+        self.ui.comboBox_ing_origin4_15.activated[str].connect(self.on_ing_origin4_changed)
+
+    def on_ing_origin4_changed(self, inputText):
+        listOfOrigin5 = Ingredient.objects(원산지분류4=inputText).distinct("원산지분류5")
+        self.ui.comboBox_ing_origin5_15.clear()
+        self.ui.comboBox_ing_origin5_15.addItem("")
+        self.ui.comboBox_ing_origin5_15.addItems(listOfOrigin5)
 
     def render_ing_category1_dropdown_menu(self):
         listOfCat1 = Ingredient.objects.distinct("식품분류1")
@@ -480,7 +671,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_ing_category5_14.clear()
         self.ui.comboBox_ing_category5_14.addItem("")
         self.ui.comboBox_ing_category5_14.addItems(listOfCat5)
-        # self.ui.comboBox_ing_category5_14.activated[str].connect(self.on_ing_cat3_changed)
 
     def find_ingredients_by_name(self, name):
         if not name:
@@ -529,6 +719,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 self.clear_find_existing_client()
             elif currPage == 6:
                 self.clear_edit_existing_client()
+            elif currPage == 14:
+                self.clear_find_existing_ingredient()
+            elif currPage == 15:
+                self.clear_edit_existing_ingredient()
             else:
                 pass
             self.ui.stackedWidget.setCurrentIndex(1)
@@ -613,8 +807,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 #     if len(self.currPatientLGG4IngTupleSet) != 0:
                 #         self.build_current_patient_tw(self.currPatientLGG4IngTupleSet, self.ui.tableWidget_allergies_lgg4_4)
 
-    def go_to_data_home(self):
-        self.ui.stackedWidget.setCurrentIndex(12)
+    def go_to_data_home(self, currPage):
+        if self.warn_before_leaving() == False:
+            return
+        else:
+            if currPage == 14:
+                self.clear_find_existing_ingredient()
+            elif currPage == 15 or currPage == 16:
+                self.clear_edit_existing_ingredient()
+            else:
+                pass
+            self.ui.stackedWidget.setCurrentIndex(12)
 
     #############################
     # Page 1 - find patient
@@ -739,17 +942,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_pw_0.setText("")
             self.ui.stackedWidget.setCurrentIndex(1)
         elif len(pwd) != 0:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("비밀번호가 틀립니다.")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
+            create_warning_message("비밀번호가 틀립니다.")
         else:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("비밀번호를 입력해주세요.")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
+            create_warning_message("비밀번호를 입력해주세요.")
 
     # def get_selected_patient_id(self):
     #     for patient_idx in range(self.ui.tableWidget_clientCandidates_5.rowCount()):
@@ -851,24 +1046,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def update_selected_disease_and_allergies_locally(self):
         self.local_diseases = convert_lw_to_str_set(self.ui.listWidget_diseases_7)
-        self.local_gs_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_7)
-        self.local_ms_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_7)
-        self.local_lgG4_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_7)
+        self.local_gs_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_7, 1)
+        self.local_ms_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_7, 1)
+        self.local_lgG4_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_7, 1)
         #self.save_local_data_to_patient(self.current_patient)
         # 진단 = Patient.objects.get(ID=id).진단
         # print(진단)
 
-    def add_selected_nutrients_to_tw(self, nutrient_tw, nutrient_dict):
-        selected_nutrients = convert_lw_to_str_set(self.ui.listWidget_nutrients_8)
-        level = self.get_level()
-        for nut in selected_nutrients:
-            nutrient_dict[nut] = level
-        # selected_nutrients_with_lvl = [tuple([nut, self.get_level()]) for nut in selected_nutrients]
-        populate_checkbox_tw_from_dict(nutrient_tw, nutrient_dict)
-        clear_checkbox_lw(self.ui.listWidget_nutrients_8)
-
-    def remove_selected_nutrients_from_tw(self, nutrient_tw, nutrient_dict):
-        remove_checked_items_from_tw(nutrient_tw, nutrient_dict)
+    def remove_selected_nutrients_from_tw(self, nutrient_tw):
+        unchecked_nutrient_dict = convert_tw_to_dict(nutrient_tw, 0)
+        populate_checkbox_tw_from_dict(nutrient_tw, unchecked_nutrient_dict)
 
     def get_level(self):
         if self.ui.radioBtn_lv1_8.isChecked():
@@ -904,9 +1091,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             new_patient.몸무게 = float(self.ui.lineEdit_weight_3.text()) if self.ui.lineEdit_weight_3.text() else 0
             new_patient.임신여부 = True if self.ui.ckBox_preg_3.isChecked() else False
             new_patient.수유여부 = True if self.ui.ckBox_bFeeding_3.isChecked() else False
-            new_patient.급성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_4)
-            new_patient.만성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_4)
-            new_patient.만성lgG4과민반응음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_4)
+            new_patient.급성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_4, 1)
+            new_patient.만성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_4, 1)
+            new_patient.만성lgG4과민반응음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_4, 1)
             new_patient.save()
             self.current_patient = new_patient
 
@@ -966,6 +1153,286 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         print("local_진단: " + str(self.local_diseases))
         print("local_권고영양소레벨_dict: " + str(self.local_권고영양소레벨_dict))
         print("local_비권고영양소레벨_dict: " + str(self.local_비권고영양소레벨_dict))
+
+    def find_nutrients_by_category(self):
+        if self.ui.comboBox_nut_category2_16.currentText() != "":
+            found_nutrients = Nutrient.objects(영양소분류2=self.ui.comboBox_nut_category2_16.currentText())
+        elif self.ui.comboBox_nut_category1_16.currentText() != "":
+            found_nutrients = Nutrient.objects(영양소분류1=self.ui.comboBox_nut_category1_16.currentText())
+        else:
+            found_nutrients = Nutrient.objects.all()
+        self.render_found_nutrients(found_nutrients, self.ui.tableWidget_nutCandidates_16)
+
+
+    def find_nutrients_by_name(self, nut_name, tw_to_show):
+        if not nut_name:
+            found_nutrients = Nutrient.objects.all()
+        else:
+            found_nutrients = Nutrient.objects(영양소명__icontains=nut_name)
+        self.render_found_nutrients(found_nutrients, tw_to_show)
+
+    #given collection of found nutrients, render ckbox of 영양소명, 영양소분류1, 영양소분류2
+    def render_found_nutrients(self, found_nutrients, tw_to_show):
+        tw_to_show.setRowCount(found_nutrients.count())
+        i = 0
+        for nutrient in found_nutrients:
+            tw_to_show.setItem(i, 0, make_tw_checkbox_item(nutrient.영양소명, False))
+            tw_to_show.setItem(i, 1, make_tw_str_item(nutrient.영양소분류1))
+            tw_to_show.setItem(i, 2, make_tw_str_item(nutrient.영양소분류2))
+            i += 1
+
+    def show_popup_nut_for_ing_nut_rel(self):
+        self.ui.widget_popup_nut_16.show()
+
+        listOfNutCat1 = Nutrient.objects.distinct("영양소분류1")
+        self.ui.comboBox_nut_category1_16.addItem("")
+        self.ui.comboBox_nut_category1_16.addItems(listOfNutCat1)
+        self.ui.comboBox_nut_category1_16.activated[str].connect(self.on_nut_cat1_changed)
+
+    def on_nut_cat1_changed(self, inputText):
+        listOfNutCat2 = Nutrient.objects(영양소분류1=inputText).distinct("영양소분류2")
+        self.ui.comboBox_nut_category2_16.addItem("")
+        self.ui.comboBox_nut_category2_16.addItems(listOfNutCat2)
+
+    def add_selected_nutrients_to_tw_and_clear_and_hide_popup(self):
+        selected_nutrients = convert_checked_item_in_tw_to_str_set(self.ui.tableWidget_nutCandidates_16)
+        index = self.ui.tableWidget_nut_quant_16.rowCount()
+        self.ui.tableWidget_nut_quant_16.setRowCount(index+ len(selected_nutrients))
+        for nut in selected_nutrients:
+            ckboxitem = make_tw_checkbox_item(nut, False)
+            item = make_tw_str_item("0.0")
+            self.ui.tableWidget_nut_quant_16.setItem(index, 0, ckboxitem)
+            self.ui.tableWidget_nut_quant_16.setItem(index, 1, item)
+            index += 1
+        self.clear_popup_nut_for_ing_nut_rel()
+        self.ui.widget_popup_nut_16.hide()
+
+    def clear_popup_nut_for_ing_nut_rel(self):
+        self.ui.lineEdit_nut_name_16.clear()
+        self.ui.comboBox_nut_category1_16.clear()
+        self.ui.comboBox_nut_category2_16.clear()
+        self.ui.tableWidget_nutCandidates_16.setRowCount(0)
+
+    def clear_find_existing_ingredient(self):
+        self.ui.lineEdit_ing_name_14.clear()
+        self.ui.comboBox_ing_category1_14.clear()
+        self.ui.comboBox_ing_category2_14.clear()
+        self.ui.comboBox_ing_category3_14.clear()
+        self.ui.comboBox_ing_category4_14.clear()
+        self.ui.comboBox_ing_category5_14.clear()
+        self.ui.tableWidget_ing_candidates_14.setRowCount(0)
+
+    def cancel_edit_existing_ingredient(self):
+        if self.warn_before_leaving():
+            self.clear_edit_existing_ingredient()
+            self.ui.stackedWidget.setCurrentIndex(13)
+
+    def clear_edit_existing_ingredient(self): #clearing out page 15 and 16
+        self.current_ingredient = None
+        #page_15 stuff
+        self.ui.lineEdit_ing_name_15.clear()
+        self.ui.comboBox_ing_category1_15.clear()
+        self.ui.comboBox_ing_category2_15.clear()
+        self.ui.comboBox_ing_category3_15.clear()
+        self.ui.comboBox_ing_category4_15.clear()
+        self.ui.comboBox_ing_category5_15.clear()
+        self.ui.plainTextEdit_ing_description_15.clear()
+        self.ui.lineEdit_ing_academic_name_15.clear()
+        self.ui.lineEdit_ing_lang_english_15.clear()
+        self.ui.lineEdit_ing_lang_chinese_15.clear()
+        self.ui.lineEdit_ing_lang_japanese_15.clear()
+        self.ui.lineEdit_ing_lang_russian_15.clear()
+        self.ui.lineEdit_ing_lang_mongolian_15.clear()
+        self.ui.lineEdit_ing_lang_arabic_15.clear()
+        self.ui.lineEdit_ing_lang_spanish_15.clear()
+        self.ui.lineEdit_ing_lang8_15.clear()
+        self.ui.lineEdit_ing_lang9_15.clear()
+        self.ui.lineEdit_ing_lang10_15.clear()
+        self.ui.lineEdit_ing_lang11_15.clear()
+        self.ui.lineEdit_ing_one_portion_15.clear()
+        self.ui.plainTextEdit_one_portion_description_15.clear()
+        self.ui.lineEdit_ing_mortality_rate_15.clear()
+        self.ui.lineEdit_ing_protein_portion_15.clear()
+        self.ui.spinBox_printingRep_level_15.setValue(1)
+        self.ui.spinBox_extinction_level_15.setValue(0)
+        self.ui.ckBox_immediate_intake_15.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.ckBox_always_unrec_15.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.ckBox_gs_allergy_15.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.ckBox_ms_allergy_15.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.ckBox_lgg4_allergy_15.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.spinBox_gasung_allergy_level_15.setValue(0)
+        self.ui.plainTextEdit_tale_15.clear()
+        self.ui.plainTextEdit_feature_15.clear()
+        self.ui.plainTextEdit_cooking_feature_15.clear()
+        self.ui.plainTextEdit_storage_15.clear()
+        self.ui.lineEdit_polishing_state_15.clear()
+        self.ui.lineEdit_processing_state_15.clear()
+        #page_16 stuff
+        self.ui.tableWidget_nut_quant_16.setRowCount(0)
+        self.ui.lineEdit_nut_name_16.clear()
+        self.ui.comboBox_nut_category1_16.clear()
+        self.ui.comboBox_nut_category2_16.clear()
+        self.ui.tableWidget_nutCandidates_16.setRowCount(0)
+
+    def cancel_find_existing_ingredient(self):
+        self.clear_find_existing_ingredient()
+        self.ui.stackedWidget.setCurrentIndex(13)
+
+    def get_ing_categories(self):
+        if self.ui.lineEdit_ing_category1_15.text() != "":
+            new_ing_cat1 = self.ui.lineEdit_ing_category1_15.text()
+        else:
+            new_ing_cat1 = self.ui.comboBox_ing_category1_15.currentText()
+        if self.ui.lineEdit_ing_category2_15.text() != "":
+            new_ing_cat2 = self.ui.lineEdit_ing_category2_15.text()
+        else:
+            new_ing_cat2 = self.ui.comboBox_ing_category2_15.currentText()
+        if self.ui.lineEdit_ing_category3_15.text() != "":
+            new_ing_cat3 = self.ui.lineEdit_ing_category3_15.text()
+        else:
+            new_ing_cat3 = self.ui.comboBox_ing_category3_15.currentText()
+        if self.ui.lineEdit_ing_category4_15.text() != "":
+            new_ing_cat4 = self.ui.lineEdit_ing_category4_15.text()
+        else:
+            new_ing_cat4 = self.ui.comboBox_ing_category4_15.currentText()
+        if self.ui.lineEdit_ing_category5_15.text() != "":
+            new_ing_cat5 = self.ui.lineEdit_ing_category5_15.text()
+        else:
+            new_ing_cat5 = self.ui.comboBox_ing_category5_15.currentText()
+        return new_ing_cat1, new_ing_cat2, new_ing_cat3, new_ing_cat4, new_ing_cat5
+
+
+
+    def save_or_update_ingredient(self):
+        # new_ing_cat1, new_ing_cat2, new_ing_cat3, new_ing_cat4, new_ing_cat5 = self.get_ing_categories()
+        new_ing_cat1, new_ing_cat2, new_ing_cat3, new_ing_cat4, new_ing_cat5 = get_five_combobox_texts(
+            self.ui.comboBox_ing_category1_15, self.ui.comboBox_ing_category2_15, self.ui.comboBox_ing_category3_15, self.ui.comboBox_ing_category4_15, self.ui.comboBox_ing_category5_15,
+            self.ui.lineEdit_ing_category1_15, self.ui.lineEdit_ing_category2_15, self.ui.lineEdit_ing_category3_15, self.ui.lineEdit_ing_category4_15, self.ui.lineEdit_ing_category5_15)
+
+        if not self.ui.lineEdit_ing_name_15.text() or not new_ing_cat1 or not new_ing_cat2 or not new_ing_cat3 or not new_ing_cat4 or not new_ing_cat5:
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
+            msgbox.setText("식품명, 식품분류 1-5는 필수입니다.")
+            msgbox.setWindowTitle("Error")
+            msgbox.exec_()
+        else:
+            origin1, origin2, origin3, origin4, origin5 = get_five_combobox_texts(
+                self.ui.comboBox_ing_origin1_15, self.ui.comboBox_ing_origin2_15, self.ui.comboBox_ing_origin3_15,
+                self.ui.comboBox_ing_origin4_15, self.ui.comboBox_ing_origin5_15,
+                self.ui.lineEdit_ing_origin1_15, self.ui.lineEdit_ing_origin2_15, self.ui.lineEdit_ing_origin3_15,
+                self.ui.lineEdit_ing_origin4_15, self.ui.lineEdit_ing_origin5_15
+            )
+            specialty1, specialty2, specialty3, specialty4, specialty5 = get_five_combobox_texts(
+                self.ui.comboBox_ing_specialty1_15, self.ui.comboBox_ing_specialty2_15, self.ui.comboBox_ing_specialty3_15,
+                self.ui.comboBox_ing_specialty4_15, self.ui.comboBox_ing_specialty5_15,
+                self.ui.lineEdit_ing_specialty1_15, self.ui.lineEdit_ing_specialty2_15, self.ui.lineEdit_ing_specialty3_15,
+                self.ui.lineEdit_ing_specialty4_15, self.ui.lineEdit_ing_specialty5_15
+            )
+            if self.current_ingredient is None: #new ingredient
+                Ingredient(
+                    식품명= self.ui.lineEdit_ing_name_15.text(),
+                    식품분류1 = new_ing_cat1,
+                    식품분류2 = new_ing_cat2,
+                    식품분류3 = new_ing_cat3,
+                    식품분류4 = new_ing_cat4,
+                    식품분류5 = new_ing_cat5,
+                    학명 = self.ui.lineEdit_ing_academic_name_15.text(),
+                    식품설명 = self.ui.plainTextEdit_ing_description_15.toPlainText(),
+                    식품명영어 = self.ui.lineEdit_ing_lang_english_15.text(),
+                    식품명중국어=self.ui.lineEdit_ing_lang_chinese_15.text(),
+                    식품명일본어=self.ui.lineEdit_ing_lang_japanese_15.text(),
+                    식품명러시아어=self.ui.lineEdit_ing_lang_russian_15.text(),
+                    식품명몽골어=self.ui.lineEdit_ing_lang_mongolian_15.text(),
+                    식품명아랍어=self.ui.lineEdit_ing_lang_arabic_15.text(),
+                    식품명스페인어=self.ui.lineEdit_ing_lang_spanish_15.text(),
+                    식품명외국어8=self.ui.lineEdit_ing_lang8_15.text(),
+                    식품명외국어9=self.ui.lineEdit_ing_lang9_15.text(),
+                    식품명외국어10=self.ui.lineEdit_ing_lang10_15.text(),
+                    식품명외국어11=self.ui.lineEdit_ing_lang11_15.text(),
+                    단일식사분량=float(self.ui.lineEdit_ing_one_portion_15.text()),
+                    단일식사분량설명 = self.ui.plainTextEdit_one_portion_description_15.toPlainText(),
+                    폐기율 = float(self.ui.lineEdit_ing_mortality_rate_15.text()),
+                    단백질가식부 = float(self.ui.lineEdit_ing_protein_portion_15.text()),
+                    출력대표성등급 = self.ui.spinBox_printingRep_level_15.value(),
+                    멸종등급 = self.ui.spinBox_extinction_level_15.value(),
+                    즉시섭취 = self.ui.ckBox_immediate_intake_15.isChecked(),
+                    항상비권고식품여부 = self.ui.ckBox_always_unrec_15.isChecked(),
+                    가성알레르기등급 = self.ui.spinBox_gasung_allergy_level_15.value(),
+                    급성알레르기가능여부 = self.ui.ckBox_gs_allergy_15.isChecked(),
+                    만성알레르기가능여부 = self.ui.ckBox_ms_allergy_15.isChecked(),
+                    만성lgG4과민반응가능여부 = self.ui.ckBox_lgg4_allergy_15.isChecked(),
+                    이야기거리 = self.ui.plainTextEdit_tale_15.toPlainText(),
+                    특징 = self.ui.plainTextEdit_feature_15.toPlainText(),
+                    조리시특성 = self.ui.plainTextEdit_cooking_feature_15.toPlainText(),
+                    보관법 = self.ui.plainTextEdit_storage_15.toPlainText(),
+                    도정상태 = self.ui.lineEdit_polishing_state_15.text(),
+                    가공상태 = self.ui.lineEdit_processing_state_15.text(),
+                    원산지분류1 = origin1,
+                    원산지분류2 = origin2,
+                    원산지분류3 = origin3,
+                    원산지분류4 = origin4,
+                    원산지분류5 = origin5,
+                    특산지분류1 = specialty1,
+                    특산지분류2 = specialty2,
+                    특산지분류3 = specialty3,
+                    특산지분류4 = specialty4,
+                    특산지분류5 = specialty5,
+                    식품영양소관계 = convert_tw_to_dict(self.ui.tableWidget_nut_quant_16, 2)
+                ).save()
+            else: #updating already existing ingredient
+                Ingredient.objects.get(식품명 = self.current_ingredient.식품명).update(
+                    식품명=self.ui.lineEdit_ing_name_15.text(),
+                    식품분류1=new_ing_cat1,
+                    식품분류2=new_ing_cat2,
+                    식품분류3=new_ing_cat3,
+                    식품분류4=new_ing_cat4,
+                    식품분류5=new_ing_cat5,
+                    학명=self.ui.lineEdit_ing_academic_name_15.text(),
+                    식품설명=self.ui.plainTextEdit_ing_description_15.toPlainText(),
+                    식품명영어=self.ui.lineEdit_ing_lang_english_15.text(),
+                    식품명중국어=self.ui.lineEdit_ing_lang_chinese_15.text(),
+                    식품명일본어=self.ui.lineEdit_ing_lang_japanese_15.text(),
+                    식품명러시아어=self.ui.lineEdit_ing_lang_russian_15.text(),
+                    식품명몽골어=self.ui.lineEdit_ing_lang_mongolian_15.text(),
+                    식품명아랍어=self.ui.lineEdit_ing_lang_arabic_15.text(),
+                    식품명스페인어=self.ui.lineEdit_ing_lang_spanish_15.text(),
+                    식품명외국어8=self.ui.lineEdit_ing_lang8_15.text(),
+                    식품명외국어9=self.ui.lineEdit_ing_lang9_15.text(),
+                    식품명외국어10=self.ui.lineEdit_ing_lang10_15.text(),
+                    식품명외국어11=self.ui.lineEdit_ing_lang11_15.text(),
+                    단일식사분량=float(self.ui.lineEdit_ing_one_portion_15.text()),
+                    단일식사분량설명=self.ui.plainTextEdit_one_portion_description_15.toPlainText(),
+                    폐기율=float(self.ui.lineEdit_ing_mortality_rate_15.text()),
+                    단백질가식부=float(self.ui.lineEdit_ing_protein_portion_15.text()),
+                    출력대표성등급=self.ui.spinBox_printingRep_level_15.value(),
+                    멸종등급=self.ui.spinBox_extinction_level_15.value(),
+                    즉시섭취=self.ui.ckBox_immediate_intake_15.isChecked(),
+                    항상비권고식품여부=self.ui.ckBox_always_unrec_15.isChecked(),
+                    가성알레르기등급=self.ui.spinBox_gasung_allergy_level_15.value(),
+                    급성알레르기가능여부=self.ui.ckBox_gs_allergy_15.isChecked(),
+                    만성알레르기가능여부=self.ui.ckBox_ms_allergy_15.isChecked(),
+                    만성lgG4과민반응가능여부=self.ui.ckBox_lgg4_allergy_15.isChecked(),
+                    이야기거리=self.ui.plainTextEdit_tale_15.toPlainText(),
+                    특징=self.ui.plainTextEdit_feature_15.toPlainText(),
+                    조리시특성=self.ui.plainTextEdit_cooking_feature_15.toPlainText(),
+                    보관법=self.ui.plainTextEdit_storage_15.toPlainText(),
+                    도정상태=self.ui.lineEdit_polishing_state_15.text(),
+                    가공상태=self.ui.lineEdit_processing_state_15.text(),
+                    원산지분류1=origin1,
+                    원산지분류2=origin2,
+                    원산지분류3=origin3,
+                    원산지분류4=origin4,
+                    원산지분류5=origin5,
+                    특산지분류1=specialty1,
+                    특산지분류2=specialty2,
+                    특산지분류3=specialty3,
+                    특산지분류4=specialty4,
+                    특산지분류5=specialty5,
+                    식품영양소관계=convert_tw_to_dict(self.ui.tableWidget_nut_quant_16, 2)
+                )
+
+        self.clear_edit_existing_ingredient()
+        self.ui.stackedWidget.setCurrentIndex(13)
 
 
 def main():

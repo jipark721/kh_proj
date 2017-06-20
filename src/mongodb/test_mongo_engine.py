@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from mongoengine import *
 from models import *
 from bson import json_util
@@ -69,8 +70,8 @@ def add_dummy_patient():
 def add_dummy_nutrient(i):
     Nutrient(
         영양소명="영양소명_" + str(i),
-        거대영양소분류="거대영양소분류_" + str(i),
-        영양소분류="영양소분류_" + str(i),
+        영양소분류1="거대영양소분류_" + str(i),
+        영양소분류2="영양소분류_" + str(i),
         하루권장량RDA="하루권장량RDA_" + str(i),
         최대권장량WHO="최대권장량WHO_" + str(i),
         최대권장량식약처="최대권장량식약처_" + str(i),
