@@ -143,9 +143,29 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     # RENDER
     ####################
     def render_page_9(self):
+        # render relevant nutrient by disease
         render_rec_nutrient_tw(self.ui.tableWidget_nutrients_9, self.local_diseases)
-        # render_recd
 
+        # render rec/nonrec ingredients by disease
+        render_checkbox_pos_and_neg_level_tw(self.ui.tableWidget_rec_ing_from_dis_9,
+                                             self.ui.tableWidget_unrec_ing_from_dis_9,
+                                             get_relevant_ingredient_from_diseases_str(self.local_diseases))
+
+        # render nonrec ingredients by allergies
+        render_checkbox_level_tw(self.ui.tableWidget_unrec_ing_from_allergies_9,
+                                 self.get_relevant_ingred_from_all_allergies(), -1)
+
+    def get_relevant_ingred_from_all_allergies(self):
+        relevant_ingredients = {}
+        for ingred, lvl in self.local_gs_allergic_ingredients.items():
+            relevant_ingredients[ingred] = lvl
+        for ingred, lvl in self.local_lgG4_allergic_ingredients.items():
+            if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
+                relevant_ingredients[ingred] = lvl
+        for ingred, lvl in self.local_ms_allergic_ingredients.items():
+            if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
+                relevant_ingredients[ingred] = lvl
+        return relevant_ingredients
 
     def go_to_calculated_page(self):
         printing_rep_level = int(self.ui.spinBox_printingRep_level_10.text())
@@ -799,17 +819,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def render_disease_and_allergies_by_date(self, date):
         if date:
             render_checkbox_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", self.current_patient.진단[date])
-            render_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명",
-                                     self.current_patient.급성알레르기음식[date])
-            render_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명",
-                                     self.current_patient.만성알레르기음식[date])
-            render_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명",
-                                     self.current_patient.만성lgG4과민반응음식[date])
+            render_all_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명",
+                                         self.current_patient.급성알레르기음식[date])
+            render_all_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명",
+                                         self.current_patient.만성알레르기음식[date])
+            render_all_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명",
+                                         self.current_patient.만성lgG4과민반응음식[date])
         else:
             render_checkbox_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", set())
-            render_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명", {})
-            render_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명", {})
-            render_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명", {})
+            render_all_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명", {})
+            render_all_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명", {})
+            render_all_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명", {})
 
     def update_patient_basic_info(self, patient_id):
         id = self.ui.lineEdit_ID_6.text()

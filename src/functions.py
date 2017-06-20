@@ -1,5 +1,6 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 from mongodb.models import *
+import operator
 import datetime
 
 def make_tw_str_item(content):
@@ -111,7 +112,7 @@ def create_checkbox_lw(cursorToCollection, lw, content, isNewPatient, patientDis
                 ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         lw.addItem(ckbtnitem)
 
-def render_checkbox_level_tw(content_collection, tw, content_field_name, checked_content_dict):
+def render_all_checkbox_level_tw(content_collection, tw, content_field_name, checked_content_dict):
     tw.setRowCount(content_collection.count())
     tw.setColumnCount(2)
     rowIndex = 0
@@ -126,6 +127,35 @@ def render_checkbox_level_tw(content_collection, tw, content_field_name, checked
         tw.setItem(rowIndex, 0, ckbtnitem)
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex = rowIndex + 1
+    tw.resizeColumnToContents(1)
+
+def render_checkbox_level_tw(tw, checked_content_dict, positive_direction):
+    tw.setRowCount(len(checked_content_dict))
+    tw.setColumnCount(2)
+    rowIndex = 0
+    for elem, level in sorted(checked_content_dict.items(), key=operator.itemgetter(1), reverse=positive_direction):
+        ckbtnitem = QtWidgets.QTableWidgetItem(elem)
+        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+        levelitem = QtWidgets.QTableWidgetItem(str(level))
+        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+        tw.setItem(rowIndex, 0, ckbtnitem)
+        tw.setItem(rowIndex, 1, levelitem)
+        rowIndex = rowIndex + 1
+    tw.resizeColumnToContents(1)
+
+def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_content_dict):
+    positive_content_dict = {}
+    negative_content_dict = {}
+    for elem, level in checked_content_dict.items():
+        if level > 0:
+            positive_content_dict[elem] = level
+        if level < 0:
+            negative_content_dict[elem] = level
+    render_checkbox_level_tw(positive_tw, positive_content_dict, 1)
+    render_checkbox_level_tw(negative_tw, negative_content_dict, 0)
+
+
 
 def clear_checkbox_lw(lw):
     for index in range(lw.count()):
@@ -133,7 +163,6 @@ def clear_checkbox_lw(lw):
 
 def render_rec_nutrient_tw(tw, diseases):
     relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases)
-    print(relevant_nutrients)
     tw.setRowCount(Nutrient.objects.count())
     tw.setColumnCount(4)
 
@@ -222,8 +251,8 @@ def get_relevant_nutrients_from_diseases_str(diseases):
 def get_relevant_ingredient_from_diseases_str(diseases):
     relevant_ingredient = {}
     for disease in diseases:
-        Disease.objects.get(질병명=disease)
-        for rel_ingredient, level in disease.질병영양소관계.items():
+        disease = Disease.objects.get(질병명=disease)
+        for rel_ingredient, level in disease.질병식품관계.items():
             relevant_ingredient[rel_ingredient] =  level
     return relevant_ingredient
 
