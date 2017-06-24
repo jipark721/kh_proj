@@ -206,6 +206,7 @@ def render_rec_nutrient_tw(tw, diseases):
 
     tw.resizeColumnToContents(0)
     tw.resizeColumnToContents(1)
+    tw.resizeColumnToContents(2)
     tw.resizeColumnToContents(3)
 
 # def clear_ckbox_level_tw(tw):
@@ -262,7 +263,6 @@ def get_relevant_nutrients_from_ingredient_str(ingredient):
         relevant_nutrient[rel_nut] = quant
     return relevant_nutrient
 
-
 def get_relevant_nutrients_from_diseases_str(diseases):
     relevant_nutrient = {}
     for disease in diseases:
@@ -278,6 +278,31 @@ def get_relevant_ingredients_from_diseases_str(diseases):
         for rel_ingredient, level in disease.질병식품관계.items():
             relevant_ingredient[rel_ingredient] =  level
     return relevant_ingredient
+
+def get_portion_code(one_portion_first, gram_first, mortality_first, protein_first):
+    code = 0
+    if one_portion_first:
+        code += 1
+    if gram_first:
+        code += 2
+    if mortality_first:
+        code += 4
+    if protein_first:
+        code += 8
+    return code
+
+def get_relevant_ingredients_from_nutrients_str(nutrients, count_for_single_nut, portion_code, printing_rep_level, extinction_level):
+    pass
+
+def insert_item_in_a_value_set_in_dict(dict, key, value_item):
+    if key not in dict:
+        temp_set = set()
+        temp_set.add(value_item)
+        dict[key] = temp_set
+    else:
+        temp_set = dict[key]
+        temp_set.add(value_item)
+        dict[key] = temp_set
 
 def get_five_combobox_texts(cb1, cb2, cb3, cb4, cb5, le1, le2, le3, le4, le5):
     if le1.text() != "":

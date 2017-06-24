@@ -198,7 +198,7 @@ if reset:
 
 # print_all_patients()
 # print_all_diseases()
-# print_all_ingredients()
+print_all_ingredients()
 # print_all_nutrients()
 export_db()
 

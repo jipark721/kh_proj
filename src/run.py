@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import operator
 from mongoengine import *
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
 from functions import *
 from mongodb.models import *
+
 
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
@@ -91,7 +93,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page_9 - get rec/unrec ingredients page
         self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
         self.ui.btn_next_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(10))
-
+        self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(lambda x: self.render_rec_unrec_ing_from_nut())
         # page 10 - see current collapsed rec/unrec ingredients page
         self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
         self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(9))
@@ -153,17 +155,144 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     # RENDER
     ####################
     def render_page_9(self):
+        self.render_basic_patient_info_on_top(9)
         # render relevant nutrient by disease
         render_rec_nutrient_tw(self.ui.tableWidget_nutrients_9, self.local_diseases)
 
         # render rec/nonrec ingredients by disease
         render_checkbox_pos_and_neg_level_tw(self.ui.tableWidget_rec_ing_from_dis_9,
                                              self.ui.tableWidget_unrec_ing_from_dis_9,
-                                             get_relevant_ingredient_from_diseases_str(self.local_diseases))
+                                             get_relevant_ingredients_from_diseases_str(self.local_diseases))
 
         # render nonrec ingredients by allergies
         render_checkbox_level_tw(self.ui.tableWidget_unrec_ing_from_allergies_9,
                                  self.get_relevant_ingred_from_all_allergies(), -1)
+
+    def render_rec_unrec_ing_from_nut(self):
+        rec_index_nut_dict = {} # level - set of diseases dict
+        unrec_index_nut_dict = {}
+        self.build_rec_unrec_index_nut_dict(rec_index_nut_dict, unrec_index_nut_dict)
+        print("unrec_index_nut_dict:")
+        print(unrec_index_nut_dict.items())
+
+        #bools
+        one_portion_first = self.ui.ckBox_onePortionFirst_8.isChecked()
+        gram_first = self.ui.ckBox_100gFirst_8.isChecked()
+        mortality_first = self.ui.ckBox_mortalityFirst_8.isChecked()
+        protein_first = self.ui.ckBox_proteinFirst_8.isChecked()
+
+        #1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
+        portion_code = get_portion_code(one_portion_first, gram_first, mortality_first, protein_first)
+        #ints
+        printing_rep_level = self.ui.spinBox_printingRep_level_8.value()
+        extinction_level = self.ui.spinBox_extinction_level_8.value()
+        # TODO - NOT USED ATM
+        origin, origin_level = self.get_most_specified_origin_and_level(8)
+        specialty, specialty_level = self.get_most_specified_specialty_and_level(8)
+        # TODO - gotta do something about this row count issue
+        self.ui.tableWidget_rec_ing_from_nut_9.setRowCount(100)
+        self.ui.tableWidget_unrec_ing_from_nut_9.setRowCount(100)
+
+        self.render_tw_for_ing_from_nut(self.ui.tableWidget_rec_ing_from_nut_9, rec_index_nut_dict, True)
+        self.render_tw_for_ing_from_nut(self.ui.tableWidget_unrec_ing_from_nut_9, unrec_index_nut_dict, False)
+
+    def render_tw_for_ing_from_nut(self, tw, dict, isRec):
+        rowIndex = 0
+        for level in reversed(range(1, 6)):
+            if not isRec:
+                level = level * (-1) #reverse to negative
+            if level in dict:
+                for nut in dict.get(level):
+                    ing_quant_dict_for_nut = {}
+                    for ing in Ingredient.objects.all():
+                        if nut in ing.식품영양소관계:
+                            # TODO - should be updated for 100g 폐기율 단백질 stuff
+                            ing_quant_dict_for_nut[ing.식품명] = ing.식품영양소관계[nut]
+                    print("ing_quant_dict_for_nut:")
+                    print(ing_quant_dict_for_nut.items())
+                    min_count = self.get_level_count(level, ing_quant_dict_for_nut)
+                    sorted_ing_quant_list = sorted(ing_quant_dict_for_nut.items(), key=operator.itemgetter(1),
+                                                   reverse=True)[:min_count]
+                    for index in range(min_count):
+                        ing_name = sorted_ing_quant_list[index][0]
+                        quant = sorted_ing_quant_list[index][1]
+                        ing_name_item = make_tw_checkbox_item(ing_name, False)
+                        level_item = make_tw_str_item(str(level))
+                        nut_item = make_tw_str_item(nut)
+                        quant_item = make_tw_str_item(str(quant))
+                        tw.setItem(rowIndex, 0, ing_name_item)
+                        tw.setItem(rowIndex, 1, level_item)
+                        tw.setItem(rowIndex, 2, nut_item)
+                        tw.setItem(rowIndex, 3, quant_item)
+                        rowIndex += 1
+        tw.resizeColumnsToContents()
+
+    def get_level_count(self, level, dict):
+        if level == 5:
+            return min(int(self.ui.lineEdit_lv5_9.text()), len(dict))
+        elif level == 4:
+            return min(int(self.ui.lineEdit_lv4_9.text()), len(dict))
+        elif level == 3:
+            return min(int(self.ui.lineEdit_lv3_9.text()), len(dict))
+        elif level == 2:
+            return min(int(self.ui.lineEdit_lv2_9.text()), len(dict))
+        elif level == 1:
+            return min(int(self.ui.lineEdit_lv1_9.text()), len(dict))
+        elif level == -5:
+            return min(int(self.ui.lineEdit_lvn5_9.text()), len(dict))
+        elif level == -4:
+            return min(int(self.ui.lineEdit_lvn4_9.text()), len(dict))
+        elif level == -3:
+            return min(int(self.ui.lineEdit_lvn3_9.text()), len(dict))
+        elif level == -2:
+            return min(int(self.ui.lineEdit_lvn2_9.text()), len(dict))
+        elif level == -1:
+            return min(int(self.ui.lineEdit_lvn1_9.text()), len(dict))
+
+
+    def build_rec_unrec_index_nut_dict(self, rec_index_nut_dict, unrec_index_nut_dict):
+        for index in range(self.ui.tableWidget_nutrients_9.rowCount()):
+            # recommended nut
+            if self.ui.tableWidget_nutrients_9.item(index, 0).checkState() == QtCore.Qt.Checked and self.ui.tableWidget_nutrients_9.item(index, 1).checkState() == QtCore.Qt.Unchecked:
+                level = int(self.ui.tableWidget_nutrients_9.item(index, 3).text())
+                insert_item_in_a_value_set_in_dict(rec_index_nut_dict, level,
+                                                   self.ui.tableWidget_nutrients_9.item(index, 2).text())
+            # unrecommended nut
+            elif self.ui.tableWidget_nutrients_9.item(index, 0).checkState() == QtCore.Qt.Unchecked and self.ui.tableWidget_nutrients_9.item(index, 1).checkState() == QtCore.Qt.Checked:
+                level = int(self.ui.tableWidget_nutrients_9.item(index, 3).text())
+                insert_item_in_a_value_set_in_dict(unrec_index_nut_dict, level,
+                                                   self.ui.tableWidget_nutrients_9.item(index, 2).text())
+
+    def render_basic_patient_info_on_top(self, currPage):
+        if currPage == 7:
+            self.ui.lineEdit_name_7.setText(self.current_patient.이름)
+            self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
+            self.ui.lineEdit_birthdate_7.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
+            self.ui.lineEdit_age_7.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
+            self.ui.lineEdit_lastOfficeVisit_7.setText(str(datetime.date.today()))
+            self.ui.lineEdit_height_7.setText(str(self.current_patient.키))
+            self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
+            self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
+        elif currPage == 9:
+            self.ui.lineEdit_name_9.setText(self.current_patient.이름)
+            self.ui.lineEdit_ID_9.setText(self.current_patient.ID)
+            self.ui.lineEdit_birthdate_9.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
+            self.ui.lineEdit_age_9.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
+            self.ui.lineEdit_lastOfficeVisit_9.setText(str(datetime.date.today()))
+            self.ui.lineEdit_height_9.setText(str(self.current_patient.키))
+            self.ui.lineEdit_weight_9.setText(str(self.current_patient.몸무게))
+            self.ui.lineEdit_nthVisit_9.setText(str(self.current_patient.방문횟수 + 1))
+        elif currPage == 10:
+            self.ui.lineEdit_name_10.setText(self.current_patient.이름)
+            self.ui.lineEdit_ID_10.setText(self.current_patient.ID)
+            self.ui.lineEdit_birthdate_10.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
+            self.ui.lineEdit_age_10.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
+            self.ui.lineEdit_lastOfficeVisit_10.setText(str(datetime.date.today()))
+            self.ui.lineEdit_height_10.setText(str(self.current_patient.키))
+            self.ui.lineEdit_weight_10.setText(str(self.current_patient.몸무게))
+            self.ui.lineEdit_nthVisit_10.setText(str(self.current_patient.방문횟수 + 1))
+        else:
+            pass
 
     def get_relevant_ingred_from_all_allergies(self):
         relevant_ingredients = {}
@@ -177,82 +306,82 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 relevant_ingredients[ingred] = lvl
         return relevant_ingredients
 
-    def go_to_calculated_page(self):
-        printing_rep_level = int(self.ui.spinBox_printingRep_level_10.text())
-        gram_first = self.ui.ckBox_100gFirst_10.isChecked()  # 1회 분량 출력조건
-        portion_first = self.ui.ckBox_onePortionFirst_10.isChecked()
-        mortality_rate_first = self.ui.ckBox_mortalityFirst_10.isChecked()
-        protein_rate_first = self.ui.ckBox_proteinFirst_10.isChecked()
-
-        gasung_level = int(self.ui.spinBox_allergy_gasung_level_10.text())
-        gs_level = int(self.ui.spinBox_allergy_gs_level_10.text())
-        ms_level = int(self.ui.spinBox_allergy_ms_level_10.text())
-        lgg4_level = int(self.ui.spinBox_allergy_lgg4_level_10.text())
-        extinction_level = int(self.ui.spinBox_extinctionLevel_10.text())
-
-        origin, origin_level = self.get_most_specified_origin_and_level()
-        specialty, specialty_level = self.get_most_specified_specialty_and_level()
-
-        isManuallyDeletingDupicates = True if self.ui.radioBtn_dup_manual_10.isChecked() else False
-        isManuallyManipulatingHigherLevel = True if self.ui.radioBtn_upperLevel_manual_10.isChecked() else False
-
-        self.ui.stackedWidget.setCurrentIndex(9)  # BLANK AT THIS MOMENT AHHH
-        copy_and_paste_tw(self.ui.tableWidget_RecNut_8, self.ui.tableWidget_rec_nut_9)
-        copy_and_paste_tw(self.ui.tableWidget_NotRecNut_8, self.ui.tableWidget_unrec_nut_9)
-
-        if (self.current_patient.진료일):
-            latest_date = str(self.current_patient.진료일[-1]).split()[0]
-            current_patient_disease_list = self.current_patient.진단[latest_date]
-            level_dis_dict = {}  # dict of level - set of 질병명
-            for d in current_patient_disease_list:
-                dis_ing_rel = Disease.objects.get(질병명=d).질병식품관계
-                print(dis_ing_rel.keys())
-                dis_nut_rel = Disease.objects.get(질병명=d).질병영양소관계
-                for diagDis in dis_ing_rel.keys():
-                    level = dis_ing_rel[diagDis]
-                    print("currlevel = " + str(level))
-                    if level not in level_dis_dict:
-                        tempSet = set()
-                        tempSet.add(diagDis)
-                        level_dis_dict[level] = tempSet
-                    else:
-                        tempSet = level_dis_dict[level]
-                        if diagDis not in tempSet:
-                            tempSet.add(diagDis)
-                            level_dis_dict[level] = tempSet
-        currRowIndexRec = 0
-        self.ui.tableWidget_rec_ing_9.setRowCount(20)
-        currRowIndexUnrec = 0
-        self.ui.tableWidget_unrec_ing_9.setRowCount(20)
-        for l in reversed(range(1, 5)):
-            if l in level_dis_dict:
-                print("level" + str(l))
-                for item in level_dis_dict[l]:
-                    print("item:" + item)
-                for dis_name in level_dis_dict[l]:
-                    print("dis_name:" + dis_name)
-                    ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
-                    ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                    ckbtnitem.setCheckState(QtCore.Qt.Checked)
-                    self.ui.tableWidget_rec_ing_9.setItem(currRowIndexRec, 0, ckbtnitem)
-                    item = QtWidgets.QTableWidgetItem(str(l))
-                    self.ui.tableWidget_rec_ing_9.setItem(currRowIndexRec, 1, item)
-                    currRowIndexRec += 1
-
-                    # self.populate_rec_or_unrec_ing_tw(self.ui.tableWidget_rec_ing_9, l,level_dis_dict[l], currRowIndex)
-            neg_l = l * (-1)
-            if neg_l in level_dis_dict:
-                for item in level_dis_dict[l]:
-                    print("item:" + item)
-                for dis_name in level_dis_dict[l]:
-                    print("dis_name:" + dis_name)
-                    ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
-                    ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                    ckbtnitem.setCheckState(QtCore.Qt.Checked)
-                    self.ui.tableWidget_unrec_ing_9.setItem(currRowIndexUnrec, 0, ckbtnitem)
-                    item = QtWidgets.QTableWidgetItem(str(l))
-                    self.ui.tableWidget_rec_ing_9.setItem(currRowIndexUnrec, 1, item)
-                    currRowIndexUnrec += 1
+    # def go_to_calculated_page(self):
+    #     printing_rep_level = int(self.ui.spinBox_printingRep_level_10.text())
+    #     gram_first = self.ui.ckBox_100gFirst_10.isChecked()  # 1회 분량 출력조건
+    #     portion_first = self.ui.ckBox_onePortionFirst_10.isChecked()
+    #     mortality_rate_first = self.ui.ckBox_mortalityFirst_10.isChecked()
+    #     protein_rate_first = self.ui.ckBox_proteinFirst_10.isChecked()
+    #
+    #     gasung_level = int(self.ui.spinBox_allergy_gasung_level_10.text())
+    #     gs_level = int(self.ui.spinBox_allergy_gs_level_10.text())
+    #     ms_level = int(self.ui.spinBox_allergy_ms_level_10.text())
+    #     lgg4_level = int(self.ui.spinBox_allergy_lgg4_level_10.text())
+    #     extinction_level = int(self.ui.spinBox_extinctionLevel_10.text())
+    #
+    #     origin, origin_level = self.get_most_specified_origin_and_level()
+    #     specialty, specialty_level = self.get_most_specified_specialty_and_level()
+    #
+    #     isManuallyDeletingDupicates = True if self.ui.radioBtn_dup_manual_10.isChecked() else False
+    #     isManuallyManipulatingHigherLevel = True if self.ui.radioBtn_upperLevel_manual_10.isChecked() else False
+    #
+    #     self.ui.stackedWidget.setCurrentIndex(9)  # BLANK AT THIS MOMENT AHHH
+    #     copy_and_paste_tw(self.ui.tableWidget_RecNut_8, self.ui.tableWidget_rec_nut_9)
+    #     copy_and_paste_tw(self.ui.tableWidget_NotRecNut_8, self.ui.tableWidget_unrec_nut_9)
+    #
+    #     if (self.current_patient.진료일):
+    #         latest_date = str(self.current_patient.진료일[-1]).split()[0]
+    #         current_patient_disease_list = self.current_patient.진단[latest_date]
+    #         level_dis_dict = {}  # dict of level - set of 질병명
+    #         for d in current_patient_disease_list:
+    #             dis_ing_rel = Disease.objects.get(질병명=d).질병식품관계
+    #             print(dis_ing_rel.keys())
+    #             dis_nut_rel = Disease.objects.get(질병명=d).질병영양소관계
+    #             for diagDis in dis_ing_rel.keys():
+    #                 level = dis_ing_rel[diagDis]
+    #                 print("currlevel = " + str(level))
+    #                 if level not in level_dis_dict:
+    #                     tempSet = set()
+    #                     tempSet.add(diagDis)
+    #                     level_dis_dict[level] = tempSet
+    #                 else:
+    #                     tempSet = level_dis_dict[level]
+    #                     if diagDis not in tempSet:
+    #                         tempSet.add(diagDis)
+    #                         level_dis_dict[level] = tempSet
+    #     currRowIndexRec = 0
+    #     self.ui.tableWidget_rec_ing_9.setRowCount(20)
+    #     currRowIndexUnrec = 0
+    #     self.ui.tableWidget_unrec_ing_9.setRowCount(20)
+    #     for l in reversed(range(1, 5)):
+    #         if l in level_dis_dict:
+    #             print("level" + str(l))
+    #             for item in level_dis_dict[l]:
+    #                 print("item:" + item)
+    #             for dis_name in level_dis_dict[l]:
+    #                 print("dis_name:" + dis_name)
+    #                 ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
+    #                 ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+    #                 ckbtnitem.setCheckState(QtCore.Qt.Checked)
+    #                 self.ui.tableWidget_rec_ing_9.setItem(currRowIndexRec, 0, ckbtnitem)
+    #                 item = QtWidgets.QTableWidgetItem(str(l))
+    #                 self.ui.tableWidget_rec_ing_9.setItem(currRowIndexRec, 1, item)
+    #                 currRowIndexRec += 1
+    #
+    #                 # self.populate_rec_or_unrec_ing_tw(self.ui.tableWidget_rec_ing_9, l,level_dis_dict[l], currRowIndex)
+    #         neg_l = l * (-1)
+    #         if neg_l in level_dis_dict:
+    #             for item in level_dis_dict[l]:
+    #                 print("item:" + item)
+    #             for dis_name in level_dis_dict[l]:
+    #                 print("dis_name:" + dis_name)
+    #                 ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
+    #                 ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+    #                 ckbtnitem.setCheckState(QtCore.Qt.Checked)
+    #                 self.ui.tableWidget_unrec_ing_9.setItem(currRowIndexUnrec, 0, ckbtnitem)
+    #                 item = QtWidgets.QTableWidgetItem(str(l))
+    #                 self.ui.tableWidget_rec_ing_9.setItem(currRowIndexUnrec, 1, item)
+    #                 currRowIndexUnrec += 1
 
     def populate_rec_or_unrec_ing_tw(self, tw, level, dis_set, currRowIndex):
         rowIndex = currRowIndex
@@ -266,33 +395,37 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             tw.setItem(rowIndex, 1, item)
             rowIndex += 1
 
-    def get_most_specified_origin_and_level(self):
-        if self.ui.comboBox_origin_5_10.currentText() != "":
-            return self.ui.comboBox_origin_5_10.currentText(), 5
-        elif self.ui.comboBox_origin_4_10.currentText() != "":
-            return self.ui.comboBox_origin_4_10.currentText(), 4
-        elif self.ui.comboBox_origin_3_10.currentText() != "":
-            return self.ui.comboBox_origin_3_10.currentText(), 3
-        elif self.ui.comboBox_origin_2_10.currentText() != "":
-            return self.ui.comboBox_origin_2_10.currentText(), 2
-        elif self.ui.comboBox_origin_1_10.currentText() != "":
-            return self.ui.comboBox_origin_1_10.currentText(), 1
-        else:
-            return "", -1
+    def get_most_specified_origin_and_level(self, currPage):
+        if currPage == 8:
+            if self.ui.comboBox_origin_5_8.currentText() != "":
+                return self.ui.comboBox_origin_5_8.currentText(), 5
+            elif self.ui.comboBox_origin_4_8.currentText() != "":
+                return self.ui.comboBox_origin_4_8.currentText(), 4
+            elif self.ui.comboBox_origin_3_8.currentText() != "":
+                return self.ui.comboBox_origin_3_8.currentText(), 3
+            elif self.ui.comboBox_origin_2_8.currentText() != "":
+                return self.ui.comboBox_origin_2_8.currentText(), 2
+            elif self.ui.comboBox_origin_1_8.currentText() != "":
+                return self.ui.comboBox_origin_1_8.currentText(), 1
+            else:
+                return "", -1
 
-    def get_most_specified_specialty_and_level(self):
-        if self.ui.comboBox_specialty_5_10.currentText() != "":
-            return self.ui.comboBox_specialty_5_10.currentText(), 5
-        elif self.ui.comboBox_specialty_4_10.currentText() != "":
-            return self.ui.comboBox_specialty_4_10.currentText(), 4
-        elif self.ui.comboBox_specialty_3_10.currentText() != "":
-            return self.ui.comboBox_specialty_3_10.currentText(), 3
-        elif self.ui.comboBox_specialty_2_10.currentText() != "":
-            return self.ui.comboBox_specialty_2_10.currentText(), 2
-        elif self.ui.comboBox_specialty_1_10.currentText() != "":
-            return self.ui.comboBox_specialty_1_10.currentText(), 1
-        else:
-            return "", -1
+
+    def get_most_specified_specialty_and_level(self, currPage):
+        if currPage == 8:
+            if self.ui.comboBox_specialty_5_8.currentText() != "":
+                return self.ui.comboBox_specialty_5_8.currentText(), 5
+            elif self.ui.comboBox_specialty_4_8.currentText() != "":
+                return self.ui.comboBox_specialty_4_8.currentText(), 4
+            elif self.ui.comboBox_specialty_3_8.currentText() != "":
+                return self.ui.comboBox_specialty_3_8.currentText(), 3
+            elif self.ui.comboBox_specialty_2_8.currentText() != "":
+                return self.ui.comboBox_specialty_2_8.currentText(), 2
+            elif self.ui.comboBox_specialty_1_8.currentText() != "":
+                return self.ui.comboBox_specialty_1_8.currentText(), 1
+            else:
+                return "", -1
+
 
     #
     # def go_to_filtering_page2(self):
@@ -845,6 +978,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.tableWidget_clientCandidates_5.setItem(i, 2, make_tw_str_item(patient.생년월일.strftime('%Y/%m/%d')))
             self.ui.tableWidget_clientCandidates_5.setItem(i, 3, make_tw_str_item(patient.주소))
             i += 1
+        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(0)
+        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(1)
+        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(2)
+        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(3)
+
 
     def clear_edit_existing_client(self):
         self.ui.lineEdit_ID_6.setText("")
@@ -991,14 +1129,15 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_existing_patient_info_disease_and_allergies(self, id):
         self.current_patient = Patient.objects.get(ID=id)
-        self.ui.lineEdit_name_7.setText(self.current_patient.이름)
-        self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
-        self.ui.lineEdit_birthdate_7.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
-        self.ui.lineEdit_age_7.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-        self.ui.lineEdit_lastOfficeVisit_7.setText(str(datetime.date.today()))
-        self.ui.lineEdit_height_7.setText(str(self.current_patient.키))
-        self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
-        self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
+        self.render_basic_patient_info_on_top(7)
+        # self.ui.lineEdit_name_7.setText(self.current_patient.이름)
+        # self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
+        # self.ui.lineEdit_birthdate_7.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
+        # self.ui.lineEdit_age_7.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
+        # self.ui.lineEdit_lastOfficeVisit_7.setText(str(datetime.date.today()))
+        # self.ui.lineEdit_height_7.setText(str(self.current_patient.키))
+        # self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
+        # self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
 
         # Render all elements to lw and tw
         self.render_disease_and_allergies_by_date("")
