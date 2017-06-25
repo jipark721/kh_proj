@@ -32,6 +32,15 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_allergic_ingredients = {}
         self.local_diseases = {}
 
+        # local filters
+        self.local_remove_duplicates = True
+        self.local_rec_threshold = 0
+        self.local_nonrec_threshold = 0
+        self.local_gs_threshold = 0
+        self.local_lgG4_threshold = 0
+        self.local_ms_threshold = 0
+        self.local_gasung_threshold = 0
+
         self.current_ingredient = None
         self.current_nutrient = None
         self.lang_to_print = ['영어', '중국어', '일본어', '러시아어', '몽골어', '아랍어', '스페인어', '외국어8', '외국어9', '외국어10', '외국어11']
@@ -148,6 +157,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     ####################
 
     def go_to_page_9(self):
+        self.local_remove_duplicates = True if self.ui.radioButton_dis_rel_ing_delete_both_8.isChecked() else False
+        self.local_rec_threshold = int(self.ui.spinBox_dis_rel_ing_level_rec_8.text())
+        self.local_nonrec_threshold = int(self.ui.spinBox_dis_rel_ing_level_unrec_8.text())
+        self.local_gs_threshold = int(self.ui.spinBox_allergy_gs_level_8.text())
+        self.local_lgG4_threshold = int(self.ui.spinBox_allergy_lgg4_level_9.text())
+        self.local_ms_threshold = int(self.ui.spinBox_allergy_ms_level_8.text())
+        self.local_gasung_threshold = int(self.ui.spinBox_allergy_gasung_level_8.text())
         self.ui.stackedWidget.setCurrentIndex(9)
         self.render_page_9()
 
@@ -156,17 +172,21 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     ####################
     def render_page_9(self):
         self.render_basic_patient_info_on_top(9)
+
         # render relevant nutrient by disease
-        render_rec_nutrient_tw(self.ui.tableWidget_nutrients_9, self.local_diseases)
+        # TODO : remove duplicates?
+        render_rec_nutrient_tw(self.ui.tableWidget_nutrients_9, self.local_diseases, False)
 
         # render rec/nonrec ingredients by disease
         render_checkbox_pos_and_neg_level_tw(self.ui.tableWidget_rec_ing_from_dis_9,
                                              self.ui.tableWidget_unrec_ing_from_dis_9,
-                                             get_relevant_ingredients_from_diseases_str(self.local_diseases))
+                                             get_relevant_ingredients_from_diseases_str(self.local_diseases, self.local_remove_duplicates),
+                                             self.local_rec_threshold, self.local_nonrec_threshold)
 
         # render nonrec ingredients by allergies
         render_checkbox_level_tw(self.ui.tableWidget_unrec_ing_from_allergies_9,
-                                 self.get_relevant_ingred_from_all_allergies(), -1)
+                                 self.get_relevant_ingred_from_all_allergies(self.local_gs_threshold, self.local_lgG4_threshold, self.local_ms_threshold, self.local_gasung_threshold)
+                                 ,-1)
 
     def render_rec_unrec_ing_from_nut(self):
         rec_index_nut_dict = {} # level - set of diseases dict
@@ -294,14 +314,23 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         else:
             pass
 
-    def get_relevant_ingred_from_all_allergies(self):
+    def get_relevant_ingred_from_all_allergies(self, gs_threshold, lgG4_threshold, ms_threshold, gasung_threshold):
         relevant_ingredients = {}
         for ingred, lvl in self.local_gs_allergic_ingredients.items():
-            relevant_ingredients[ingred] = lvl
+            if lvl >= gs_threshold:
+                if ingred not in relevant_ingredients or lvl >= relevant_ingredients[ingred]:
+                    relevant_ingredients[ingred] = lvl
         for ingred, lvl in self.local_lgG4_allergic_ingredients.items():
-            if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
-                relevant_ingredients[ingred] = lvl
+            if lvl >= lgG4_threshold:
+                if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
+                    relevant_ingredients[ingred] = lvl
         for ingred, lvl in self.local_ms_allergic_ingredients.items():
+            if lvl >= ms_threshold:
+                if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
+                    relevant_ingredients[ingred] = lvl
+        for ingredient in Ingredient.objects(가성알레르기등급__lte=gasung_threshold):
+            ingred = ingredient.식품명
+            lvl = ingredient.가성알레르기등급
             if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
                 relevant_ingredients[ingred] = lvl
         return relevant_ingredients

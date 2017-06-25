@@ -160,25 +160,23 @@ def render_checkbox_level_tw(tw, checked_content_dict, positive_direction):
         rowIndex = rowIndex + 1
     tw.resizeColumnToContents(1)
 
-def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_content_dict):
+def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_content_dict, rec_threshold, nonrec_threshold):
     positive_content_dict = {}
     negative_content_dict = {}
     for elem, level in checked_content_dict.items():
-        if level > 0:
+        if level > rec_threshold:
             positive_content_dict[elem] = level
-        if level < 0:
+        if level < nonrec_threshold:
             negative_content_dict[elem] = level
     render_checkbox_level_tw(positive_tw, positive_content_dict, 1)
     render_checkbox_level_tw(negative_tw, negative_content_dict, 0)
-
-
 
 def clear_checkbox_lw(lw):
     for index in range(lw.count()):
         lw.item(index).setCheckState(QtCore.Qt.Unchecked)
 
-def render_rec_nutrient_tw(tw, diseases):
-    relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases)
+def render_rec_nutrient_tw(tw, diseases, remove_duplicates):
+    relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases, remove_duplicates)
     tw.setRowCount(Nutrient.objects.count())
     tw.setColumnCount(4)
 
@@ -263,20 +261,40 @@ def get_relevant_nutrients_from_ingredient_str(ingredient):
         relevant_nutrient[rel_nut] = quant
     return relevant_nutrient
 
-def get_relevant_nutrients_from_diseases_str(diseases):
+def get_relevant_nutrients_from_diseases_str(diseases, remove_duplicates):
     relevant_nutrient = {}
+    removed = {}
     for disease in diseases:
         disease = Disease.objects.get(질병명=disease)
         for rel_nutrient, level in disease.질병영양소관계.items():
-            relevant_nutrient[rel_nutrient] = level
+            if rel_nutrient not in relevant_nutrient and rel_nutrient not in removed:
+                relevant_nutrient[rel_nutrient] = level
+            elif remove_duplicates:
+                del relevant_nutrient[rel_nutrient]
+                removed[rel_nutrient] = True
+            elif rel_nutrient in relevant_nutrient and relevant_nutrient[rel_nutrient] > 0:
+                if level > relevant_nutrient[rel_nutrient] or level < 0:
+                    relevant_nutrient[rel_nutrient] = level
+            elif rel_nutrient in relevant_nutrient and relevant_nutrient[rel_nutrient] < 0 and level < relevant_nutrient[rel_nutrient]:
+                relevant_nutrient[rel_nutrient] = level
     return relevant_nutrient
 
-def get_relevant_ingredients_from_diseases_str(diseases):
+def get_relevant_ingredients_from_diseases_str(diseases, remove_duplicates):
     relevant_ingredient = {}
+    removed = {}
     for disease in diseases:
         disease = Disease.objects.get(질병명=disease)
         for rel_ingredient, level in disease.질병식품관계.items():
-            relevant_ingredient[rel_ingredient] =  level
+            if rel_ingredient not in relevant_ingredient and rel_ingredient not in removed:
+                relevant_ingredient[rel_ingredient] =  level
+            elif rel_ingredient in relevant_ingredient and remove_duplicates:
+                del relevant_ingredient[rel_ingredient]
+                removed[rel_ingredient] = True
+            elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] > 0:
+                if level > relevant_ingredient[rel_ingredient] or level < 0:
+                    relevant_ingredient[rel_ingredient] = level
+            elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] < 0 and level < relevant_ingredient[rel_ingredient]:
+                relevant_ingredient[rel_ingredient] = level
     return relevant_ingredient
 
 def get_portion_code(one_portion_first, gram_first, mortality_first, protein_first):
