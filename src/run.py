@@ -3,6 +3,7 @@
 import sys
 import operator
 from mongoengine import *
+from mongoengine.queryset.visitor import Q
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
 from functions import *
@@ -172,44 +173,47 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         rec_index_nut_dict = {} # level - set of diseases dict
         unrec_index_nut_dict = {}
         self.build_rec_unrec_index_nut_dict(rec_index_nut_dict, unrec_index_nut_dict)
-        print("unrec_index_nut_dict:")
-        print(unrec_index_nut_dict.items())
 
-        #bools
-        one_portion_first = self.ui.ckBox_onePortionFirst_8.isChecked()
-        gram_first = self.ui.ckBox_100gFirst_8.isChecked()
-        mortality_first = self.ui.ckBox_mortalityFirst_8.isChecked()
-        protein_first = self.ui.ckBox_proteinFirst_8.isChecked()
-
-        #1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
-        portion_code = get_portion_code(one_portion_first, gram_first, mortality_first, protein_first)
-        #ints
-        printing_rep_level = self.ui.spinBox_printingRep_level_8.value()
-        extinction_level = self.ui.spinBox_extinction_level_8.value()
         # TODO - NOT USED ATM
         origin, origin_level = self.get_most_specified_origin_and_level(8)
         specialty, specialty_level = self.get_most_specified_specialty_and_level(8)
         # TODO - gotta do something about this row count issue
-        self.ui.tableWidget_rec_ing_from_nut_9.setRowCount(100)
-        self.ui.tableWidget_unrec_ing_from_nut_9.setRowCount(100)
+        self.ui.tableWidget_rec_ing_from_nut_9.setRowCount(1000)
+        self.ui.tableWidget_unrec_ing_from_nut_9.setRowCount(1000)
 
         self.render_tw_for_ing_from_nut(self.ui.tableWidget_rec_ing_from_nut_9, rec_index_nut_dict, True)
         self.render_tw_for_ing_from_nut(self.ui.tableWidget_unrec_ing_from_nut_9, unrec_index_nut_dict, False)
 
     def render_tw_for_ing_from_nut(self, tw, dict, isRec):
+        # ints
+        printing_rep_level = self.ui.spinBox_printingRep_level_8.value()
+        extinction_level = self.ui.spinBox_extinction_level_8.value()
+        # bools
+        one_portion_first = self.ui.ckBox_onePortionFirst_8.isChecked()
+        gram_first = self.ui.ckBox_100gFirst_8.isChecked()
+        mortality_first = self.ui.ckBox_mortalityFirst_8.isChecked()
+        protein_first = self.ui.ckBox_proteinFirst_8.isChecked()
+        # 1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
+        portion_code = get_portion_code(one_portion_first, gram_first, mortality_first, protein_first)
+
         rowIndex = 0
         for level in reversed(range(1, 6)):
             if not isRec:
                 level = level * (-1) #reverse to negative
             if level in dict:
-                for nut in dict.get(level):
+                for nut_str in dict.get(level):
                     ing_quant_dict_for_nut = {}
-                    for ing in Ingredient.objects.all():
-                        if nut in ing.식품영양소관계:
+                    ing_quant_dict_for_nut_secondary = {} #for 100g when both one-portion and 100g checked
+                    for ing in Ingredient.objects(
+                                    Q(출력대표성등급__lte=printing_rep_level) & Q(멸종등급__lt=extinction_level)):
+                        if nut_str in ing.식품영양소관계:
                             # TODO - should be updated for 100g 폐기율 단백질 stuff
-                            ing_quant_dict_for_nut[ing.식품명] = ing.식품영양소관계[nut]
-                    print("ing_quant_dict_for_nut:")
-                    print(ing_quant_dict_for_nut.items())
+                            ing_quant_dict_for_nut[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+                                                                                               portion_code)
+                            if one_portion_first and gram_first:
+                                ing_quant_dict_for_nut_secondary[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+                                                                                                             portion_code)
+                            # ing_quant_dict_for_nut[ing.식품명] = ing.식품영양소관계[nut_str]
                     min_count = self.get_level_count(level, ing_quant_dict_for_nut)
                     sorted_ing_quant_list = sorted(ing_quant_dict_for_nut.items(), key=operator.itemgetter(1),
                                                    reverse=True)[:min_count]
@@ -218,14 +222,38 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                         quant = sorted_ing_quant_list[index][1]
                         ing_name_item = make_tw_checkbox_item(ing_name, False)
                         level_item = make_tw_str_item(str(level))
-                        nut_item = make_tw_str_item(nut)
+                        nut_item = make_tw_str_item(nut_str)
                         quant_item = make_tw_str_item(str(quant))
                         tw.setItem(rowIndex, 0, ing_name_item)
                         tw.setItem(rowIndex, 1, level_item)
                         tw.setItem(rowIndex, 2, nut_item)
                         tw.setItem(rowIndex, 3, quant_item)
                         rowIndex += 1
+
+
+                    if portion_code != 3 and portion_code != 7 and portion_code != 11 and portion_code != 15:
+
+
+                    else: #both one portion and 100g checked
+
+
+        tw.setRowCount(rowIndex)
         tw.resizeColumnsToContents()
+
+    def calculate_nut_quant_for_ing(self, ing, nut_str, portion_code):
+        # 데이터안에는 각 식품 100그램 안에 영양소가 얼마 들어있는지 기입되어있음
+        # 1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
+        default_100g_value = ing.식품영양소관계[nut_str]
+        if portion_code == 1 or portion_code == 3:
+            return default_100g_value * ing.단일식사분량 / 100.0
+        elif portion_code == 2:
+            return default_100g_value
+        elif portion_code == 4 or portion_code == 5 or portion_code == 7:
+            return default_100g_value * ing.단일식사분량 / 100.0 * (1-ing.폐기율)
+        elif portion_code == 6:
+            return default_100g_value * (1-ing.폐기율)
+
+
 
     def get_level_count(self, level, dict):
         if level == 5:
@@ -1066,9 +1094,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # print(self.current_patient)
 
     def updatePatients(self):
-        # for patient in getAllPatients():
-        #     self.tableWidget_clientCandidates_5.
-        #     patient.
         pass
 
     def go_to_data(self):
@@ -1130,14 +1155,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def render_existing_patient_info_disease_and_allergies(self, id):
         self.current_patient = Patient.objects.get(ID=id)
         self.render_basic_patient_info_on_top(7)
-        # self.ui.lineEdit_name_7.setText(self.current_patient.이름)
-        # self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
-        # self.ui.lineEdit_birthdate_7.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
-        # self.ui.lineEdit_age_7.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-        # self.ui.lineEdit_lastOfficeVisit_7.setText(str(datetime.date.today()))
-        # self.ui.lineEdit_height_7.setText(str(self.current_patient.키))
-        # self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
-        # self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
 
         # Render all elements to lw and tw
         self.render_disease_and_allergies_by_date("")
@@ -1145,10 +1162,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_past_diagnosis_combo_box(self):
         past_dates = [str(date).split()[0] for date in self.current_patient.진료일]
-        self.ui.past_diagnosis_combobox_7.clear()
-        self.ui.past_diagnosis_combobox_7.addItem("")
-        self.ui.past_diagnosis_combobox_7.addItems(past_dates)
-        self.ui.past_diagnosis_combobox_7.activated[str].connect(self.render_disease_and_allergies_by_date)
+        self.ui.combobox_past_diagnosis_7.clear()
+        self.ui.combobox_past_diagnosis_7.addItem("")
+        self.ui.combobox_past_diagnosis_7.addItems(past_dates)
+        self.ui.combobox_past_diagnosis_7.activated[str].connect(self.render_disease_and_allergies_by_date)
 
     def render_disease_and_allergies_by_date(self, date):
         if date:
