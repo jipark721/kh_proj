@@ -669,7 +669,7 @@
         <widget class="QPushButton" name="btn_findbyID_5">
          <property name="geometry">
           <rect>
-           <x>300</x>
+           <x>350</x>
            <y>40</y>
            <width>111</width>
            <height>31</height>
@@ -684,7 +684,7 @@
           <rect>
            <x>160</x>
            <y>130</y>
-           <width>131</width>
+           <width>180</width>
            <height>31</height>
           </rect>
          </property>
@@ -737,7 +737,7 @@
           <rect>
            <x>160</x>
            <y>40</y>
-           <width>131</width>
+           <width>180</width>
            <height>31</height>
           </rect>
          </property>
@@ -745,7 +745,7 @@
         <widget class="QPushButton" name="btn_findbyName_5">
          <property name="geometry">
           <rect>
-           <x>300</x>
+           <x>350</x>
            <y>130</y>
            <width>111</width>
            <height>31</height>
@@ -1451,12 +1451,12 @@
            <string>만성 알레르기 lgG4 음식 </string>
           </property>
          </widget>
-         <widget class="QComboBox" name="past_diagnosis_combobox_7">
+         <widget class="QComboBox" name="combobox_past_diagnosis_7">
           <property name="geometry">
            <rect>
             <x>80</x>
             <y>605</y>
-            <width>104</width>
+            <width>141</width>
             <height>31</height>
            </rect>
           </property>
@@ -2772,12 +2772,17 @@
          </column>
          <column>
           <property name="text">
-           <string>New Column</string>
+           <string>영양소명</string>
           </property>
          </column>
          <column>
           <property name="text">
            <string>함량</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>우선순위설명</string>
           </property>
          </column>
         </widget>
@@ -2808,6 +2813,11 @@
          <column>
           <property name="text">
            <string>함량</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>우선순위설명</string>
           </property>
          </column>
         </widget>

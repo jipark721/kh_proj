@@ -2,6 +2,7 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from mongodb.models import *
 import operator
 import datetime
+from decimal import *
 
 def make_tw_str_item(content):
     return QtWidgets.QTableWidgetItem(content)
@@ -50,10 +51,10 @@ def convert_tw_to_dict(tw, fetchItemCode):
             if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
                 dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
         elif fetchItemCode == 0:
-            if tw.item(index, 0).checkState() == QtCore.Qt.Unchecked and float(tw.item(index, 1).text()) != 0:
-                dict[tw.item(index, 0).text()] = float(tw.item(index, 1).text())
+            if tw.item(index, 0).checkState() == QtCore.Qt.Unchecked and Decimal(tw.item(index, 1).text()) != 0:
+                dict[tw.item(index, 0).text()] = Decimal(tw.item(index, 1).text())
         else:
-            dict[tw.item(index, 0).text()] = float(tw.item(index, 1).text())
+            dict[tw.item(index, 0).text()] = Decimal(tw.item(index, 1).text())
     return dict
 
 #for table widgets, iterate through rows and return a set of checked items
