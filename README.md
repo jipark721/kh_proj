@@ -3,8 +3,8 @@
 ### Collaborators: Alex Ahn, Ji Park
 
 ## Scores:
-### Ji : 8
-### Alex : 7
+### Ji : 10
+### Alex : 7 (WINNER!!)
 
 ## Simple Set Up & Check up:
 
