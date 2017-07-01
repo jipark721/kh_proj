@@ -191,6 +191,7 @@ def render_rec_nutrient_tw(tw, diseases, remove_duplicates):
         nonrec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
         nutrient_item = QtWidgets.QTableWidgetItem(nutrient.영양소명)
         level_item = QtWidgets.QTableWidgetItem("0")
+        # level_item.setBackground()
         if nutrient.영양소명 in relevant_nutrients:
             if relevant_nutrients[nutrient.영양소명] > 0:
                 rec_ckbtn.setCheckState(QtCore.Qt.Checked)
@@ -345,3 +346,27 @@ def get_five_combobox_texts(cb1, cb2, cb3, cb4, cb5, le1, le2, le3, le4, le5):
     else:
         str5 = cb5.currentText()
     return str1, str2, str3, str4, str5
+
+def highlight_duplicate_ingredients_page_9(tw1, tw2, tw3, tw4, tw5):
+    tw1_items = get_tw_items(tw1)
+    tw2_items = get_tw_items(tw2)
+    tw3_items = get_tw_items(tw3)
+    tw4_items = get_tw_items(tw4)
+    tw5_items = get_tw_items(tw5)
+
+    highlight_dups(tw1, tw2_items | tw3_items | tw4_items | tw5_items)
+    highlight_dups(tw2, tw1_items | tw3_items | tw4_items | tw5_items)
+    highlight_dups(tw3, tw1_items | tw2_items | tw4_items | tw5_items)
+    highlight_dups(tw4, tw1_items | tw2_items | tw3_items | tw5_items)
+    highlight_dups(tw5, tw1_items | tw2_items | tw3_items | tw4_items)
+
+def get_tw_items(tw):
+    items = set()
+    for index in range(tw.rowCount()):
+        items.add(tw.item(index, 0).text())
+    return items
+
+def highlight_dups(tw, duplicate_items):
+    for index in range(tw.rowCount()):
+        if tw.item(index, 0).text() in duplicate_items:
+            tw.item(index, 0).setBackground(QtGui.QColor(255, 128, 128))
