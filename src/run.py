@@ -3,11 +3,12 @@
 import sys
 import operator
 from mongoengine import *
+from mongoengine.queryset.visitor import Q
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
 from functions import *
 from mongodb.models import *
-
+from decimal import *
 
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
@@ -192,60 +193,119 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         rec_index_nut_dict = {} # level - set of diseases dict
         unrec_index_nut_dict = {}
         self.build_rec_unrec_index_nut_dict(rec_index_nut_dict, unrec_index_nut_dict)
-        print("unrec_index_nut_dict:")
-        print(unrec_index_nut_dict.items())
 
-        #bools
-        one_portion_first = self.ui.ckBox_onePortionFirst_8.isChecked()
-        gram_first = self.ui.ckBox_100gFirst_8.isChecked()
-        mortality_first = self.ui.ckBox_mortalityFirst_8.isChecked()
-        protein_first = self.ui.ckBox_proteinFirst_8.isChecked()
-
-        #1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
-        portion_code = get_portion_code(one_portion_first, gram_first, mortality_first, protein_first)
-        #ints
-        printing_rep_level = self.ui.spinBox_printingRep_level_8.value()
-        extinction_level = self.ui.spinBox_extinction_level_8.value()
         # TODO - NOT USED ATM
         origin, origin_level = self.get_most_specified_origin_and_level(8)
         specialty, specialty_level = self.get_most_specified_specialty_and_level(8)
         # TODO - gotta do something about this row count issue
-        self.ui.tableWidget_rec_ing_from_nut_9.setRowCount(100)
-        self.ui.tableWidget_unrec_ing_from_nut_9.setRowCount(100)
+        self.ui.tableWidget_rec_ing_from_nut_9.setRowCount(1000)
+        self.ui.tableWidget_unrec_ing_from_nut_9.setRowCount(1000)
 
         self.render_tw_for_ing_from_nut(self.ui.tableWidget_rec_ing_from_nut_9, rec_index_nut_dict, True)
         self.render_tw_for_ing_from_nut(self.ui.tableWidget_unrec_ing_from_nut_9, unrec_index_nut_dict, False)
 
     def render_tw_for_ing_from_nut(self, tw, dict, isRec):
+        # ints
+        printing_rep_level = self.ui.spinBox_printingRep_level_8.value()
+        extinction_level = self.ui.spinBox_extinction_level_8.value()
+        # bools
+        is_one_portion_first = self.ui.ckBox_onePortionFirst_8.isChecked()
+        is_100g_first = self.ui.ckBox_100gFirst_8.isChecked()
+        is_mortality_first = self.ui.ckBox_mortalityFirst_8.isChecked()
+        is_protein_first = self.ui.ckBox_proteinFirst_8.isChecked()
+        # 1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
+        portion_code = get_portion_code(is_one_portion_first, is_100g_first, is_mortality_first, is_protein_first)
+
         rowIndex = 0
+        ing_quant_list_for_nut_secondary = [] #list of (식품명, quant, level)
         for level in reversed(range(1, 6)):
             if not isRec:
                 level = level * (-1) #reverse to negative
             if level in dict:
-                for nut in dict.get(level):
+                for nut_str in dict.get(level):
                     ing_quant_dict_for_nut = {}
+                    ing_quant_dict_for_nut_secondary = {} #for 100g when both one-portion and 100g checked
+
+                    # for ing in Ingredient.objects(
+                    #                 Q(출력대표성등급__lte=printing_rep_level) & Q(멸종등급__lt=extinction_level)):
                     for ing in Ingredient.objects.all():
-                        if nut in ing.식품영양소관계:
+                        if nut_str in ing.식품영양소관계:
                             # TODO - should be updated for 100g 폐기율 단백질 stuff
-                            ing_quant_dict_for_nut[ing.식품명] = ing.식품영양소관계[nut]
-                    print("ing_quant_dict_for_nut:")
-                    print(ing_quant_dict_for_nut.items())
+                            ing_quant_dict_for_nut[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+                                                                                               portion_code, False)
+                            if is_one_portion_first and is_100g_first: #1회식사와 100그램 중복 설정시 1회식사분량 먼저 표시후 100그램 표시
+                                #ing_quant_list_for_nut_secondary.append((ing.식품명, self.calculate_nut_quant_for_ing(ing, nut_str, portion_code, True), level))
+                                ing_quant_dict_for_nut_secondary[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+                                                                                                             portion_code, True)
+                            # ing_quant_dict_for_nut[ing.식품명] = ing.식품영양소관계[nut_str]
                     min_count = self.get_level_count(level, ing_quant_dict_for_nut)
                     sorted_ing_quant_list = sorted(ing_quant_dict_for_nut.items(), key=operator.itemgetter(1),
                                                    reverse=True)[:min_count]
+                    if is_one_portion_first and is_100g_first:
+                        min_count2 = self.get_level_count(level, ing_quant_dict_for_nut_secondary)
+                        sorted_ing_quant_list2 = sorted(ing_quant_dict_for_nut_secondary.items(), key=operator.itemgetter(1),
+                                                       reverse=True)[:min_count2]
+                        for item in sorted_ing_quant_list2:
+                            ing_quant_list_for_nut_secondary.append((item[0], item[1], level, nut_str)) #(ing_str, quant, level, nut_str)
+                        #ing_quant_list_for_nut_secondary.extend(sorted_ing_quant_list2)
+
                     for index in range(min_count):
                         ing_name = sorted_ing_quant_list[index][0]
                         quant = sorted_ing_quant_list[index][1]
                         ing_name_item = make_tw_checkbox_item(ing_name, False)
                         level_item = make_tw_str_item(str(level))
-                        nut_item = make_tw_str_item(nut)
+                        nut_item = make_tw_str_item(nut_str)
                         quant_item = make_tw_str_item(str(quant))
                         tw.setItem(rowIndex, 0, ing_name_item)
                         tw.setItem(rowIndex, 1, level_item)
                         tw.setItem(rowIndex, 2, nut_item)
                         tw.setItem(rowIndex, 3, quant_item)
+                        if is_one_portion_first and is_100g_first:
+                            description_item = make_tw_str_item("1회식사분량 고려출력")
+                            tw.setItem(rowIndex, 4, description_item)
                         rowIndex += 1
+
+        if is_one_portion_first and is_100g_first:
+            for (ing_str, quant, level, nut_str) in ing_quant_list_for_nut_secondary:
+                ing_name_item = make_tw_checkbox_item(ing_str, False)
+                level_item = make_tw_str_item(str(level))
+                nut_item = make_tw_str_item(nut_str)
+                quant_item = make_tw_str_item(str(quant))
+                description_item = make_tw_str_item("100g분량 고려출력")
+                tw.setItem(rowIndex, 0, ing_name_item)
+                tw.setItem(rowIndex, 1, level_item)
+                tw.setItem(rowIndex, 2, nut_item)
+                tw.setItem(rowIndex, 3, quant_item)
+                tw.setItem(rowIndex, 4, description_item)
+                rowIndex += 1
+
+
+        tw.setRowCount(rowIndex)
         tw.resizeColumnsToContents()
+
+    def calculate_nut_quant_for_ing(self, ing, nut_str, portion_code, for_secondary):
+        # 데이터안에는 각 식품 100그램 안에 영양소가 얼마 들어있는지 기입되어있음
+        # 1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
+        default_100g_value = Decimal(ing.식품영양소관계[nut_str])
+        if for_secondary or portion_code == 2 or portion_code == 6 or portion_code == 10 or portion_code == 14: #여기서는 무조건 100그램으로 써줘야함
+            if portion_code == 3 or portion_code == 2:
+                return default_100g_value
+            elif portion_code == 7 or portion_code == 6:
+                return default_100g_value * (1-ing.폐기율)
+            elif portion_code == 11 or portion_code == 10:
+                return default_100g_value * (ing.단백질가식부)
+            elif portion_code == 15 or portion_code == 14:
+                return default_100g_value * (1-ing.폐기율) * ing.단백질가식부
+        else:
+            if (portion_code == 1 or portion_code == 3):
+                return default_100g_value * ing.단일식사분량 / 100
+            elif portion_code == 4 or portion_code == 5 or portion_code == 7:
+                return default_100g_value * ing.단일식사분량 / 100 * (1-ing.폐기율)
+            elif portion_code == 8 or portion_code == 9 or portion_code == 11:
+                return default_100g_value * ing.단일식사분량 / 100 * ing.단백질가식부
+            elif portion_code == 12 or portion_code == 13 or portion_code == 15:
+                return default_100g_value * ing.단일식사분량 / 100 * (1-ing.폐기율) * ing.단백질가식부
+
 
     def get_level_count(self, level, dict):
         if level == 5:
@@ -415,7 +475,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def populate_rec_or_unrec_ing_tw(self, tw, level, dis_set, currRowIndex):
         rowIndex = currRowIndex
         for dis_name in dis_set:
-            print("dis_name:" + dis_name)
             ckbtnitem = QtWidgets.QTableWidgetItem(dis_name)
             ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
             ckbtnitem.setCheckState(QtCore.Qt.Checked)
@@ -1095,9 +1154,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # print(self.current_patient)
 
     def updatePatients(self):
-        # for patient in getAllPatients():
-        #     self.tableWidget_clientCandidates_5.
-        #     patient.
         pass
 
     def go_to_data(self):
@@ -1159,14 +1215,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def render_existing_patient_info_disease_and_allergies(self, id):
         self.current_patient = Patient.objects.get(ID=id)
         self.render_basic_patient_info_on_top(7)
-        # self.ui.lineEdit_name_7.setText(self.current_patient.이름)
-        # self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
-        # self.ui.lineEdit_birthdate_7.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
-        # self.ui.lineEdit_age_7.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-        # self.ui.lineEdit_lastOfficeVisit_7.setText(str(datetime.date.today()))
-        # self.ui.lineEdit_height_7.setText(str(self.current_patient.키))
-        # self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
-        # self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
 
         # Render all elements to lw and tw
         self.render_disease_and_allergies_by_date("")
@@ -1174,10 +1222,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_past_diagnosis_combo_box(self):
         past_dates = [str(date).split()[0] for date in self.current_patient.진료일]
-        self.ui.past_diagnosis_combobox_7.clear()
-        self.ui.past_diagnosis_combobox_7.addItem("")
-        self.ui.past_diagnosis_combobox_7.addItems(past_dates)
-        self.ui.past_diagnosis_combobox_7.activated[str].connect(self.render_disease_and_allergies_by_date)
+        self.ui.combobox_past_diagnosis_7.clear()
+        self.ui.combobox_past_diagnosis_7.addItem("")
+        self.ui.combobox_past_diagnosis_7.addItems(past_dates)
+        self.ui.combobox_past_diagnosis_7.activated[str].connect(self.render_disease_and_allergies_by_date)
 
     def render_disease_and_allergies_by_date(self, date):
         if date:
@@ -1201,11 +1249,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         birthdate = self.ui.dateEdit_birthdate_6.date().toString(format=QtCore.Qt.ISODate)
         address = self.ui.lineEdit_address_6.text()
         if self.ui.lineEdit_height_6.text():
-            height = float(self.ui.lineEdit_height_6.text())
+            height = Decimal(self.ui.lineEdit_height_6.text())
         else:
             height = None
         if self.ui.lineEdit_weight_6.text():
-            weight = float(self.ui.lineEdit_weight_6.text())
+            weight = Decimal(self.ui.lineEdit_weight_6.text())
         else:
             weight = None
         isPreg = True if self.ui.ckBox_preg_6.isChecked() else False
@@ -1255,8 +1303,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 self.ui.listWidget_diseases_4)}
             new_patient.진료 = 진단
             new_patient.방문횟수 = 1
-            new_patient.키 = float(self.ui.lineEdit_height_3.text()) if self.ui.lineEdit_height_3.text() else 0
-            new_patient.몸무게 = float(self.ui.lineEdit_weight_3.text()) if self.ui.lineEdit_weight_3.text() else 0
+            new_patient.키 = Decimal(self.ui.lineEdit_height_3.text()) if self.ui.lineEdit_height_3.text() else 0
+            new_patient.몸무게 = Decimal(self.ui.lineEdit_weight_3.text()) if self.ui.lineEdit_weight_3.text() else 0
             new_patient.임신여부 = True if self.ui.ckBox_preg_3.isChecked() else False
             new_patient.수유여부 = True if self.ui.ckBox_bFeeding_3.isChecked() else False
             new_patient.급성알레르기음식 = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_4, 1)
@@ -1517,10 +1565,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                     식품명외국어9=self.ui.lineEdit_ing_lang9_15.text(),
                     식품명외국어10=self.ui.lineEdit_ing_lang10_15.text(),
                     식품명외국어11=self.ui.lineEdit_ing_lang11_15.text(),
-                    단일식사분량=float(self.ui.lineEdit_ing_one_portion_15.text()),
+                    단일식사분량=Decimal(self.ui.lineEdit_ing_one_portion_15.text()),
                     단일식사분량설명 = self.ui.plainTextEdit_one_portion_description_15.toPlainText(),
-                    폐기율 = float(self.ui.lineEdit_ing_mortality_rate_15.text()),
-                    단백질가식부 = float(self.ui.lineEdit_ing_protein_portion_15.text()),
+                    폐기율 = Decimal(self.ui.lineEdit_ing_mortality_rate_15.text()),
+                    단백질가식부 = Decimal(self.ui.lineEdit_ing_protein_portion_15.text()),
                     출력대표성등급 = self.ui.spinBox_printingRep_level_15.value(),
                     멸종등급 = self.ui.spinBox_extinction_level_15.value(),
                     즉시섭취 = self.ui.ckBox_immediate_intake_15.isChecked(),
@@ -1568,10 +1616,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                     식품명외국어9=self.ui.lineEdit_ing_lang9_15.text(),
                     식품명외국어10=self.ui.lineEdit_ing_lang10_15.text(),
                     식품명외국어11=self.ui.lineEdit_ing_lang11_15.text(),
-                    단일식사분량=float(self.ui.lineEdit_ing_one_portion_15.text()),
+                    단일식사분량=Decimal(self.ui.lineEdit_ing_one_portion_15.text()),
                     단일식사분량설명=self.ui.plainTextEdit_one_portion_description_15.toPlainText(),
-                    폐기율=float(self.ui.lineEdit_ing_mortality_rate_15.text()),
-                    단백질가식부=float(self.ui.lineEdit_ing_protein_portion_15.text()),
+                    폐기율=Decimal(self.ui.lineEdit_ing_mortality_rate_15.text()),
+                    단백질가식부=Decimal(self.ui.lineEdit_ing_protein_portion_15.text()),
                     출력대표성등급=self.ui.spinBox_printingRep_level_15.value(),
                     멸종등급=self.ui.spinBox_extinction_level_15.value(),
                     즉시섭취=self.ui.ckBox_immediate_intake_15.isChecked(),
