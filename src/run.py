@@ -92,6 +92,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_save_next_8.clicked.connect(lambda x: self.save_and_go_to_filtering_page())
 
         # page_9 - get rec/unrec ingredients page
+        self.ui.btn_home_9.clicked.connect(lambda x: self.go_home(9))
         self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
         self.ui.btn_next_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(10))
         self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(lambda x: self.render_rec_unrec_ing_from_nut())
@@ -163,11 +164,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # render rec/nonrec ingredients by disease
         render_checkbox_pos_and_neg_level_tw(self.ui.tableWidget_rec_ing_from_dis_9,
                                              self.ui.tableWidget_unrec_ing_from_dis_9,
-                                             get_relevant_ingredients_from_diseases_str(self.local_diseases))
+                                             get_relevant_ingredients_from_diseases_str(self.local_diseases,
+                                                                                        self.ui.spinBox_dis_rel_ing_level_rec_8.value(),
+                                                                                        self.ui.spinBox_dis_rel_ing_level_unrec_8.value()))
 
         # render nonrec ingredients by allergies
         render_checkbox_level_tw(self.ui.tableWidget_unrec_ing_from_allergies_9,
-                                 self.get_relevant_ingred_from_all_allergies(), -1)
+                                 self.get_relevant_ingred_from_all_allergies(self.ui.spinBox_allergy_gs_level_8.value(), self.ui.spinBox_allergy_ms_level_8.value(), self.ui.spinBox_allergy_lgg4_level_9.value()), -1)
 
     def render_rec_unrec_ing_from_nut(self):
         rec_index_nut_dict = {} # level - set of diseases dict
@@ -354,15 +357,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         else:
             pass
 
-    def get_relevant_ingred_from_all_allergies(self):
+    def get_relevant_ingred_from_all_allergies(self, gs_threshold, ms_threshold, lgg4_threshold):
         relevant_ingredients = {}
+        # TODO - update for gasung allergies
         for ingred, lvl in self.local_gs_allergic_ingredients.items():
-            relevant_ingredients[ingred] = lvl
+            if lvl >= gs_threshold:
+                relevant_ingredients[ingred] = lvl
         for ingred, lvl in self.local_lgG4_allergic_ingredients.items():
-            if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
+            if (ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl) and lvl >= lgg4_threshold:
                 relevant_ingredients[ingred] = lvl
         for ingred, lvl in self.local_ms_allergic_ingredients.items():
-            if ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl:
+            if (ingred not in relevant_ingredients or relevant_ingredients[ingred] > lvl) and lvl >= ms_threshold:
                 relevant_ingredients[ingred] = lvl
         return relevant_ingredients
 
@@ -898,6 +903,25 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.tableWidget_ing_candidates_14.setItem(i, 5, make_tw_str_item(ingredient.식품분류5))
             i += 1
 
+    def reset_page_7(self):
+        self.ui.lineEdit_ID_7.clear()
+        self.ui.lineEdit_name_7.clear()
+        self.ui.lineEdit_birthdate_7.clear()
+        self.ui.lineEdit_age_7.clear()
+        self.ui.lineEdit_height_7.clear()
+        self.ui.lineEdit_weight_7.clear()
+        self.ui.lineEdit_lastOfficeVisit_7.clear()
+        self.ui.lineEdit_nthVisit_7.clear()
+        self.ui.listWidget_diseases_7.clear()
+        self.ui.tableWidget_allergies_gs_7.setColumnCount(0)
+        self.ui.tableWidget_allergies_ms_7.setColumnCount(0)
+        self.ui.tableWidget_allergies_lgg4_7.setColumnCount(0)
+
+    def reset_page_8(self):
+        pass
+
+    def reset_page_9(self):
+        pass
     #############################
     # NAVIGATION - Go
     #############################
@@ -911,6 +935,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 self.clear_find_existing_client()
             elif currPage == 6:
                 self.clear_edit_existing_client()
+            elif currPage == 7 or currPage == 8 or currPage == 9:
+                self.reset_page_7()
+                self.reset_page_8()
+                self.reset_page_9()
             elif currPage == 14:
                 self.clear_find_existing_ingredient()
             elif currPage == 15:

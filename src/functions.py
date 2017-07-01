@@ -272,12 +272,15 @@ def get_relevant_nutrients_from_diseases_str(diseases):
             relevant_nutrient[rel_nutrient] = level
     return relevant_nutrient
 
-def get_relevant_ingredients_from_diseases_str(diseases):
+def get_relevant_ingredients_from_diseases_str(diseases, rec_threshold, unrec_threshold):
     relevant_ingredient = {}
     for disease in diseases:
         disease = Disease.objects.get(질병명=disease)
         for rel_ingredient, level in disease.질병식품관계.items():
-            relevant_ingredient[rel_ingredient] =  level
+            if level > 0 and level >= rec_threshold:
+                relevant_ingredient[rel_ingredient] = level
+            elif level < 0 and level <= unrec_threshold:
+                relevant_ingredient[rel_ingredient] = level
     return relevant_ingredient
 
 def get_portion_code(one_portion_first, gram_first, mortality_first, protein_first):
