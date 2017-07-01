@@ -103,6 +103,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page_9 - get rec/unrec ingredients page
         self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
         self.ui.btn_next_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(10))
+        self.ui.btn_check_duplicate_ing_9.clicked.connect(self.highlight_duplicate_ingredients)
         self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(lambda x: self.render_rec_unrec_ing_from_nut())
         # page 10 - see current collapsed rec/unrec ingredients page
         self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
@@ -471,6 +472,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     #                 item = QtWidgets.QTableWidgetItem(str(l))
     #                 self.ui.tableWidget_rec_ing_9.setItem(currRowIndexUnrec, 1, item)
     #                 currRowIndexUnrec += 1
+
+    def highlight_duplicate_ingredients(self):
+        highlight_duplicate_ingredients_page_9(self.ui.tableWidget_rec_ing_from_nut_9, self.ui.tableWidget_unrec_ing_from_nut_9, self.ui.tableWidget_rec_ing_from_dis_9, self.ui.tableWidget_unrec_ing_from_dis_9, self.ui.tableWidget_unrec_ing_from_allergies_9)
 
     def populate_rec_or_unrec_ing_tw(self, tw, level, dis_set, currRowIndex):
         rowIndex = currRowIndex
