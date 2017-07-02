@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>21</number>
+       <number>10</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="gridWidget" native="true">
@@ -4127,7 +4127,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-4</y>
+          <y>-3</y>
           <width>1191</width>
           <height>41</height>
          </rect>
@@ -4372,7 +4372,7 @@
          <rect>
           <x>0</x>
           <y>40</y>
-          <width>681</width>
+          <width>721</width>
           <height>781</height>
          </rect>
         </property>
@@ -4380,9 +4380,9 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>40</y>
-           <width>311</width>
-           <height>641</height>
+           <y>30</y>
+           <width>350</width>
+           <height>651</height>
           </rect>
          </property>
          <column>
@@ -4392,7 +4392,32 @@
          </column>
          <column>
           <property name="text">
-           <string>권고레벨</string>
+           <string>레벨</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류1</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류2</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류3</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류4</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류5</string>
           </property>
          </column>
         </widget>
@@ -4400,7 +4425,7 @@
          <property name="geometry">
           <rect>
            <x>130</x>
-           <y>10</y>
+           <y>0</y>
            <width>91</width>
            <height>16</height>
           </rect>
@@ -4413,7 +4438,7 @@
          <property name="geometry">
           <rect>
            <x>480</x>
-           <y>10</y>
+           <y>0</y>
            <width>91</width>
            <height>20</height>
           </rect>
@@ -4425,10 +4450,10 @@
         <widget class="QTableWidget" name="tableWidget_current_unrec_ing_10">
          <property name="geometry">
           <rect>
-           <x>350</x>
-           <y>40</y>
-           <width>321</width>
-           <height>641</height>
+           <x>370</x>
+           <y>30</y>
+           <width>350</width>
+           <height>651</height>
           </rect>
          </property>
          <column>
@@ -4438,9 +4463,60 @@
          </column>
          <column>
           <property name="text">
-           <string>비권고레벨</string>
+           <string>레벨</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>분류1</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류2</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류3</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류4</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류5</string>
+          </property>
+         </column>
+        </widget>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="geometry">
+          <rect>
+           <x>120</x>
+           <y>686</y>
+           <width>111</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>식품분류로 정렬</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>686</y>
+           <width>111</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>level로 정렬</string>
+         </property>
         </widget>
        </widget>
        <widget class="QWidget" name="widget_11" native="true">
@@ -4455,8 +4531,8 @@
         <widget class="QLabel" name="label_66">
          <property name="geometry">
           <rect>
-           <x>140</x>
-           <y>10</y>
+           <x>190</x>
+           <y>0</y>
            <width>91</width>
            <height>21</height>
           </rect>
@@ -4468,8 +4544,8 @@
         <widget class="QLabel" name="label_67">
          <property name="geometry">
           <rect>
-           <x>480</x>
-           <y>10</y>
+           <x>530</x>
+           <y>0</y>
            <width>91</width>
            <height>20</height>
           </rect>
@@ -4481,10 +4557,10 @@
         <widget class="QTableWidget" name="tableWidget_past_rec_ing_10">
          <property name="geometry">
           <rect>
-           <x>10</x>
-           <y>40</y>
-           <width>321</width>
-           <height>641</height>
+           <x>50</x>
+           <y>30</y>
+           <width>340</width>
+           <height>651</height>
           </rect>
          </property>
          <column>
@@ -4494,17 +4570,42 @@
          </column>
          <column>
           <property name="text">
-           <string>권고레벨</string>
+           <string>레벨</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류1</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류2</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류3</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류4</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류5</string>
           </property>
          </column>
         </widget>
         <widget class="QTableWidget" name="tableWidget_past_unrec_ing_10">
          <property name="geometry">
           <rect>
-           <x>360</x>
-           <y>40</y>
-           <width>321</width>
-           <height>641</height>
+           <x>400</x>
+           <y>30</y>
+           <width>341</width>
+           <height>651</height>
           </rect>
          </property>
          <column>
@@ -4514,14 +4615,39 @@
          </column>
          <column>
           <property name="text">
-           <string>비권고레벨</string>
+           <string>레벨</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류1</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류2</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류3</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류4</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>분류5</string>
           </property>
          </column>
         </widget>
         <widget class="QComboBox" name="comboBox_past_list_10">
          <property name="geometry">
           <rect>
-           <x>130</x>
+           <x>170</x>
            <y>690</y>
            <width>161</width>
            <height>26</height>
@@ -4531,7 +4657,7 @@
         <widget class="QLabel" name="label_68">
          <property name="geometry">
           <rect>
-           <x>20</x>
+           <x>60</x>
            <y>690</y>
            <width>111</width>
            <height>21</height>
