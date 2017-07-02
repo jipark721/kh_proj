@@ -375,3 +375,9 @@ def highlight_dups(tw, duplicate_items):
     for index in range(tw.rowCount()):
         if tw.item(index, 0).text() in duplicate_items:
             tw.item(index, 0).setBackground(QtGui.QColor(255, 128, 128))
+
+def set_checkstate_for_ckbtn(ckbtn, shouldCheck):
+    if shouldCheck:
+        ckbtn.setCheckState(QtCore.Qt.Checked)
+    else:
+        ckbtn.setCheckState(QtCore.Qt.Unchecked)
