@@ -98,6 +98,7 @@ def populate_checkbox_tw_from_dict(tw, content_collection):
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex+=1
 
+
 def update_checkbox_state_and_level_tw(tw, checked_content_dict):
     for index in range(tw.rowCount()):
         field_name = tw.item(index, 0).text()
@@ -176,13 +177,16 @@ def clear_checkbox_lw(lw):
     for index in range(lw.count()):
         lw.item(index).setCheckState(QtCore.Qt.Unchecked)
 
-def render_rec_nutrient_tw(tw, diseases, remove_duplicates):
+def render_rec_nutrient_tw(nut_category, tw, diseases, remove_duplicates, is_misc):
     relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases, remove_duplicates)
-    tw.setRowCount(Nutrient.objects.count())
-    tw.setColumnCount(4)
+    if is_misc:
+        rowIndex = tw.rowCount()
+    else:
+        rowIndex = 0
+    tw.setRowCount(rowIndex + Nutrient.objects(영양소분류1=nut_category).count())
+    tw.setColumnCount(6)
 
-    rowIndex = 0
-    for nutrient in Nutrient.objects:
+    for nutrient in Nutrient.objects(영양소분류1=nut_category):
         rec_ckbtn = QtWidgets.QTableWidgetItem()
         rec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         rec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
@@ -191,6 +195,8 @@ def render_rec_nutrient_tw(tw, diseases, remove_duplicates):
         nonrec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
         nutrient_item = QtWidgets.QTableWidgetItem(nutrient.영양소명)
         level_item = QtWidgets.QTableWidgetItem("0")
+        cat1_item = QtWidgets.QTableWidgetItem(nutrient.영양소분류1)
+        cat2_item = QtWidgets.QTableWidgetItem(nutrient.영양소분류2)
         # level_item.setBackground()
         if nutrient.영양소명 in relevant_nutrients:
             if relevant_nutrients[nutrient.영양소명] > 0:
@@ -202,12 +208,11 @@ def render_rec_nutrient_tw(tw, diseases, remove_duplicates):
         tw.setItem(rowIndex, 1, nonrec_ckbtn)
         tw.setItem(rowIndex, 2, nutrient_item)
         tw.setItem(rowIndex, 3, level_item)
+        tw.setItem(rowIndex, 4, cat1_item)
+        tw.setItem(rowIndex, 5, cat2_item)
         rowIndex+=1
+    tw.resizeColumnsToContents()
 
-    tw.resizeColumnToContents(0)
-    tw.resizeColumnToContents(1)
-    tw.resizeColumnToContents(2)
-    tw.resizeColumnToContents(3)
 
 # def clear_ckbox_level_tw(tw):
 #     for rowIndex in range(tw.rowCount):

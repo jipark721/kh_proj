@@ -22,7 +22,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.currPatientGSIngTupleSet = set()
         self.currPatientMSIngTupleSet = set()
         self.currPatientLGG4IngTupleSet = set()
-        self.setupLogic()
 
         # local classes
         self.current_date = datetime.date.today()
@@ -42,10 +41,15 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
 
+        self.rec_level_nut_dict = {}  # level - set of diseases dict
+        self.unrec_level_nut_dict = {}
+
         self.current_ingredient = None
         self.current_nutrient = None
         self.lang_to_print = ['영어', '중국어', '일본어', '러시아어', '몽골어', '아랍어', '스페인어', '외국어8', '외국어9', '외국어10', '외국어11']
         self.nut_info_to_print = []
+
+        self.setupLogic()
 
     def setupLogic(self):
         # page_0
@@ -67,7 +71,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_next_3.clicked.connect(self.register_patient_and_go_to_select_diseases_and_allergies)
         self.ui.btn_checkUniqID_3.clicked.connect(self.check_unique_ID)
 
-        # page_4
+
 
         # page_5 - find existing patient
         self.ui.btn_cancel_5.clicked.connect(self.cancel_find_existing_client)
@@ -85,13 +89,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_save_next_6.clicked.connect(lambda x: self.go_to_edit_existing_patient_page2(self.ui.lineEdit_ID_6.text()))
 
         # page_7 - patient information (diseases / allergies)
-        self.ui.btn_back_7.clicked.connect(self.go_back_to_edit_existing_patient_page1)
+        self.ui.btn_back_7.clicked.connect(self.go_back_to_patient_selection)
         self.ui.btn_next_7.clicked.connect(self.go_to_page_8)
         self.ui.btn_home_7.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(1))
 
         # page 8 - filtering page
         self.ui.btn_back_8.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(7))
-        self.ui.btn_next_8.clicked.connect(self.go_to_page_9)
+        self.ui.btn_next_8.clicked.connect(self.go_to_page_4)
         # self.ui.btn_home_8.clicked.connect(lambda x:self.go_home(8))
         # self.ui.btn_back_8.clicked.connect(self.go_back_to_edit_existing_patient_page2)
         # self.ui.btn_go2Rec_8.clicked.connect(lambda x: self.add_selected_nutrients_to_tw(self.ui.tableWidget_RecNut_8, self.local_권고영양소레벨_dict))
@@ -100,8 +104,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.ui.btn_undo2NotRec_8.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_NotRecNut_8, self.local_비권고영양소레벨_dict))
         # self.ui.btn_save_next_8.clicked.connect(lambda x: self.save_and_go_to_filtering_page())
 
+        # page_4
+        self.ui.btn_home_4.clicked.connect(lambda x: self.go_home(4))
+        self.ui.btn_next_4.clicked.connect(lambda x: self.go_to_page_9())
+        self.ui.btn_back_4.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
+
         # page_9 - get rec/unrec ingredients page
-        self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(8))
+        self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(4))
         self.ui.btn_next_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(10))
         self.ui.btn_check_duplicate_ing_9.clicked.connect(self.highlight_duplicate_ingredients)
         self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(lambda x: self.render_rec_unrec_ing_from_nut())
@@ -158,26 +167,54 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     # GO TO
     ####################
 
-    def go_to_page_9(self):
+    def go_to_page_4(self):
         self.local_remove_duplicates = True if self.ui.radioButton_dis_rel_ing_delete_both_8.isChecked() else False
         self.local_rec_threshold = int(self.ui.spinBox_dis_rel_ing_level_rec_8.text())
         self.local_nonrec_threshold = int(self.ui.spinBox_dis_rel_ing_level_unrec_8.text())
         self.local_gs_threshold = int(self.ui.spinBox_allergy_gs_level_8.text())
-        self.local_lgG4_threshold = int(self.ui.spinBox_allergy_lgg4_level_9.text())
+        self.local_lgG4_threshold = int(self.ui.spinBox_allergy_lgg4_level_8.text())
         self.local_ms_threshold = int(self.ui.spinBox_allergy_ms_level_8.text())
         self.local_gasung_threshold = int(self.ui.spinBox_allergy_gasung_level_8.text())
+        self.ui.stackedWidget.setCurrentIndex(4)
+        self.render_page_4()
+
+
+    def go_to_page_9(self):
         self.ui.stackedWidget.setCurrentIndex(9)
         self.render_page_9()
+
+    def go_back_to_patient_selection(self):
+        if self.warn_before_leaving() == False:
+            return
+        else:
+            self.clear_current_patient_info_and_all_related_pages()
+            self.ui.stackedWidget.setCurrentIndex(5)
 
     ####################
     # RENDER
     ####################
+    def render_page_4(self):
+        self.render_basic_patient_info_on_top(4)
+
+        render_rec_nutrient_tw("탄수화물", self.ui.tableWidget_nutrients1_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("단백질", self.ui.tableWidget_nutrients2_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("지방", self.ui.tableWidget_nutrients3_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("비타민", self.ui.tableWidget_nutrients4_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("미네랄", self.ui.tableWidget_nutrients5_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("플라보노이드", self.ui.tableWidget_nutrients6_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("카로테노이드", self.ui.tableWidget_nutrients7_4, self.local_diseases, False, False)
+
+        render_rec_nutrient_tw("기타1", self.ui.tableWidget_nutrients8_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("기타2", self.ui.tableWidget_nutrients8_4, self.local_diseases, False, True)
+        render_rec_nutrient_tw("기타3", self.ui.tableWidget_nutrients9_4, self.local_diseases, False, False)
+        render_rec_nutrient_tw("기타4", self.ui.tableWidget_nutrients9_4, self.local_diseases, False, True)
+
     def render_page_9(self):
         self.render_basic_patient_info_on_top(9)
 
         # render relevant nutrient by disease
         # TODO : remove duplicates?
-        render_rec_nutrient_tw(self.ui.tableWidget_nutrients_9, self.local_diseases, False)
+        self.render_all_selected_nutrients()
 
         # render rec/nonrec ingredients by disease
         render_checkbox_pos_and_neg_level_tw(self.ui.tableWidget_rec_ing_from_dis_9,
@@ -187,14 +224,59 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # render nonrec ingredients by allergies
         render_checkbox_level_tw(self.ui.tableWidget_unrec_ing_from_allergies_9,
-                                 self.get_relevant_ingred_from_all_allergies(self.local_gs_threshold, self.local_lgG4_threshold, self.local_ms_threshold, self.local_gasung_threshold)
-                                 ,-1)
+                                 self.get_relevant_ingred_from_all_allergies(self.local_gs_threshold, self.local_lgG4_threshold,
+                                                                             self.local_ms_threshold, self.local_gasung_threshold),
+                                 -1)
+
+    def render_all_selected_nutrients(self):
+        # rec_level_nut_dict = {}  # level - set of diseases dict
+        # unrec_level_nut_dict = {}
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients1_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients2_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients3_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients4_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients5_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients6_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients7_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients8_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+        self.build_rec_unrec_index_nut_dict(self.ui.tableWidget_nutrients9_4, self.rec_level_nut_dict, self.unrec_level_nut_dict)
+
+        print(len(self.rec_level_nut_dict.values()))
+        print(self.rec_level_nut_dict.items())
+        print(len(self.unrec_level_nut_dict.values()))
+
+        print(self.unrec_level_nut_dict.items())
+
+        self.ui.tableWidget_nutrients_rec_9.setRowCount(1000)
+        rowIndex = 0
+        for level in reversed(range(1,6)):
+            if level in self.rec_level_nut_dict:
+                for nut_str in self.rec_level_nut_dict.get(level):
+                    print(nut_str)
+                    nut_item = make_tw_str_item(nut_str)
+                    level_item = make_tw_str_item(str(level))
+                    self.ui.tableWidget_nutrients_rec_9.setItem(rowIndex, 0, nut_item)
+                    self.ui.tableWidget_nutrients_rec_9.setItem(rowIndex, 1, level_item)
+                    rowIndex += 1
+        self.ui.tableWidget_nutrients_rec_9.setRowCount(rowIndex)
+        print("rec rowIndex: "+str(rowIndex))
+        self.ui.tableWidget_nutrients_unrec_9.setRowCount(1000)
+        unrec_rowIndex = 0
+        for level in reversed(range(1,6)):
+            level = level * (-1)
+            if level in self.unrec_level_nut_dict:
+                for nut_str in self.unrec_level_nut_dict.get(level):
+                    print(nut_str)
+                    nut_item = make_tw_str_item(nut_str)
+                    level_item = make_tw_str_item(str(level))
+                    self.ui.tableWidget_nutrients_unrec_9.setItem(unrec_rowIndex, 0, nut_item)
+                    self.ui.tableWidget_nutrients_unrec_9.setItem(unrec_rowIndex, 1, level_item)
+                    unrec_rowIndex += 1
+        self.ui.tableWidget_nutrients_unrec_9.setRowCount(unrec_rowIndex)
+        print("unrec rowIndex: "+str(unrec_rowIndex))
+
 
     def render_rec_unrec_ing_from_nut(self):
-        rec_index_nut_dict = {} # level - set of diseases dict
-        unrec_index_nut_dict = {}
-        self.build_rec_unrec_index_nut_dict(rec_index_nut_dict, unrec_index_nut_dict)
-
         # TODO - NOT USED ATM
         origin, origin_level = self.get_most_specified_origin_and_level(8)
         specialty, specialty_level = self.get_most_specified_specialty_and_level(8)
@@ -202,8 +284,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.tableWidget_rec_ing_from_nut_9.setRowCount(1000)
         self.ui.tableWidget_unrec_ing_from_nut_9.setRowCount(1000)
 
-        self.render_tw_for_ing_from_nut(self.ui.tableWidget_rec_ing_from_nut_9, rec_index_nut_dict, True)
-        self.render_tw_for_ing_from_nut(self.ui.tableWidget_unrec_ing_from_nut_9, unrec_index_nut_dict, False)
+        self.render_tw_for_ing_from_nut(self.ui.tableWidget_rec_ing_from_nut_9, self.rec_level_nut_dict, True)
+        self.render_tw_for_ing_from_nut(self.ui.tableWidget_unrec_ing_from_nut_9, self.unrec_level_nut_dict, False)
 
     def render_tw_for_ing_from_nut(self, tw, dict, isRec):
         # ints
@@ -331,21 +413,30 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             return min(int(self.ui.lineEdit_lvn1_9.text()), len(dict))
 
 
-    def build_rec_unrec_index_nut_dict(self, rec_index_nut_dict, unrec_index_nut_dict):
-        for index in range(self.ui.tableWidget_nutrients_9.rowCount()):
+    def build_rec_unrec_index_nut_dict(self, tw, rec_index_nut_dict, unrec_index_nut_dict):
+        for index in range(tw.rowCount()):
             # recommended nut
-            if self.ui.tableWidget_nutrients_9.item(index, 0).checkState() == QtCore.Qt.Checked and self.ui.tableWidget_nutrients_9.item(index, 1).checkState() == QtCore.Qt.Unchecked:
-                level = int(self.ui.tableWidget_nutrients_9.item(index, 3).text())
-                insert_item_in_a_value_set_in_dict(rec_index_nut_dict, level,
-                                                   self.ui.tableWidget_nutrients_9.item(index, 2).text())
+            if tw.item(index, 0).checkState() == QtCore.Qt.Checked and tw.item(index, 1).checkState() == QtCore.Qt.Unchecked and int(tw.item(index, 3).text()) > 0:
+                level = int(tw.item(index, 3).text())
+                nut_name = tw.item(index, 2).text()
+                insert_item_in_a_value_set_in_dict(rec_index_nut_dict, level, nut_name)
             # unrecommended nut
-            elif self.ui.tableWidget_nutrients_9.item(index, 0).checkState() == QtCore.Qt.Unchecked and self.ui.tableWidget_nutrients_9.item(index, 1).checkState() == QtCore.Qt.Checked:
-                level = int(self.ui.tableWidget_nutrients_9.item(index, 3).text())
-                insert_item_in_a_value_set_in_dict(unrec_index_nut_dict, level,
-                                                   self.ui.tableWidget_nutrients_9.item(index, 2).text())
+            elif tw.item(index, 0).checkState() == QtCore.Qt.Unchecked and tw.item(index, 1).checkState() == QtCore.Qt.Checked and int(tw.item(index, 3).text()) < 0:
+                level = int(tw.item(index, 3).text())
+                nut_name = tw.item(index, 2).text()
+                insert_item_in_a_value_set_in_dict(unrec_index_nut_dict, level, nut_name)
 
     def render_basic_patient_info_on_top(self, currPage):
-        if currPage == 7:
+        if currPage == 4:
+            self.ui.lineEdit_name_4.setText(self.current_patient.이름)
+            self.ui.lineEdit_ID_4.setText(self.current_patient.ID)
+            self.ui.lineEdit_birthdate_4.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
+            self.ui.lineEdit_age_4.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
+            self.ui.lineEdit_lastOfficeVisit_4.setText(str(datetime.date.today()))
+            self.ui.lineEdit_height_4.setText(str(self.current_patient.키))
+            self.ui.lineEdit_weight_4.setText(str(self.current_patient.몸무게))
+            self.ui.lineEdit_nthVisit_4.setText(str(self.current_patient.방문횟수 + 1))
+        elif currPage == 7:
             self.ui.lineEdit_name_7.setText(self.current_patient.이름)
             self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
             self.ui.lineEdit_birthdate_7.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
@@ -940,6 +1031,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         else:
             if currPage == 3:
                 self.clear_register_new_patient()
+            elif currPage == 4 or currPage == 7 or currPage == 8 or currPage == 9 or currPage == 10:
+                self.clear_current_patient_info_and_all_related_pages()
             elif currPage == 5:
                 self.clear_find_existing_client()
             elif currPage == 6:
@@ -951,6 +1044,121 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             else:
                 pass
             self.ui.stackedWidget.setCurrentIndex(1)
+
+    def clear_current_patient_info_and_all_related_pages(self):
+        self.reset_page_7()
+        self.reset_page_8()
+        self.reset_page_4()
+        self.reset_page_9()
+        self.reset_page_10()
+
+        self.current_patient = None
+        self.local_gs_allergic_ingredients.clear()
+        self.local_ms_allergic_ingredients.clear()
+        self.local_lgG4_allergic_ingredients.clear()
+        self.local_diseases.clear()
+
+        self.local_rec_threshold = 0
+        self.local_nonrec_threshold = 0
+        self.local_gs_threshold = 0
+        self.local_lgG4_threshold = 0
+        self.local_ms_threshold = 0
+        self.local_gasung_threshold = 0
+
+        self.rec_level_nut_dict.clear()
+        self.unrec_level_nut_dict.clear()
+
+    def reset_page_10(self):
+        self.ui.lineEdit_ID_10.clear()
+        self.ui.lineEdit_name_10.clear()
+        self.ui.lineEdit_birthdate_10.clear()
+        self.ui.lineEdit_age_10.clear()
+        self.ui.lineEdit_height_10.clear()
+        self.ui.lineEdit_weight_10.clear()
+        self.ui.lineEdit_nthVisit_10.clear()
+        self.ui.lineEdit_lastOfficeVisit_10.clear()
+        self.ui.tableWidget_current_rec_ing_10.setRowCount(0)
+        self.ui.tableWidget_current_unrec_ing_10.setRowCount(0)
+        self.ui.tableWidget_past_rec_ing_10.setRowCount(0)
+        self.ui.tableWidget_past_unrec_ing_10.setRowCount(0)
+
+    def reset_page_9(self):
+        self.ui.lineEdit_ID_9.clear()
+        self.ui.lineEdit_name_9.clear()
+        self.ui.lineEdit_birthdate_9.clear()
+        self.ui.lineEdit_age_9.clear()
+        self.ui.lineEdit_height_9.clear()
+        self.ui.lineEdit_weight_9.clear()
+        self.ui.lineEdit_nthVisit_9.clear()
+        self.ui.lineEdit_lastOfficeVisit_9.clear()
+        self.ui.tableWidget_nutrients_rec_9.setRowCount(0)
+        self.ui.tableWidget_nutrients_unrec_9.setRowCount(0)
+        self.ui.tableWidget_rec_ing_from_nut_9.setRowCount(0)
+        self.ui.tableWidget_unrec_ing_from_nut_9.setRowCount(0)
+        self.ui.tableWidget_rec_ing_from_dis_9.setRowCount(0)
+        self.ui.tableWidget_unrec_ing_from_dis_9.setRowCount(0)
+        self.ui.tableWidget_unrec_ing_from_allergies_9.setRowCount(0)
+
+    def reset_page_8(self):
+        self.ui.ckBox_onePortionFirst_8.setCheckState(QtCore.Qt.Checked)
+        self.ui.ckBox_100gFirst_8.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.ckBox_proteinFirst_8.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.ckBox_mortalityFirst_8.setCheckState(QtCore.Qt.Unchecked)
+        self.ui.spinBox_printingRep_level_8.setValue(1)
+        self.ui.spinBox_extinction_level_8.setValue(1)
+        self.ui.comboBox_origin_1_8.clear()
+        self.ui.comboBox_origin_2_8.clear()
+        self.ui.comboBox_origin_3_8.clear()
+        self.ui.comboBox_origin_4_8.clear()
+        self.ui.comboBox_origin_5_8.clear()
+        self.ui.comboBox_specialty_1_8.clear()
+        self.ui.comboBox_specialty_2_8.clear()
+        self.ui.comboBox_specialty_3_8.clear()
+        self.ui.comboBox_specialty_4_8.clear()
+        self.ui.comboBox_specialty_5_8.clear()
+        self.ui.spinBox_dis_rel_ing_level_rec_8.setValue(1)
+        self.ui.spinBox_dis_rel_ing_level_unrec_8.setValue(-1)
+        self.ui.radioButton_dis_rel_ing_delete_both_8.setChecked(True)
+        self.ui.radioButton_dis_rel_ing_to_unrec_8.setChecked(False)
+        self.ui.radioButton_upperLevel_auto_8.setChecked(True)
+        self.ui.radioButton_upperLevel_manual_8.setChecked(False)
+        self.ui.spinBox_allergy_gasung_level_8.setValue(1)
+        self.ui.spinBox_allergy_gs_level_8.setValue(1)
+        self.ui.spinBox_allergy_ms_level_8.setValue(1)
+        self.ui.spinBox_allergy_lgg4_level_8.setValue(1)
+
+    def reset_page_7(self):
+        self.ui.lineEdit_ID_7.clear()
+        self.ui.lineEdit_name_7.clear()
+        self.ui.lineEdit_birthdate_7.clear()
+        self.ui.lineEdit_age_7.clear()
+        self.ui.lineEdit_height_7.clear()
+        self.ui.lineEdit_weight_7.clear()
+        self.ui.lineEdit_nthVisit_7.clear()
+        self.ui.lineEdit_lastOfficeVisit_7.clear()
+        self.ui.listWidget_diseases_7.clear()
+        self.ui.tableWidget_allergies_gs_7.setRowCount(0)
+        self.ui.tableWidget_allergies_ms_7.setRowCount(0)
+        self.ui.tableWidget_allergies_lgg4_7.setRowCount(0)
+
+    def reset_page_4(self):
+        self.ui.lineEdit_ID_4.clear()
+        self.ui.lineEdit_name_4.clear()
+        self.ui.lineEdit_birthdate_4.clear()
+        self.ui.lineEdit_age_4.clear()
+        self.ui.lineEdit_height_4.clear()
+        self.ui.lineEdit_weight_4.clear()
+        self.ui.lineEdit_nthVisit_4.clear()
+        self.ui.lineEdit_lastOfficeVisit_4.clear()
+        self.ui.tableWidget_nutrients1_4.setRowCount(0)
+        self.ui.tableWidget_nutrients2_4.setRowCount(0)
+        self.ui.tableWidget_nutrients3_4.setRowCount(0)
+        self.ui.tableWidget_nutrients4_4.setRowCount(0)
+        self.ui.tableWidget_nutrients5_4.setRowCount(0)
+        self.ui.tableWidget_nutrients6_4.setRowCount(0)
+        self.ui.tableWidget_nutrients7_4.setRowCount(0)
+        self.ui.tableWidget_nutrients8_4.setRowCount(0)
+        self.ui.tableWidget_nutrients9_4.setRowCount(0)
 
     def go_to_previous_page(self, currPage):
         self.ui.stackedWidget.setCurrentIndex(currPage - 1)
