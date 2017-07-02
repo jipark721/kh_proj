@@ -102,7 +102,7 @@ class Nutrient(Document):
     이야기3 = StringField(max_length=100)
     이야기4 = StringField(max_length=100)
     이야기5 = StringField(max_length=100)
-    영양소명한국어 = StringField(max_length=100)
+    영양소명중국어 = StringField(max_length=100)
     영양소명영어 = StringField(max_length=100)
     영양소명일본어 = StringField(max_length=100)
     영양소명러시아어 = StringField(max_length=100)
