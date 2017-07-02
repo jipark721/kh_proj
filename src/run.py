@@ -113,7 +113,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(4))
         self.ui.btn_next_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(10))
         self.ui.btn_check_duplicate_ing_9.clicked.connect(self.highlight_duplicate_ingredients)
-        self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(lambda x: self.render_rec_unrec_ing_from_nut())
+        self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(self.render_rec_unrec_ing_from_nut)
+        self.ui.btn_delete_selected_9.clicked.connect(self.remove_selected_items_tws)
         # page 10 - see current collapsed rec/unrec ingredients page
         self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
         self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(9))
@@ -227,6 +228,18 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                                  self.get_relevant_ingred_from_all_allergies(self.local_gs_threshold, self.local_lgG4_threshold,
                                                                              self.local_ms_threshold, self.local_gasung_threshold),
                                  -1)
+
+    def remove_selected_items_tws(self):
+        self.remove_selected_items_tw(self.ui.tableWidget_rec_ing_from_nut_9)
+        self.remove_selected_items_tw(self.ui.tableWidget_unrec_ing_from_nut_9)
+        self.remove_selected_items_tw(self.ui.tableWidget_rec_ing_from_dis_9)
+        self.remove_selected_items_tw(self.ui.tableWidget_unrec_ing_from_dis_9)
+        self.remove_selected_items_tw(self.ui.tableWidget_unrec_ing_from_allergies_9)
+
+    def remove_selected_items_tw(self, tw):
+        for rowIndex in range(tw.rowCount(), -1, -1):
+            if tw.item(rowIndex, 0) and tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
+                tw.removeRow(rowIndex)
 
     def render_all_selected_nutrients(self):
         # rec_level_nut_dict = {}  # level - set of diseases dict

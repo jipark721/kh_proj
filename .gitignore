@@ -5,3 +5,4 @@ view/stackedwid1.ui.autosave
 *.pyc
 __pycache__/
 src/mongodb/db/
+*.json
