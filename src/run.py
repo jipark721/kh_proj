@@ -192,14 +192,49 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.render_page_9()
 
     def go_to_page_10(self, currPage):
-        # rec_dict = self.build_ultimate_rec_ing_level_dict()
-        # unrec_dict = self.build_ultimate_unrec_ing_level_dict()
+        self.build_ultimate_rec_ing_level_dict()
+
         self.ui.stackedWidget.setCurrentIndex(10)
         self.render_basic_patient_info_on_top(10)
 
-    # def build_ultimate_rec_ing_level_dict(self):
-    #     dict = {}
-    #     dict = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 3)
+    def build_ultimate_rec_ing_level_dict(self):
+        rec_dict = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 1)
+        rec_dict.update(convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_dis_9, 1))
+
+        unrec_dict = convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_nut_9, 1)
+        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_dis_9, 1))
+        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_allergies_9, 1))
+
+        self.ui.tableWidget_current_rec_ing_10.setRowCount(len(rec_dict))
+        self.ui.tableWidget_current_unrec_ing_10.setRowCount(len(unrec_dict))
+
+        i = 0
+        for rec_ingredient, lvl in rec_dict.items():
+            ingredient = Ingredient.objects.get(식품명=rec_ingredient)
+            self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_rec_ing_10, i, ingredient, lvl)
+            i+=1
+
+        i = 0
+        for unrec_ingredient, lvl in unrec_dict.items():
+            ingredient = Ingredient.objects.get(식품명=unrec_ingredient)
+            self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_unrec_ing_10, i, ingredient, lvl)
+            i+=1
+
+    def make_rec_ingredient_tw_item(self, tw, rowIndex, ingredient, lvl):
+        ingredient_item = QtWidgets.QTableWidgetItem(ingredient.식품명)
+        level_item = QtWidgets.QTableWidgetItem(str(lvl))
+        class_one = QtWidgets.QTableWidgetItem(ingredient.식품분류1)
+        class_two = QtWidgets.QTableWidgetItem(ingredient.식품분류2)
+        class_three = QtWidgets.QTableWidgetItem(ingredient.식품분류3)
+        class_four = QtWidgets.QTableWidgetItem(ingredient.식품분류4)
+        class_five = QtWidgets.QTableWidgetItem(ingredient.식품분류5)
+        tw.setItem(rowIndex, 0, ingredient_item)
+        tw.setItem(rowIndex, 1, level_item)
+        tw.setItem(rowIndex, 2, class_one)
+        tw.setItem(rowIndex, 3, class_two)
+        tw.setItem(rowIndex, 4, class_three)
+        tw.setItem(rowIndex, 5, class_four)
+        tw.setItem(rowIndex, 6, class_five)
 
 
     def go_back_to_patient_selection(self):
