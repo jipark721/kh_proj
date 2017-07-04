@@ -89,8 +89,7 @@ class Ingredient(Document):
 
 class Nutrient(Document):
     영양소명 = StringField(required=True, max_length=100)
-    영양소분류1 = StringField(max_length=100)
-    영양소분류2 = StringField(max_length=100)
+    영양소분류 = StringField(max_length=100)
     하루권장량RDA = StringField(max_length=100)
     최대권장량WHO = StringField(max_length=100)
     최대권장량식약처 = StringField(max_length=100)

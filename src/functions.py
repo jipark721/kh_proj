@@ -43,7 +43,7 @@ def make_lw_checkbox_item(content, isChecked):
     return item
 
 #for allergy table widgets and nut_quant tablewidgets, iterate through rows and return a list of tuple(알레르기음식, level)
-#0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything
+#0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything(decimal) 3 - fetch everything(integer)
 def convert_tw_to_dict(tw, fetchItemCode):
     dict = {}
     for index in range(tw.rowCount()):
@@ -53,9 +53,17 @@ def convert_tw_to_dict(tw, fetchItemCode):
         elif fetchItemCode == 0:
             if tw.item(index, 0).checkState() == QtCore.Qt.Unchecked and Decimal(tw.item(index, 1).text()) != 0:
                 dict[tw.item(index, 0).text()] = Decimal(tw.item(index, 1).text())
-        else:
+        elif fetchItemCode == 2:
             dict[tw.item(index, 0).text()] = Decimal(tw.item(index, 1).text())
+        elif fetchItemCode == 3:
+            dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
     return dict
+#
+# def update_dict_with_another_tw(original_dict, tw):
+#     for index in range(tw.rowCount()):
+#         level = int(tw.item(index, 1).text())
+#         if level in original_dict.keys():
+
 
 #for table widgets, iterate through rows and return a set of checked items
 def convert_checked_item_in_tw_to_str_set(tw):
@@ -183,10 +191,10 @@ def render_rec_nutrient_tw(nut_category, tw, diseases, remove_duplicates, is_mis
         rowIndex = tw.rowCount()
     else:
         rowIndex = 0
-    tw.setRowCount(rowIndex + Nutrient.objects(영양소분류1=nut_category).count())
+    tw.setRowCount(rowIndex + Nutrient.objects(영양소분류=nut_category).count())
     tw.setColumnCount(6)
 
-    for nutrient in Nutrient.objects(영양소분류1=nut_category):
+    for nutrient in Nutrient.objects(영양소분류=nut_category):
         rec_ckbtn = QtWidgets.QTableWidgetItem()
         rec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         rec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
@@ -195,8 +203,7 @@ def render_rec_nutrient_tw(nut_category, tw, diseases, remove_duplicates, is_mis
         nonrec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
         nutrient_item = QtWidgets.QTableWidgetItem(nutrient.영양소명)
         level_item = QtWidgets.QTableWidgetItem("0")
-        cat1_item = QtWidgets.QTableWidgetItem(nutrient.영양소분류1)
-        cat2_item = QtWidgets.QTableWidgetItem(nutrient.영양소분류2)
+        cat_item = QtWidgets.QTableWidgetItem(nutrient.영양소분류)
         # level_item.setBackground()
         if nutrient.영양소명 in relevant_nutrients:
             if relevant_nutrients[nutrient.영양소명] > 0:
@@ -208,8 +215,7 @@ def render_rec_nutrient_tw(nut_category, tw, diseases, remove_duplicates, is_mis
         tw.setItem(rowIndex, 1, nonrec_ckbtn)
         tw.setItem(rowIndex, 2, nutrient_item)
         tw.setItem(rowIndex, 3, level_item)
-        tw.setItem(rowIndex, 4, cat1_item)
-        tw.setItem(rowIndex, 5, cat2_item)
+        tw.setItem(rowIndex, 4, cat_item)
         rowIndex+=1
     tw.resizeColumnsToContents()
 

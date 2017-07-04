@@ -55,7 +55,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def setupLogic(self):
         # page_0
         self.ui.btn_enter_0.clicked.connect(self.check_password)
-
+        self.ui.btn_quit_app_0.clicked.connect(lambda x: self.close())
         # page_1 - home
         self.ui.btn_goToPatient_1.clicked.connect(self.go_to_patient)
         self.ui.btn_goToData_1.clicked.connect(self.go_to_data)
@@ -103,7 +103,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_9 - get rec/unrec ingredients page
         self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(4))
-        self.ui.btn_next_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(10))
+        self.ui.btn_next_9.clicked.connect(lambda x: self.go_to_page_10(9))
         self.ui.btn_check_duplicate_ing_9.clicked.connect(self.highlight_duplicate_ingredients)
         self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(self.render_rec_unrec_ing_from_nut)
         self.ui.btn_delete_selected_9.clicked.connect(self.remove_selected_items_tws)
@@ -116,10 +116,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_12 - data home
         self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
-        self.ui.btn_edit_patients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(27))
+        self.ui.btn_edit_patients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(28))
         self.ui.btn_edit_ingredients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
         self.ui.btn_edit_nutrients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(20))
-        self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(24))
+        self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(25))
         # page_13 - data ingredient home
         self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
         self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home_with_no_warning)
@@ -147,7 +147,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_data_home_16.clicked.connect(lambda x: self.go_to_data_home(16))
         self.ui.btn_show_popup_nut_16.clicked.connect(lambda x: self.show_popup_nut_for_ing_nut_rel())
         self.ui.btn_findby_nut_name_16.clicked.connect(lambda x: self.find_nutrients_by_name(self.ui.lineEdit_nut_name_16.text(), self.ui.tableWidget_nutCandidates_16))
-        self.ui.btn_findby_nut_category_16.clicked.connect(lambda x: self.find_nutrients_by_category(self.ui.comboBox_nut_category1_16, self.ui.comboBox_nut_category2_16, self.ui.tableWidget_nutCandidates_16))
+        self.ui.btn_findby_nut_category_16.clicked.connect(lambda x: self.find_nutrients_by_category(self.ui.comboBox_nut_category1_16, self.ui.tableWidget_nutCandidates_16))
         self.ui.btn_add_nut_16.clicked.connect(lambda x: self.add_selected_nutrients_to_tw_and_clear_and_hide_popup())
         self.ui.btn_delete_selected_nut_16.clicked.connect(lambda x: self.remove_selected_nutrients_from_tw(self.ui.tableWidget_nut_quant_16))
         self.ui.btn_back_16.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
@@ -159,11 +159,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_register_new_nut_20.clicked.connect(lambda x: self.go_to_register_or_edit_nutrient_info(None))
         self.ui.btn_edit_existing_nut_20.clicked.connect(lambda x: self.go_to_find_existing_nutrient_for_editing())
         # page_21 find existing nutrient for editing
-        # self.ui.btn_home_21.clicked.connect(lambda x: self.go_home(21))
-        # self.ui.btn_data_home_21.clicked.connect(lambda x: self.go_to_data_home(21))
         self.ui.btn_findby_nut_name_21.clicked.connect(
             lambda x: self.find_nutrients_by_name(self.ui.lineEdit_nut_name_21.text(), self.ui.tableWidget_nutCandidates_21))
-        self.ui.btn_findby_nut_category_21.clicked.connect(lambda x: self.find_nutrients_by_category(self.ui.comboBox_nut_category1_21, self.ui.comboBox_nut_category2_21, self.ui.tableWidget_nutCandidates_21))
+        self.ui.btn_findby_nut_category_21.clicked.connect(lambda x: self.find_nutrients_by_category(self.ui.comboBox_nut_category1_21, self.ui.tableWidget_nutCandidates_21))
         self.ui.btn_cancel_21.clicked.connect(lambda x: self.cancel_find_existing_nutrient())
         self.ui.btn_confirm_nut_21.clicked.connect(lambda x: self.go_to_register_or_edit_nutrient_info(
             get_first_checked_btn_text_in_tw(self.ui.tableWidget_nutCandidates_21)))
@@ -193,6 +191,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(9)
         self.render_page_9()
 
+    def go_to_page_10(self, currPage):
+        # rec_dict = self.build_ultimate_rec_ing_level_dict()
+        # unrec_dict = self.build_ultimate_unrec_ing_level_dict()
+        self.ui.stackedWidget.setCurrentIndex(10)
+        self.render_basic_patient_info_on_top(10)
+
+    # def build_ultimate_rec_ing_level_dict(self):
+    #     dict = {}
+    #     dict = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 3)
+
+
     def go_back_to_patient_selection(self):
         if self.warn_before_leaving() == False:
             return
@@ -204,7 +213,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         if nut_name is not None:
             self.clear_find_existing_nutrient()
         self.ui.stackedWidget.setCurrentIndex(22)
-        listOfCat1 = Ingredient.objects.distinct("영양소분류1")
+        listOfCat1 = Ingredient.objects.distinct("영양소분류")
         self.ui.comboBox_nut_category1_22.addItem("")
         self.ui.comboBox_nut_category1_22.addItems(listOfCat1)
         if nut_name is not None:  # if editing existing ingredient
@@ -872,11 +881,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def populate_existing_nutrient_info(self, nut_name):
         self.current_nutrient = Nutrient.objects.get(영양소명=nut_name)
         self.ui.lineEdit_nut_name_22.setText(self.current_nutrient.영양소명)
-        listOfCat2 = Nutrient.objects(영양소분류1=self.current_nutrient.영양소분류1).distinct("영양소분류2")
-        self.ui.comboBox_nut_category2_22.addItem("")
-        self.ui.comboBox_nut_category2_22.addItems(listOfCat2)
-        self.ui.comboBox_nut_category1_22.setCurrentText(self.current_nutrient.영양소분류1)
-        self.ui.comboBox_nut_category2_22.setCurrentText(self.current_nutrient.영양소분류2)
+
+        self.ui.comboBox_nut_category1_22.setCurrentText(self.current_nutrient.영양소분류)
         self.ui.lineEdit_nut_lang_english_22.setText(self.current_nutrient.영양소명영어)
         self.ui.lineEdit_nut_lang_chinese_22.setText(self.current_nutrient.영양소명중국어)
         self.ui.lineEdit_nut_lang_japanese_22.setText(self.current_nutrient.영양소명일본어)
@@ -903,15 +909,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.plainTextEdit_story4_22.setPlainText(self.current_nutrient.이야기4)
 
     def render_nut_category1_dropdown_menu(self):
-        listOfCat1 = Nutrient.objects.distinct("영양소분류1")
+        listOfCat = Nutrient.objects.distinct("영양소분류")
         self.ui.comboBox_nut_category1_21.addItem("")
-        self.ui.comboBox_nut_category1_21.addItems(listOfCat1)
-        self.ui.comboBox_nut_category1_21.activated[str].connect(self.on_nut_cat1_for_lookup_changed)
-
-    def on_nut_cat1_for_lookup_changed(self, inputText):
-        listOfNutCat2 = Nutrient.objects(영양소분류1=inputText).distinct("영양소분류2")
-        self.ui.comboBox_nut_category2_21.addItem("")
-        self.ui.comboBox_nut_category2_21.addItems(listOfNutCat2)
+        self.ui.comboBox_nut_category1_21.addItems(listOfCat)
 
     def render_ing_specialty1_dropdown_menu(self):
         listOfSpecialty1 = Ingredient.objects.distinct("특산지분류1")
@@ -1643,11 +1643,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         print("local_권고영양소레벨_dict: " + str(self.local_권고영양소레벨_dict))
         print("local_비권고영양소레벨_dict: " + str(self.local_비권고영양소레벨_dict))
 
-    def find_nutrients_by_category(self, combobox1, combobox2, tw_to_show):
-        if combobox2.currentText() != "":
-            found_nutrients = Nutrient.objects(영양소분류2=combobox2.currentText())
-        elif combobox1.currentText() != "":
-            found_nutrients = Nutrient.objects(영양소분류1=combobox1.currentText())
+    def find_nutrients_by_category(self, combobox, tw_to_show):
+        if combobox.currentText() != "":
+            found_nutrients = Nutrient.objects(영양소분류=combobox.currentText())
         else:
             found_nutrients = Nutrient.objects.all()
         self.render_found_nutrients(found_nutrients, tw_to_show)
@@ -1660,28 +1658,22 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             found_nutrients = Nutrient.objects(영양소명__icontains=nut_name)
         self.render_found_nutrients(found_nutrients, tw_to_show)
 
-    #given collection of found nutrients, render ckbox of 영양소명, 영양소분류1, 영양소분류2
+    #given collection of found nutrients, render ckbox of 영양소명, 영양소분류
     def render_found_nutrients(self, found_nutrients, tw_to_show):
         tw_to_show.setRowCount(found_nutrients.count())
         i = 0
         for nutrient in found_nutrients:
             tw_to_show.setItem(i, 0, make_tw_checkbox_item(nutrient.영양소명, False))
-            tw_to_show.setItem(i, 1, make_tw_str_item(nutrient.영양소분류1))
-            tw_to_show.setItem(i, 2, make_tw_str_item(nutrient.영양소분류2))
+            tw_to_show.setItem(i, 1, make_tw_str_item(nutrient.영양소분류))
             i += 1
 
     def show_popup_nut_for_ing_nut_rel(self):
         self.ui.widget_popup_nut_16.show()
 
-        listOfNutCat1 = Nutrient.objects.distinct("영양소분류1")
+        listOfNutCat1 = Nutrient.objects.distinct("영양소분류")
         self.ui.comboBox_nut_category1_16.addItem("")
         self.ui.comboBox_nut_category1_16.addItems(listOfNutCat1)
-        self.ui.comboBox_nut_category1_16.activated[str].connect(self.on_nut_cat1_for_ing_changed)
 
-    def on_nut_cat1_for_ing_changed(self, inputText):
-        listOfNutCat2 = Nutrient.objects(영양소분류1=inputText).distinct("영양소분류2")
-        self.ui.comboBox_nut_category2_16.addItem("")
-        self.ui.comboBox_nut_category2_16.addItems(listOfNutCat2)
 
     def add_selected_nutrients_to_tw_and_clear_and_hide_popup(self):
         selected_nutrients = convert_checked_item_in_tw_to_str_set(self.ui.tableWidget_nutCandidates_16)

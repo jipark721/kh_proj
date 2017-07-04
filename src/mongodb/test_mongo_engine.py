@@ -66,13 +66,12 @@ def add_dummy_patient():
             진료일=[datetime.date(2017, 6, 8), datetime.date(2017, 6, 5)]) \
         .save()
 
-nut_cat1_list = ["탄수화물", "단백질", "지방", "미네랄", "비타민", "플라보노이드", "카토테노이드", "기타1", "기타2", "기타3","기타4"]
+nut_cat_list = ["탄수화물", "단백질", "지방", "미네랄", "비타민", "플라보노이드", "카로테노이드", "기타1", "기타2", "기타3","기타4"]
 
 def add_dummy_nutrient(i):
     Nutrient(
         영양소명="영양소명_" + str(i),
-        영양소분류1=nut_cat1_list[random.randint(0, 10)],
-        영양소분류2="영양소분류2_" + str(i),
+        영양소분류=nut_cat_list[random.randint(0, 10)],
         하루권장량RDA="하루권장량RDA_" + str(i),
         최대권장량WHO="최대권장량WHO_" + str(i),
         최대권장량식약처="최대권장량식약처_" + str(i),
@@ -189,9 +188,9 @@ reset = True
 if reset:
     reset_database()
     add_dummy_patient()
-    for i in range(500):
+    for i in range(100):
         add_dummy_nutrient(i)
-    for i in range(1000):
+    for i in range(100):
         add_dummy_ingredient(i)
     for i in range(100):
         add_dummy_disease(i)
@@ -200,7 +199,7 @@ if reset:
 # print_all_patients()
 # print_all_diseases()
 #print_all_ingredients()
-print_all_nutrients()
+# print_all_nutrients()
 export_db()
 
 print("\n\nThere are %d many patients data" % Patient.objects.count())
