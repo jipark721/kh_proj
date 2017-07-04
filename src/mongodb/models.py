@@ -113,7 +113,7 @@ class Nutrient(Document):
     영양소명외국어10 = StringField(max_length=100)
     영양소명외국어11 = StringField(max_length=100)
     영양소명외국어12 = StringField(max_length=100)
-    #포함식품리스트 = ListField(StringField())
+    포함식품리스트 = DictField()
 
     def __str__(self):
         return self.영양소명

@@ -174,13 +174,18 @@ def add_dummy_relations():
         disease.save()
 
     for ingredient in Ingredient.objects:
-        for i in range(random.randint(2, 5)):
+        for i in range(random.randint(3, 7)):
             ingredient.식품영양소관계[
                 Nutrient.objects[
                     random.randint(1, Nutrient.objects.count()-1)
                 ].영양소명
             ] = random.uniform(0, 100)
         ingredient.save()
+
+        for nutrient, level in ingredient.식품영양소관계.items():
+            target_nutrient = Nutrient.objects.get(영양소명=nutrient)
+            target_nutrient.포함식품리스트[ingredient.식품명] = level
+            target_nutrient.save()
 
 
 # populate dummy data
