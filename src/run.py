@@ -42,6 +42,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
 
+        # edit
+        self.local_disease_to_edit = None
+
         self.list_of_nut_cat = Nutrient.objects.distinct("영양소분류")
         self.list_of_nut_tw = [self.ui.tableWidget_nutrients1_4, self.ui.tableWidget_nutrients2_4,
                           self.ui.tableWidget_nutrients3_4,
@@ -200,6 +203,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_cancel_6.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(28))
         self.ui.btn_save_6.clicked.connect(self.update_patient_basic_info)
 
+        #page_25 add or edit disease
+        self.ui.btn_edit_existing_dis_25.clicked.connect(lambda x: self.go_to_pageN(26))
+        self.ui.btn_register_new_dis_25.clicked.connect(lambda x: self.go_to_pageN(27))
+
+        #page_26 add new disease
+        # self.ui.btn_lookup_ing_27.clicked.connect(self.popup_ing_table_for_disease_edit)
+        # self.ui.btn_lookup_nut_27.clicked.connect(self.popup_nut_table_for_disease_edit)
+
+        #page_27 edit existing disease
+        self.ui.btn_findby_dis_name_26.clicked.connect(self.find_existing_disease_for_edit)
+        self.ui.btn_confirm_dis_26.clicked.connect(self.go_to_edit_disease)
 
     def cancel_find_existing_nutrient(self):
         self.clear_find_existing_nutrient()
@@ -879,6 +893,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def go_to_pageN_with_warning_before_exiting(self, pageToGo):
         if self.warn_before_leaving():
             self.ui.stackedWidget.setCurrentIndex(pageToGo)
+
+    def go_to_pageN(self, pageToGo):
+        self.ui.stackedWidget.setCurrentIndex(pageToGo)
 
     def check_unique_ing_name(self, lineedit):
         try:
@@ -2099,6 +2116,25 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         self.clear_edit_existing_ingredient()
         self.ui.stackedWidget.setCurrentIndex(13)
+
+    def find_existing_disease_for_edit(self):
+        tag = self.ui.lineEdit_dis_name_26.text()
+        found_diseases = Disease.objects(질병명__icontains=tag)
+        render_checkbox_lw(self.ui.listWidget_dis_candidates_26, found_diseases, "질병명", None)
+
+    def go_to_edit_disease(self):
+        disease_name = get_first_checked_btn_text_in_lw(self.ui.listWidget_dis_candidates_26)
+        self.local_disease_to_edit = Disease.objects.get(질병명=disease_name)
+        self.render_edit_disease_page()
+        self.go_to_pageN(27)
+
+    def render_edit_disease_page(self):
+        self.ui.lineEdit_dis_name_27.setText(self.local_disease_to_edit.질병명)
+        self.ui.lineEdit_dis__name_english_27.setText(self.local_disease_to_edit.질병명영어)
+        populate_checkbox_tw_from_dict(self.ui.tableWidget_dis_ing_27, self.local_disease_to_edit.질병식품관계)
+        populate_checkbox_tw_from_dict(self.ui.tableWidget_dis_nut_27, self.local_disease_to_edit.질병영양소관계)
+        self.ui.widget_popup_add_ing_27.hide()
+        self.ui.widget_popup_add_nut_27.hide()
 
 
 def main():

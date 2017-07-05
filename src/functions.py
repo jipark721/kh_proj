@@ -288,6 +288,12 @@ def get_first_checked_btn_text_in_tw(tw):
             return tw.item(index, 0).text()
     return None
 
+def get_first_checked_btn_text_in_lw(lw):
+    for index in range(lw.count()):
+        if lw.item(index).checkState() == QtCore.Qt.Checked:
+            return lw.item(index).text()
+    return None
+
 def convert_date_string_to_QDate_obj(dateStr):
     date = datetime.strptime(dateStr, '%Y/%m/%d')
     return QtCore.QDate(date.year, date.month, date.day)
