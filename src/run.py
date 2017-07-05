@@ -9,6 +9,7 @@ from mongodb.utils import *
 from functions import *
 from mongodb.models import *
 from decimal import *
+import math
 
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
@@ -40,6 +41,20 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_threshold = 0
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
+
+        self.list_of_nut_cat = Nutrient.objects.distinct("영양소분류")
+        self.list_of_nut_tw = [self.ui.tableWidget_nutrients1_4, self.ui.tableWidget_nutrients2_4,
+                          self.ui.tableWidget_nutrients3_4,
+                          self.ui.tableWidget_nutrients4_4, self.ui.tableWidget_nutrients5_4,
+                          self.ui.tableWidget_nutrients6_4,
+                          self.ui.tableWidget_nutrients7_4, self.ui.tableWidget_nutrients8_4,
+                          self.ui.tableWidget_nutrients9_4,
+                          self.ui.tableWidget_nutrients1_29, self.ui.tableWidget_nutrients2_29,
+                          self.ui.tableWidget_nutrients3_29,
+                          self.ui.tableWidget_nutrients4_29, self.ui.tableWidget_nutrients5_29,
+                          self.ui.tableWidget_nutrients6_29,
+                          self.ui.tableWidget_nutrients7_29]
+        self.nut_level_src_dict = {} #nut - (level, src) dict
 
         self.rec_level_nut_dict = {}  # level - set of diseases dict
         self.unrec_level_nut_dict = {}
@@ -98,9 +113,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_4
         self.ui.btn_home_4.clicked.connect(lambda x: self.go_home(4))
-        self.ui.btn_next_4.clicked.connect(lambda x: self.go_to_page_9())
+        self.ui.btn_next_4.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(29))
         self.ui.btn_back_4.clicked.connect(lambda x: self.go_to_page_8(4))
-
+        # page_29
+        self.ui.btn_home_29.clicked.connect(lambda x: self.go_home(29))
+        self.ui.btn_back_29.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(4))
+        self.ui.btn_next_29.clicked.connect(lambda x: self.go_to_page_9())
+        self.ui.btn_go_to_rec_29.clicked.connect(lambda x: self.put_selected_nutrients_to_tw(self.ui.tableWidget_nutrients_rec_29, True))
+        self.ui.btn_undo_go_to_rec_29.clicked.connect(lambda x: self.take_out_selected_nutrients_from_tw(self.ui.tableWidget_nutrients_rec_29, True))
+        self.ui.btn_go_to_unrec_29.clicked.connect(lambda x: self.put_selected_nutrients_to_tw(self.ui.tableWidget_nutrients_unrec_29, False))
+        self.ui.btn_undo_go_to_unrec_29.clicked.connect(lambda x: self.take_out_selected_nutrients_from_tw(self.ui.tableWidget_nutrients_unrec_29, False))
         # page_9 - get rec/unrec ingredients page
         self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(4))
         self.ui.btn_next_9.clicked.connect(lambda x: self.go_to_page_10(9))
@@ -175,6 +197,52 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     ####################
     # GO TO
     ####################
+    def put_selected_nutrients_to_tw(self, rec_or_unrec_tw, isRec):
+        lv = self.get_level_page29()
+        if not isRec:
+            lv = lv * (-1)
+        for i in range(len(self.list_of_nut_cat)):
+            nut_tw = self.list_of_nut_tw[i]
+            for rowIndex in range(nut_tw.rowCount()):
+                if nut_tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
+                    nut_str = nut_tw.item(rowIndex, 1).text()
+                    if nut_str in self.nut_level_src_dict: #if nut_str already in either rec_tw or unrec_tw
+                        old_level, old_source = self.nut_level_src_dict[nut_str]
+                        found_index = find_item_index_for_str_in_tw(rec_or_unrec_tw, nut_str, 0)
+
+                        if (isRec and lv > old_level) or (not isRec and lv < old_level):
+                            new_source = "User Input"
+                            self.nut_level_src_dict[nut_str] = (lv, new_source)
+                            rec_or_unrec_tw.item(found_index, 1).setText(str(lv))
+                            rec_or_unrec_tw.item(found_index, 2).setText(new_source)
+                    else: #nut_str not in rec_tw nor unrec_tw
+                        source = "User Input"
+                        self.nut_level_src_dict[nut_str] = (lv, source)
+                        rec_or_unrec_tw_rowIndex = rec_or_unrec_tw.rowCount()
+                        rec_or_unrec_tw.insertRow(rec_or_unrec_tw_rowIndex)
+                        nut_item = make_tw_checkbox_item(nut_str, False)
+                        level_item = make_tw_str_item(str(lv))
+                        src_item = make_tw_str_item(source)
+                        rec_or_unrec_tw.setItem(rec_or_unrec_tw_rowIndex, 0, nut_item)
+                        rec_or_unrec_tw.setItem(rec_or_unrec_tw_rowIndex, 1, level_item)
+                        rec_or_unrec_tw.setItem(rec_or_unrec_tw_rowIndex, 2, src_item)
+
+                        nut_tw.item(rowIndex, 1).setBackground(QtGui.QColor(135,206,250))
+                    nut_tw.item(rowIndex, 0).setCheckState(QtCore.Qt.Unchecked)
+
+    def take_out_selected_nutrients_from_tw(self, rec_or_unrec_tw, isRec):
+        for rowIndex in range(rec_or_unrec_tw.rowCount(), -1, -1):
+            if rec_or_unrec_tw.item(rowIndex, 0) and rec_or_unrec_tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
+                nut_str = rec_or_unrec_tw.item(rowIndex, 0).text()
+                del self.nut_level_src_dict[nut_str]
+                rec_or_unrec_tw.removeRow(rowIndex)
+
+                for i in range(len(self.list_of_nut_tw)):
+                    nut_tw = self.list_of_nut_tw[i]
+                    found_index = find_item_index_for_str_in_tw(nut_tw, nut_str, 1)
+                    if found_index != -1:
+                        nut_tw.item(found_index, 1).setBackground(QtGui.QColor(255,255,255))
+                        break
 
     def go_to_page_4(self):
         self.local_remove_duplicates = True if self.ui.radioButton_dis_rel_ing_delete_both_8.isChecked() else False
@@ -185,7 +253,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_ms_threshold = int(self.ui.spinBox_allergy_ms_level_8.text())
         self.local_gasung_threshold = int(self.ui.spinBox_allergy_gasung_level_8.text())
         self.ui.stackedWidget.setCurrentIndex(4)
-        self.render_page_4()
+        self.render_page_4_and_29()
+
 
     def go_to_page_9(self):
         self.ui.stackedWidget.setCurrentIndex(9)
@@ -257,21 +326,28 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     ####################
     # RENDER
     ####################
-    def render_page_4(self):
+    def render_page_4_and_29(self):
         self.render_basic_patient_info_on_top(4)
+        self.render_basic_patient_info_on_top(29)
 
-        render_rec_nutrient_tw("탄수화물", self.ui.tableWidget_nutrients1_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("단백질", self.ui.tableWidget_nutrients2_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("지방", self.ui.tableWidget_nutrients3_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("비타민", self.ui.tableWidget_nutrients4_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("미네랄", self.ui.tableWidget_nutrients5_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("플라보노이드", self.ui.tableWidget_nutrients6_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("카로테노이드", self.ui.tableWidget_nutrients7_4, self.local_diseases, False, False)
+        list_of_nut_cat_lineedit = [self.ui.lineEdit_cat1_4, self.ui.lineEdit_cat2_4, self.ui.lineEdit_cat3_4,
+                                    self.ui.lineEdit_cat4_4, self.ui.lineEdit_cat5_4, self.ui.lineEdit_cat6_4,
+                                    self.ui.lineEdit_cat7_4, self.ui.lineEdit_cat8_4, self.ui.lineEdit_cat9_4,
+                                    self.ui.lineEdit_cat1_29, self.ui.lineEdit_cat2_29, self.ui.lineEdit_cat3_29,
+                                    self.ui.lineEdit_cat4_29, self.ui.lineEdit_cat5_29, self.ui.lineEdit_cat6_29,
+                                    self.ui.lineEdit_cat7_29]
+        self.ui.tableWidget_nutrients_rec_29.setRowCount(0)
+        self.ui.tableWidget_nutrients_unrec_29.setRowCount(0)
+        for i in range(len(self.list_of_nut_cat)):
+            nut_cat = self.list_of_nut_cat[i]
+            list_of_nut_cat_lineedit[i].setText(nut_cat)
+            render_rec_nutrient_tw(nut_cat, self.list_of_nut_tw[i], self.ui.tableWidget_nutrients_rec_29,
+                                   self.ui.tableWidget_nutrients_unrec_29, self.local_diseases, False, self.nut_level_src_dict)
+            self.ui.tableWidget_nutrients_rec_29.resizeColumnsToContents()
+            self.ui.tableWidget_nutrients_unrec_29.resizeColumnsToContents()
 
-        render_rec_nutrient_tw("기타1", self.ui.tableWidget_nutrients8_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("기타2", self.ui.tableWidget_nutrients8_4, self.local_diseases, False, True)
-        render_rec_nutrient_tw("기타3", self.ui.tableWidget_nutrients9_4, self.local_diseases, False, False)
-        render_rec_nutrient_tw("기타4", self.ui.tableWidget_nutrients9_4, self.local_diseases, False, True)
+
+
 
     def render_page_9(self):
         self.render_basic_patient_info_on_top(9)
@@ -323,7 +399,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         for level in reversed(range(1,6)):
             if level in self.rec_level_nut_dict:
                 for nut_str in self.rec_level_nut_dict.get(level):
-                    print(nut_str)
                     nut_item = make_tw_str_item(nut_str)
                     level_item = make_tw_str_item(str(level))
                     self.ui.tableWidget_nutrients_rec_9.setItem(rowIndex, 0, nut_item)
@@ -337,7 +412,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             level = level * (-1)
             if level in self.unrec_level_nut_dict:
                 for nut_str in self.unrec_level_nut_dict.get(level):
-                    print(nut_str)
                     nut_item = make_tw_str_item(nut_str)
                     level_item = make_tw_str_item(str(level))
                     self.ui.tableWidget_nutrients_unrec_9.setItem(unrec_rowIndex, 0, nut_item)
@@ -355,9 +429,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.render_tw_for_ing_from_nut(self.ui.tableWidget_rec_ing_from_nut_9, self.rec_level_nut_dict, True)
         self.render_tw_for_ing_from_nut(self.ui.tableWidget_unrec_ing_from_nut_9, self.unrec_level_nut_dict, False)
 
-    def isOriginAndSpecialtyBothSatisfied(self, ing):
+    def isOriginAndSpecialtyBothSatisfied(self, ing_str):
         origin, origin_level = self.get_most_specified_origin_and_level(8)
         specialty, specialty_level = self.get_most_specified_specialty_and_level(8)
+        ing = Ingredient.objects.get(식품명 = ing_str)
         if origin_level != -1:
             if origin_level == 1 and ing.원산지분류1 != origin:
                 return False
@@ -383,9 +458,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         return True
 
     def render_tw_for_ing_from_nut(self, tw, dict, isRec):
-        # # TODO - NOT USED ATM
-        # origin, origin_level = self.get_most_specified_origin_and_level(8)
-        # specialty, specialty_level = self.get_most_specified_specialty_and_level(8)
         # ints
         printing_rep_level = self.ui.spinBox_printingRep_level_8.value()
         extinction_level = self.ui.spinBox_extinction_level_8.value()
@@ -406,29 +478,28 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             if level in dict:
                 for nut_str in dict.get(level):
                     ing_quant_dict_for_nut = {}
-                    ing_quant_dict_for_nut_secondary = {} #for 100g when both one-portion and 100g checked
+                    ing_quant_dict_for_nut_secondary = {}  # for 100g when both one-portion and 100g checked
 
-                    for ing in Ingredient.objects(
-                                    Q(출력대표성등급__lte=printing_rep_level) & Q(멸종등급__lt=extinction_level)):
-                    # for ing in Ingredient.objects.all():
-                    #    self.build_ing_quant_dict(nut_str, ing, ing_quant_dict_for_nut, ing_quant_dict_for_nut_secondary, portion_code, is_one_portion_first, is_100g_first)
-                        if self.isOriginAndSpecialtyBothSatisfied(ing) and nut_str in ing.식품영양소관계:
-                            ing_quant_dict_for_nut[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+                    ingredients_containing_nut = Nutrient.objects.get(영양소명 = nut_str).포함식품리스트.keys()
+                    for ing_str in ingredients_containing_nut:
+                        if self.isOriginAndSpecialtyBothSatisfied(ing_str) and \
+                                        Ingredient.objects.get(식품명 = ing_str).출력대표성등급 <= printing_rep_level and \
+                                        Ingredient.objects.get(식품명 = ing_str).멸종등급 > extinction_level:
+                            ing_quant_dict_for_nut[ing_str] = self.calculate_nut_quant_for_ing(ing_str, nut_str,
                                                                                                portion_code, False)
                             if is_one_portion_first and is_100g_first: #1회식사와 100그램 중복 설정시 1회식사분량 먼저 표시후 100그램 표시
-                                ing_quant_dict_for_nut_secondary[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+                                ing_quant_dict_for_nut_secondary[ing_str] = self.calculate_nut_quant_for_ing(ing_str, nut_str,
                                                                                                              portion_code, True)
-                            # ing_quant_dict_for_nut[ing.식품명] = ing.식품영양소관계[nut_str]
                     min_count = self.get_level_count(level, ing_quant_dict_for_nut)
                     sorted_ing_quant_list = sorted(ing_quant_dict_for_nut.items(), key=operator.itemgetter(1),
                                                    reverse=True)[:min_count]
+
                     if is_one_portion_first and is_100g_first:
                         min_count2 = self.get_level_count(level, ing_quant_dict_for_nut_secondary)
                         sorted_ing_quant_list2 = sorted(ing_quant_dict_for_nut_secondary.items(), key=operator.itemgetter(1),
                                                        reverse=True)[:min_count2]
                         for item in sorted_ing_quant_list2:
                             ing_quant_list_for_nut_secondary.append((item[0], item[1], level, nut_str)) #(ing_str, quant, level, nut_str)
-
                     for index in range(min_count):
                         ing_name = sorted_ing_quant_list[index][0]
                         quant = sorted_ing_quant_list[index][1]
@@ -458,14 +529,67 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 tw.setItem(rowIndex, 3, quant_item)
                 tw.setItem(rowIndex, 4, description_item)
                 rowIndex += 1
-
-
         tw.setRowCount(rowIndex)
         tw.resizeColumnsToContents()
+        #             for ing in Ingredient.objects(
+        #                             Q(출력대표성등급__lte=printing_rep_level) & Q(멸종등급__lt=extinction_level)):
+        #             # for ing in Ingredient.objects.all():
+        #             #    self.build_ing_quant_dict(nut_str, ing, ing_quant_dict_for_nut, ing_quant_dict_for_nut_secondary, portion_code, is_one_portion_first, is_100g_first)
+        #                 if self.isOriginAndSpecialtyBothSatisfied(ing) and nut_str in ing.식품영양소관계:
+        #                     ing_quant_dict_for_nut[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+        #                                                                                        portion_code, False)
+        #                     if is_one_portion_first and is_100g_first: #1회식사와 100그램 중복 설정시 1회식사분량 먼저 표시후 100그램 표시
+        #                         ing_quant_dict_for_nut_secondary[ing.식품명] = self.calculate_nut_quant_for_ing(ing, nut_str,
+        #                                                                                                      portion_code, True)
+        #                     # ing_quant_dict_for_nut[ing.식품명] = ing.식품영양소관계[nut_str]
+        #             min_count = self.get_level_count(level, ing_quant_dict_for_nut)
+        #             sorted_ing_quant_list = sorted(ing_quant_dict_for_nut.items(), key=operator.itemgetter(1),
+        #                                            reverse=True)[:min_count]
+        #             if is_one_portion_first and is_100g_first:
+        #                 min_count2 = self.get_level_count(level, ing_quant_dict_for_nut_secondary)
+        #                 sorted_ing_quant_list2 = sorted(ing_quant_dict_for_nut_secondary.items(), key=operator.itemgetter(1),
+        #                                                reverse=True)[:min_count2]
+        #                 for item in sorted_ing_quant_list2:
+        #                     ing_quant_list_for_nut_secondary.append((item[0], item[1], level, nut_str)) #(ing_str, quant, level, nut_str)
+        #
+        #             for index in range(min_count):
+        #                 ing_name = sorted_ing_quant_list[index][0]
+        #                 quant = sorted_ing_quant_list[index][1]
+        #                 ing_name_item = make_tw_checkbox_item(ing_name, False)
+        #                 level_item = make_tw_str_item(str(level))
+        #                 nut_item = make_tw_str_item(nut_str)
+        #                 quant_item = make_tw_str_item(str(quant))
+        #                 tw.setItem(rowIndex, 0, ing_name_item)
+        #                 tw.setItem(rowIndex, 1, level_item)
+        #                 tw.setItem(rowIndex, 2, nut_item)
+        #                 tw.setItem(rowIndex, 3, quant_item)
+        #                 if is_one_portion_first and is_100g_first:
+        #                     description_item = make_tw_str_item("1회식사분량 고려출력")
+        #                     tw.setItem(rowIndex, 4, description_item)
+        #                 rowIndex += 1
+        #
+        # if is_one_portion_first and is_100g_first:
+        #     for (ing_str, quant, level, nut_str) in ing_quant_list_for_nut_secondary:
+        #         ing_name_item = make_tw_checkbox_item(ing_str, False)
+        #         level_item = make_tw_str_item(str(level))
+        #         nut_item = make_tw_str_item(nut_str)
+        #         quant_item = make_tw_str_item(str(quant))
+        #         description_item = make_tw_str_item("100g분량 고려출력")
+        #         tw.setItem(rowIndex, 0, ing_name_item)
+        #         tw.setItem(rowIndex, 1, level_item)
+        #         tw.setItem(rowIndex, 2, nut_item)
+        #         tw.setItem(rowIndex, 3, quant_item)
+        #         tw.setItem(rowIndex, 4, description_item)
+        #         rowIndex += 1
+        #
+        #
+        # tw.setRowCount(rowIndex)
+        # tw.resizeColumnsToContents()
 
-    def calculate_nut_quant_for_ing(self, ing, nut_str, portion_code, for_secondary):
+    def calculate_nut_quant_for_ing(self, ing_str, nut_str, portion_code, for_secondary):
         # 데이터안에는 각 식품 100그램 안에 영양소가 얼마 들어있는지 기입되어있음
         # 1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
+        ing = Ingredient.objects.get(식품명 = ing_str)
         default_100g_value = Decimal(ing.식품영양소관계[nut_str])
         if for_secondary or portion_code == 2 or portion_code == 6 or portion_code == 10 or portion_code == 14: #여기서는 무조건 100그램으로 써줘야함
             if portion_code == 3 or portion_code == 2:
@@ -560,6 +684,15 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_height_10.setText(str(self.current_patient.키))
             self.ui.lineEdit_weight_10.setText(str(self.current_patient.몸무게))
             self.ui.lineEdit_nthVisit_10.setText(str(self.current_patient.방문횟수 + 1))
+        elif currPage == 29:
+            self.ui.lineEdit_name_29.setText(self.current_patient.이름)
+            self.ui.lineEdit_ID_29.setText(self.current_patient.ID)
+            self.ui.lineEdit_birthdate_29.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
+            self.ui.lineEdit_age_29.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
+            self.ui.lineEdit_lastOfficeVisit_29.setText(str(datetime.date.today()))
+            self.ui.lineEdit_height_29.setText(str(self.current_patient.키))
+            self.ui.lineEdit_weight_29.setText(str(self.current_patient.몸무게))
+            self.ui.lineEdit_nthVisit_29.setText(str(self.current_patient.방문횟수 + 1))
         else:
             pass
 
@@ -1117,7 +1250,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         else:
             if currPage == 3:
                 self.clear_register_new_patient()
-            elif currPage == 4 or currPage == 7 or currPage == 8 or currPage == 9 or currPage == 10:
+            elif currPage == 4 or currPage == 29 or currPage == 7 or currPage == 8 or currPage == 9 or currPage == 10:
                 self.clear_current_patient_info_and_all_related_pages()
             elif currPage == 5:
                 self.clear_find_existing_client()
@@ -1136,7 +1269,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def clear_current_patient_info_and_all_related_pages(self):
         self.reset_page_7()
         self.reset_page_8()
-        self.reset_page_4()
+        self.reset_page_4_and_29()
         self.reset_page_9()
         self.reset_page_10()
 
@@ -1229,7 +1362,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.tableWidget_allergies_ms_7.setRowCount(0)
         self.ui.tableWidget_allergies_lgg4_7.setRowCount(0)
 
-    def reset_page_4(self):
+    def reset_page_4_and_29(self):
         self.ui.lineEdit_ID_4.clear()
         self.ui.lineEdit_name_4.clear()
         self.ui.lineEdit_birthdate_4.clear()
@@ -1238,15 +1371,21 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_weight_4.clear()
         self.ui.lineEdit_nthVisit_4.clear()
         self.ui.lineEdit_lastOfficeVisit_4.clear()
-        self.ui.tableWidget_nutrients1_4.setRowCount(0)
-        self.ui.tableWidget_nutrients2_4.setRowCount(0)
-        self.ui.tableWidget_nutrients3_4.setRowCount(0)
-        self.ui.tableWidget_nutrients4_4.setRowCount(0)
-        self.ui.tableWidget_nutrients5_4.setRowCount(0)
-        self.ui.tableWidget_nutrients6_4.setRowCount(0)
-        self.ui.tableWidget_nutrients7_4.setRowCount(0)
-        self.ui.tableWidget_nutrients8_4.setRowCount(0)
-        self.ui.tableWidget_nutrients9_4.setRowCount(0)
+
+        self.ui.lineEdit_ID_29.clear()
+        self.ui.lineEdit_name_29.clear()
+        self.ui.lineEdit_birthdate_29.clear()
+        self.ui.lineEdit_age_29.clear()
+        self.ui.lineEdit_height_29.clear()
+        self.ui.lineEdit_weight_29.clear()
+        self.ui.lineEdit_nthVisit_29.clear()
+        self.ui.lineEdit_lastOfficeVisit_29.clear()
+
+        for i in range(len(self.list_of_nut_tw)):
+            self.list_of_nut_tw[i].setRowCount(0)
+
+        self.ui.tableWidget_nutrients_rec_29.setRowCount(0)
+        self.ui.tableWidget_nutrients_unrec_29.setRowCount(0)
 
     def go_to_previous_page(self, currPage):
         self.ui.stackedWidget.setCurrentIndex(currPage - 1)
@@ -1580,16 +1719,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         unchecked_nutrient_dict = convert_tw_to_dict(nutrient_tw, 0)
         populate_checkbox_tw_from_dict(nutrient_tw, unchecked_nutrient_dict)
 
-    def get_level(self):
-        if self.ui.radioBtn_lv1_8.isChecked():
+    def get_level_page29(self):
+        if self.ui.radioButton_lv1_29.isChecked():
             return 1
-        elif self.ui.radioBtn_lv2_8.isChecked():
+        elif self.ui.radioButton_lv2_29.isChecked():
             return 2
-        elif self.ui.radioBtn_lv3_8.isChecked():
+        elif self.ui.radioButton_lv3_29.isChecked():
             return 3
-        elif self.ui.radioBtn_lv4_8.isChecked():
+        elif self.ui.radioButton_lv4_29.isChecked():
             return 4
-        elif self.ui.radioBtn_lv5_8.isChecked():
+        elif self.ui.radioButton_lv5_29.isChecked():
             return 5
         else:
             return 0

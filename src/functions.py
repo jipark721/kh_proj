@@ -185,45 +185,84 @@ def clear_checkbox_lw(lw):
     for index in range(lw.count()):
         lw.item(index).setCheckState(QtCore.Qt.Unchecked)
 
-def render_rec_nutrient_tw(nut_category, tw, diseases, remove_duplicates, is_misc):
+# def render_rec_nutrient_tw(nut_category, tw, diseases, remove_duplicates, is_misc):
+#     relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases, remove_duplicates)
+#     if is_misc:
+#         rowIndex = tw.rowCount()
+#     else:
+#         rowIndex = 0
+#     tw.setRowCount(rowIndex + Nutrient.objects(영양소분류=nut_category).count())
+#     tw.setColumnCount(6)
+#
+#     for nutrient in Nutrient.objects(영양소분류=nut_category):
+#         rec_ckbtn = QtWidgets.QTableWidgetItem()
+#         rec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+#         rec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
+#         nonrec_ckbtn = QtWidgets.QTableWidgetItem()
+#         nonrec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+#         nonrec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
+#         nutrient_item = QtWidgets.QTableWidgetItem(nutrient.영양소명)
+#         level_item = QtWidgets.QTableWidgetItem("0")
+#         cat_item = QtWidgets.QTableWidgetItem(nutrient.영양소분류)
+#         # level_item.setBackground()
+#         if nutrient.영양소명 in relevant_nutrients:
+#             if relevant_nutrients[nutrient.영양소명] > 0:
+#                 rec_ckbtn.setCheckState(QtCore.Qt.Checked)
+#             else:
+#                 nonrec_ckbtn.setCheckState(QtCore.Qt.Checked)
+#             level_item.setText(str(relevant_nutrients[nutrient.영양소명]))
+#         tw.setItem(rowIndex, 0, rec_ckbtn)
+#         tw.setItem(rowIndex, 1, nonrec_ckbtn)
+#         tw.setItem(rowIndex, 2, nutrient_item)
+#         tw.setItem(rowIndex, 3, level_item)
+#         tw.setItem(rowIndex, 4, cat_item)
+#         rowIndex+=1
+#     tw.resizeColumnsToContents()
+
+def render_rec_nutrient_tw(nut_category, tw, rec_tw, unrec_tw, diseases, remove_duplicates, nut_level_src_dict):
     relevant_nutrients = get_relevant_nutrients_from_diseases_str(diseases, remove_duplicates)
-    if is_misc:
-        rowIndex = tw.rowCount()
-    else:
-        rowIndex = 0
-    tw.setRowCount(rowIndex + Nutrient.objects(영양소분류=nut_category).count())
-    tw.setColumnCount(6)
+    rowIndex = 0
+    tw.setRowCount(Nutrient.objects(영양소분류=nut_category).count())
+    tw.setColumnCount(3)
 
     for nutrient in Nutrient.objects(영양소분류=nut_category):
-        rec_ckbtn = QtWidgets.QTableWidgetItem()
-        rec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-        rec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
-        nonrec_ckbtn = QtWidgets.QTableWidgetItem()
-        nonrec_ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-        nonrec_ckbtn.setCheckState(QtCore.Qt.Unchecked)
-        nutrient_item = QtWidgets.QTableWidgetItem(nutrient.영양소명)
-        level_item = QtWidgets.QTableWidgetItem("0")
-        cat_item = QtWidgets.QTableWidgetItem(nutrient.영양소분류)
-        # level_item.setBackground()
+        ckbtn = QtWidgets.QTableWidgetItem()
+        ckbtn.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        ckbtn.setCheckState(QtCore.Qt.Unchecked)
+        nutrient_item = make_tw_str_item(nutrient.영양소명)
+        cat_item = make_tw_str_item(nutrient.영양소분류)
+        tw.setItem(rowIndex, 0, ckbtn)
+        tw.setItem(rowIndex, 1, nutrient_item)
+        tw.setItem(rowIndex, 2, cat_item)
         if nutrient.영양소명 in relevant_nutrients:
-            if relevant_nutrients[nutrient.영양소명] > 0:
-                rec_ckbtn.setCheckState(QtCore.Qt.Checked)
-            else:
-                nonrec_ckbtn.setCheckState(QtCore.Qt.Checked)
-            level_item.setText(str(relevant_nutrients[nutrient.영양소명]))
-        tw.setItem(rowIndex, 0, rec_ckbtn)
-        tw.setItem(rowIndex, 1, nonrec_ckbtn)
-        tw.setItem(rowIndex, 2, nutrient_item)
-        tw.setItem(rowIndex, 3, level_item)
-        tw.setItem(rowIndex, 4, cat_item)
+            tw.item(rowIndex, 1).setBackground(QtGui.QColor(135,206,250))
+            level, source = relevant_nutrients[nutrient.영양소명]
+            nut_level_src_dict[nutrient.영양소명] = (level, source)
+
+            ckbtn_item = make_tw_checkbox_item(nutrient.영양소명, False)
+            level_item = make_tw_str_item(str(level))
+            source_item = make_tw_str_item(source)
+            if level > 0:
+                rowIndex2 = rec_tw.rowCount()
+                rec_tw.insertRow(rowIndex2)
+                rec_tw.setItem(rowIndex2, 0, ckbtn_item)
+                rec_tw.setItem(rowIndex2, 1, level_item)
+                rec_tw.setItem(rowIndex2, 2, source_item)
+            elif level < 0:
+                rowIndex2 = unrec_tw.rowCount()
+                unrec_tw.insertRow(rowIndex2)
+                unrec_tw.setItem(rowIndex2, 0, ckbtn_item)
+                unrec_tw.setItem(rowIndex2, 1, level_item)
+                unrec_tw.setItem(rowIndex2, 2, source_item)
         rowIndex+=1
     tw.resizeColumnsToContents()
 
-
-# def clear_ckbox_level_tw(tw):
-#     for rowIndex in range(tw.rowCount):
-#         tw.item(rowIndex, 0).setCheckState(QtCore.Qt.Unchecked)
-#         tw.item(rowIndex, 1).text()
+def set_all_ckbox_state_in_tw(tw, col, toCheck):
+    for rowIndex in range(tw.rowCount()):
+        if toCheck:
+            tw.item(rowIndex, col).setCheckState(QtCore.Qt.Checked)
+        else:
+            tw.item(rowIndex, col).setCheckState(QtCore.Qt.Unchecked)
 
 # iterate through listwidget and build a set of indices of checked diseases
 def build_disease_index_set_from_lw(lw):
@@ -277,19 +316,28 @@ def get_relevant_nutrients_from_ingredient_str(ingredient):
 def get_relevant_nutrients_from_diseases_str(diseases, remove_duplicates):
     relevant_nutrient = {}
     removed = {}
-    for disease in diseases:
-        disease = Disease.objects.get(질병명=disease)
+    for disease_str in diseases:
+        disease = Disease.objects.get(질병명=disease_str)
         for rel_nutrient, level in disease.질병영양소관계.items():
             if rel_nutrient not in relevant_nutrient and rel_nutrient not in removed:
-                relevant_nutrient[rel_nutrient] = level
+                relevant_nutrient[rel_nutrient] = (level, disease_str)
             elif remove_duplicates:
                 del relevant_nutrient[rel_nutrient]
                 removed[rel_nutrient] = True
-            elif rel_nutrient in relevant_nutrient and relevant_nutrient[rel_nutrient] > 0:
-                if level > relevant_nutrient[rel_nutrient] or level < 0:
-                    relevant_nutrient[rel_nutrient] = level
-            elif rel_nutrient in relevant_nutrient and relevant_nutrient[rel_nutrient] < 0 and level < relevant_nutrient[rel_nutrient]:
-                relevant_nutrient[rel_nutrient] = level
+            elif rel_nutrient in relevant_nutrient:
+                old_level, old_disease_str = relevant_nutrient[rel_nutrient]
+                if old_level > 0 and (level > old_level or level < 0): #상위레벨 유지
+                    relevant_nutrient[rel_nutrient] = (level, disease_str)
+                elif old_level < 0 and level < old_level:
+                    relevant_nutrient[rel_nutrient] = (level, disease_str)
+            # elif rel_nutrient in relevant_nutrient:
+            #     lv, dis_str = relevant_nutrient[rel_nutrient]
+            #     if lv > 0
+            #     and relevant_nutrient[rel_nutrient] > 0:
+            #     if level > relevant_nutrient[rel_nutrient] or level < 0:
+            #         relevant_nutrient[rel_nutrient] = (level, disease_str)
+            # elif rel_nutrient in relevant_nutrient and relevant_nutrient[rel_nutrient] < 0 and level < relevant_nutrient[rel_nutrient]:
+            #     relevant_nutrient[rel_nutrient] = (level, disease_str)
     return relevant_nutrient
 
 def get_relevant_ingredients_from_diseases_str(diseases, remove_duplicates):
@@ -389,3 +437,9 @@ def set_checkstate_for_ckbtn(ckbtn, shouldCheck):
         ckbtn.setCheckState(QtCore.Qt.Checked)
     else:
         ckbtn.setCheckState(QtCore.Qt.Unchecked)
+
+def find_item_index_for_str_in_tw(tw, str, col):
+    for index in range(tw.rowCount()):
+        if str == tw.item(index, col).text():
+            return index
+    return -1

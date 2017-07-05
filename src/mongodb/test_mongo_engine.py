@@ -45,7 +45,7 @@ def print_all_nutrients():
 
 
 def add_dummy_patient():
-    Patient(ID="ID_1", 이름="상현", 성별="남", 생년월일=datetime.date(1992, 9, 17),
+    Patient(ID="ID_1", 이름="안상현", 성별="남", 생년월일=datetime.date(1992, 9, 17),
             주소="서울시 종로구 부암동", 방문횟수=1, 키=150, 몸무게=50, 임신여부=False, 수유여부=False,
             급성알레르기음식={str(datetime.date(2017, 6, 10)): {"식품명_1": 3, "식품명_2": 1}},
             만성알레르기음식={str(datetime.date(2017, 6, 10)): {"식품명_1": 2, "식품명_2": 4, "식품명_4": 1}},
@@ -53,7 +53,7 @@ def add_dummy_patient():
             진단={str(datetime.date(2017, 6, 10)): {"질병명_3"}}, 진료일=[datetime.date(2017, 6, 10)]) \
         .save()
 
-    Patient(ID="ID_2", 이름="지영", 성별="여", 생년월일=datetime.date(1993, 7, 21),
+    Patient(ID="ID_2", 이름="박지영", 성별="여", 생년월일=datetime.date(1993, 7, 21),
             주소="서울시 송파구 잠실", 방문횟수=2, 키=170, 몸무게=49, 임신여부=False, 수유여부=False,
             급성알레르기음식={str(datetime.date(2017, 6, 5)): {"식품명_1": 3, "식품명_3": 1},
                       str(datetime.date(2017, 6, 8)): {"식품명_1": 3}},
@@ -131,9 +131,9 @@ def add_dummy_ingredient(i):
         폐기율=random.uniform(1, 5),
         단백질가식부=random.uniform(1, 5),
         가성알레르기등급=random.randint(1, 5),
-        급성알레르기가능여부=random.uniform(0, 1) < 0.5,
-        만성알레르기가능여부=random.uniform(0, 1) < 0.5,
-        만성lgG4과민반응가능여부=random.uniform(0, 1) < 0.5,
+        급성알레르기가능여부=random.uniform(0, 1) < 0.1,
+        만성알레르기가능여부=random.uniform(0, 1) < 0.1,
+        만성lgG4과민반응가능여부=random.uniform(0, 1) < 0.01,
         멸종등급=random.randint(1, 5),
         원산지분류1="원산지분류1_" + str(i),
         원산지분류2="원산지분류2_" + str(i),
@@ -195,7 +195,7 @@ if reset:
     add_dummy_patient()
     for i in range(100):
         add_dummy_nutrient(i)
-    for i in range(100):
+    for i in range(5000):
         add_dummy_ingredient(i)
     for i in range(100):
         add_dummy_disease(i)
