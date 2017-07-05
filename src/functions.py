@@ -288,6 +288,12 @@ def get_first_checked_btn_text_in_tw(tw):
             return tw.item(index, 0).text()
     return None
 
+def get_first_checked_btn_text_in_lw(lw):
+    for index in range(lw.count()):
+        if lw.item(index).checkState() == QtCore.Qt.Checked:
+            return lw.item(index).text()
+    return None
+
 def convert_date_string_to_QDate_obj(dateStr):
     date = datetime.strptime(dateStr, '%Y/%m/%d')
     return QtCore.QDate(date.year, date.month, date.day)
@@ -448,3 +454,17 @@ def find_item_index_for_str_in_tw(tw, str, col):
         if str == tw.item(index, col).text():
             return index
     return -1
+
+
+#########################
+##
+## Master Data Editor
+##
+#########################
+
+def update_nutrient_list_from_ingredients(ingredient):
+    for nutrient, level in ingredient.식품영양소관계.items():
+        target_nutrient = Nutrient.objects.get(영양소명=nutrient)
+        target_nutrient.포함식품리스트[ingredient.식품명] = level
+        target_nutrient.save()
+

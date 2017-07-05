@@ -42,6 +42,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
 
+        # edit
+        self.local_disease_to_edit = None
+
         self.list_of_nut_cat = Nutrient.objects.distinct("영양소분류")
         self.list_of_nut_tw = [self.ui.tableWidget_nutrients1_4, self.ui.tableWidget_nutrients2_4,
                                self.ui.tableWidget_nutrients3_4, self.ui.tableWidget_nutrients4_4,
@@ -61,10 +64,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                                self.ui.listWidget_nutrients5_24, self.ui.listWidget_nutrients6_24,
                                self.ui.listWidget_nutrients7_24, self.ui.listWidget_nutrients8_24]
         self.nut_level_src_dict = {} #nut - (level, src) dict
-
         self.rec_level_nut_dict = {}  # level - set of diseases dict
         self.unrec_level_nut_dict = {}
-
         self.current_ingredient = None
         self.current_nutrient = None
         self.current_disease = None
@@ -96,8 +97,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page_5 - find existing patient
         self.ui.btn_cancel_5.clicked.connect(self.cancel_find_existing_client)
         self.ui.btn_home_5.clicked.connect(lambda x: self.go_home(5))
-        self.ui.btn_findbyID_5.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_5.text()))
-        self.ui.btn_findbyName_5.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_5.text()))
+        self.ui.btn_findbyID_5.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_5.text(), self.ui.tableWidget_clientCandidates_5))
+        self.ui.btn_findbyName_5.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_5.text(), self.ui.tableWidget_clientCandidates_5))
         self.ui.btn_confirmClient_5.clicked.connect(
             lambda x: self.go_to_select_disease_and_allergies(
                 get_first_checked_btn_text_in_tw(self.ui.tableWidget_clientCandidates_5)))
@@ -196,8 +197,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             get_first_checked_btn_text_in_tw(self.ui.tableWidget_nutCandidates_21)))
         #page_22
         self.ui.btn_check_uniq_nut_name_22.clicked.connect(lambda x: self.check_unique_nut_name(self.ui.lineEdit_nut_name_22))
-
-        #page_23
+        # page_23
         self.ui.btn_next_23.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(24))
         self.ui.btn_update_cat1_23.clicked.connect(lambda x: self.update_nutrient_column_i(1, self.ui.lineEdit_cat1_23))
         self.ui.btn_update_cat2_23.clicked.connect(lambda x: self.update_nutrient_column_i(2, self.ui.lineEdit_cat2_23))
@@ -207,7 +207,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_update_cat6_23.clicked.connect(lambda x: self.update_nutrient_column_i(6, self.ui.lineEdit_cat6_23))
         self.ui.btn_update_cat7_23.clicked.connect(lambda x: self.update_nutrient_column_i(7, self.ui.lineEdit_cat7_23))
         self.ui.btn_update_cat8_23.clicked.connect(lambda x: self.update_nutrient_column_i(8, self.ui.lineEdit_cat8_23))
-        #page_24
+        # page_24
         self.ui.btn_back_24.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(23))
         self.ui.btn_update_cat1_24.clicked.connect(lambda x: self.update_nutrient_column_i(1, self.ui.lineEdit_cat1_24))
         self.ui.btn_update_cat2_24.clicked.connect(lambda x: self.update_nutrient_column_i(2, self.ui.lineEdit_cat2_24))
@@ -217,6 +217,30 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_update_cat6_24.clicked.connect(lambda x: self.update_nutrient_column_i(6, self.ui.lineEdit_cat6_24))
         self.ui.btn_update_cat7_24.clicked.connect(lambda x: self.update_nutrient_column_i(7, self.ui.lineEdit_cat7_24))
         self.ui.btn_update_cat8_24.clicked.connect(lambda x: self.update_nutrient_column_i(8, self.ui.lineEdit_cat8_24))
+        #page_28 find existing patient for edit
+        self.ui.btn_cancel_28.clicked.connect(self.cancel_find_existing_client)
+        self.ui.btn_findby_patient_id_28.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_28.text(), self.ui.tableWidget_patientCandidates_28))
+        self.ui.btn_findby_patient_name_28.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_28.text(), self.ui.tableWidget_patientCandidates_28))
+        self.ui.btn_confirmPatient_28.clicked.connect(
+            lambda x: self.go_to_edit_patient_basic_info(
+                get_first_checked_btn_text_in_tw(self.ui.tableWidget_patientCandidates_28)))
+
+        #page_6 edit_patient_basic_info
+        self.ui.btn_cancel_6.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(28))
+        self.ui.btn_save_6.clicked.connect(self.update_patient_basic_info)
+
+        #page_25 add or edit disease
+        self.ui.btn_edit_existing_dis_25.clicked.connect(lambda x: self.go_to_pageN(26))
+        self.ui.btn_register_new_dis_25.clicked.connect(lambda x: self.go_to_pageN(27))
+
+        #page_26 add new disease
+        # self.ui.btn_lookup_ing_27.clicked.connect(self.popup_ing_table_for_disease_edit)
+        # self.ui.btn_lookup_nut_27.clicked.connect(self.popup_nut_table_for_disease_edit)
+
+        #page_27 edit existing disease
+        self.ui.btn_findby_dis_name_26.clicked.connect(self.find_existing_disease_for_edit)
+        self.ui.btn_confirm_dis_26.clicked.connect(self.go_to_edit_disease)
+
     def cancel_find_existing_nutrient(self):
         self.clear_find_existing_nutrient()
         self.ui.stackedWidget.setCurrentIndex(20)
@@ -927,6 +951,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         if self.warn_before_leaving():
             self.ui.stackedWidget.setCurrentIndex(pageToGo)
 
+    def go_to_pageN(self, pageToGo):
+        self.ui.stackedWidget.setCurrentIndex(pageToGo)
+
     def check_unique_ing_name(self, lineedit):
         try:
             nameFound = Ingredient.objects.get(식품명=lineedit.text())
@@ -1466,22 +1493,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # tempHeight = float(self.ui.lineEdit_height_3.text()) if self.ui.lineEdit_height_3.text() != "" else 0.0
 
         if not tempID or not tempName:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("ID, 이름, 생년월일은 필수입니다.")
-            msgbox.setWindowTitle("Error")
-            msgbox.exec_()
+            create_warning_message("ID, 이름, 생년월일은 필수입니다.")
         else:
             try:
                 Patient(ID=tempID, 이름=tempName, 성별=tempGender).save()  # , 성별=tempGender, 키=tempHeight).save()
                 self.ui.stackedWidget.setCurrentIndex(7)
                 self.render_existing_patient_info_disease_and_allergies(tempID)
             except:
-                msgbox = QtWidgets.QMessageBox()
-                msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-                msgbox.setText("잘못된 환자정보입니다. 다시 입력해주시길 바랍니다")
-                msgbox.setWindowTitle("Error")
-                msgbox.exec_()
+                create_warning_message("잘못된 환자정보입니다. 다시 입력해주시길 바랍니다")
 
                 # self.ui.stackedWidget.setCurrentIndex(4)
                 # if self.currPatientDiseaseIndexSet and \
@@ -1528,33 +1547,33 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     #############################
     # Page 1 - find patient
     #############################
-    def find_patients_by_name(self, name):
+    def find_patients_by_name(self, name, tw):
         if not name:
             found_patients = Patient.objects.all()
         else:
             found_patients = Patient.objects(이름=name)
-        self.render_found_patients(found_patients)
+        self.render_found_patients(found_patients, tw)
 
-    def find_patients_by_id(self, id):
+    def find_patients_by_id(self, id, tw):
         if not id:
             found_patients = Patient.objects.all()
         else:
             found_patients = Patient.objects.get(ID=id)
-        self.render_found_patients(found_patients)
+        self.render_found_patients(found_patients, tw)
 
-    def render_found_patients(self, found_patients):
-        self.ui.tableWidget_clientCandidates_5.setRowCount(found_patients.count())
+    def render_found_patients(self, found_patients, tw):
+        tw.setRowCount(found_patients.count())
         i = 0
         for patient in found_patients:
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 0, make_tw_checkbox_item(patient.ID, False))
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 1, make_tw_str_item(patient.이름))
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 2, make_tw_str_item(patient.생년월일.strftime('%Y/%m/%d')))
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 3, make_tw_str_item(patient.주소))
+            tw.setItem(i, 0, make_tw_checkbox_item(patient.ID, False))
+            tw.setItem(i, 1, make_tw_str_item(patient.이름))
+            tw.setItem(i, 2, make_tw_str_item(patient.생년월일.strftime('%Y/%m/%d')))
+            tw.setItem(i, 3, make_tw_str_item(patient.주소))
             i += 1
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(0)
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(1)
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(2)
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(3)
+        tw.resizeColumnToContents(0)
+        tw.resizeColumnToContents(1)
+        tw.resizeColumnToContents(2)
+        tw.resizeColumnToContents(3)
 
 
     def clear_edit_existing_client(self):
@@ -1568,7 +1587,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_weight_6.setText("")
         self.ui.ckBox_preg_6.setChecked(False)
         self.ui.ckBox_bFeeding_6.setChecked(False)
-        self.ui.dateEdit_lastOfficeVisit_6.setDate(QtCore.QDate.currentDate())
         self.currPatientDiseaseIndexSet.clear()
         self.currPatientGSIngTupleSet.clear()
         self.currPatientMSIngTupleSet.clear()
@@ -1661,12 +1679,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     #     return None
 
     def go_to_edit_patient_basic_info(self, id):
-        selected_patient_id = get_first_checked_btn_text_in_tw(self.ui.tableWidget_clientCandidates_5)
         self.clear_find_existing_client()
         self.ui.stackedWidget.setCurrentIndex(6)
-        if selected_patient_id:
+        if id:
             # First time a current patient info is stored locally.
-            self.current_patient = Patient.objects.get(ID=selected_patient_id)
+            self.current_patient = Patient.objects.get(ID=id)
             self.ui.lineEdit_ID_6.setText(self.current_patient.ID)
             self.ui.lineEdit_name_6.setText(self.current_patient.이름)
             if self.current_patient.성별 == "남":
@@ -1683,7 +1700,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 True) if self.current_patient.임신여부 == True else self.ui.ckBox_preg_6.setChecked(False)
             self.ui.ckBox_bFeeding_6.setChecked(
                 True) if self.current_patient.수유여부 == True else self.ui.ckBox_bFeeding_6.setChecked(False)
-            self.ui.dateEdit_lastOfficeVisit_6.setDate(QtCore.QDate(datetime.date.today()))
 
     def go_to_page_8(self, currPage):
         if currPage == 7:
@@ -1746,6 +1762,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         isPreg = True if self.ui.ckBox_preg_6.isChecked() else False
         isBFeeding = True if self.ui.ckBox_bFeeding_6.isChecked() else False
         update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding)
+        self.go_to_home_no_warning()
 
     def update_selected_disease_and_allergies_locally(self):
         self.local_diseases = convert_lw_to_str_set(self.ui.listWidget_diseases_7)
@@ -1822,15 +1839,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 idFound = None
             if idFound:
                 self.ui.lineEdit_ID_3.setText("")
-                msgbox = QtWidgets.QMessageBox()
-                msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-                msgbox.setText("동일한 ID가 존재합니다. 다른 ID를 시도해주세요")
-                msgbox.setWindowTitle("Error")
-                msgbox.exec_()
+                create_warning_message("동일한 ID가 존재합니다. 다른 ID를 시도해주세요")
             else:
-                msgbox = QtWidgets.QMessageBox()
-                msgbox.setText("사용가능한 아이디입니다")
-                msgbox.exec_()
+                create_normal_message("사용가능한 아이디입니다")
                 uniqIDChecked = True
 
     def save_local_data_to_patient(self, patient):
@@ -1885,9 +1896,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def show_popup_nut_for_ing_nut_rel(self):
         self.ui.widget_popup_nut_16.show()
 
-        listOfNutCat1 = Nutrient.objects.distinct("영양소분류")
         self.ui.comboBox_nut_category1_16.addItem("")
-        self.ui.comboBox_nut_category1_16.addItems(listOfNutCat1)
+        self.ui.comboBox_nut_category1_16.addItems(self.list_of_nut_cat)
 
 
     def add_selected_nutrients_to_tw_and_clear_and_hide_popup(self):
@@ -2128,6 +2138,25 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         self.clear_edit_existing_ingredient()
         self.ui.stackedWidget.setCurrentIndex(13)
+
+    def find_existing_disease_for_edit(self):
+        tag = self.ui.lineEdit_dis_name_26.text()
+        found_diseases = Disease.objects(질병명__icontains=tag)
+        render_checkbox_lw(self.ui.listWidget_dis_candidates_26, found_diseases, "질병명", None)
+
+    def go_to_edit_disease(self):
+        disease_name = get_first_checked_btn_text_in_lw(self.ui.listWidget_dis_candidates_26)
+        self.local_disease_to_edit = Disease.objects.get(질병명=disease_name)
+        self.render_edit_disease_page()
+        self.go_to_pageN(27)
+
+    def render_edit_disease_page(self):
+        self.ui.lineEdit_dis_name_27.setText(self.local_disease_to_edit.질병명)
+        self.ui.lineEdit_dis__name_english_27.setText(self.local_disease_to_edit.질병명영어)
+        populate_checkbox_tw_from_dict(self.ui.tableWidget_dis_ing_27, self.local_disease_to_edit.질병식품관계)
+        populate_checkbox_tw_from_dict(self.ui.tableWidget_dis_nut_27, self.local_disease_to_edit.질병영양소관계)
+        self.ui.widget_popup_add_ing_27.hide()
+        self.ui.widget_popup_add_nut_27.hide()
 
 
 def main():
