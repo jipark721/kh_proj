@@ -2541,9 +2541,9 @@ class Ui_MainWindow(object):
         self.lineEdit_cat7_24 = QtWidgets.QLineEdit(self.widget_72)
         self.lineEdit_cat7_24.setGeometry(QtCore.QRect(980, 10, 120, 21))
         self.lineEdit_cat7_24.setObjectName("lineEdit_cat7_24")
-        self.lineEdit_cat9_23 = QtWidgets.QLineEdit(self.widget_72)
-        self.lineEdit_cat9_23.setGeometry(QtCore.QRect(1140, 10, 120, 21))
-        self.lineEdit_cat9_23.setObjectName("lineEdit_cat9_23")
+        self.lineEdit_cat9_24 = QtWidgets.QLineEdit(self.widget_72)
+        self.lineEdit_cat9_24.setGeometry(QtCore.QRect(1140, 10, 120, 21))
+        self.lineEdit_cat9_24.setObjectName("lineEdit_cat9_24")
         self.widget_76 = QtWidgets.QWidget(self.widget_72)
         self.widget_76.setGeometry(QtCore.QRect(1280, 0, 141, 51))
         self.widget_76.setObjectName("widget_76")
@@ -3224,7 +3224,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(24)
+        self.stackedWidget.setCurrentIndex(20)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

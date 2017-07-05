@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>24</number>
+       <number>22</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -8680,7 +8680,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_cat9_23">
+        <widget class="QLineEdit" name="lineEdit_cat8_24">
          <property name="geometry">
           <rect>
            <x>1140</x>

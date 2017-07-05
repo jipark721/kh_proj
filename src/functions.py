@@ -307,6 +307,11 @@ def create_warning_message(warnMsg):
     msgbox.setWindowTitle("Error")
     msgbox.exec_()
 
+def create_normal_message(msg):
+    msgbox = QtWidgets.QMessageBox()
+    msgbox.setText(msg)
+    msgbox.exec_()
+
 def get_relevant_nutrients_from_ingredient_str(ingredient):
     relevant_nutrient = {}
     for rel_nut, quant in Ingredient.objects.get(식품명=ingredient).식품영양소관계.items():
