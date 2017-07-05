@@ -55,10 +55,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                           self.ui.tableWidget_nutrients6_29,
                           self.ui.tableWidget_nutrients7_29]
         self.nut_level_src_dict = {} #nut - (level, src) dict
-
         self.rec_level_nut_dict = {}  # level - set of diseases dict
         self.unrec_level_nut_dict = {}
-
         self.current_ingredient = None
         self.current_nutrient = None
         self.current_disease = None
@@ -90,8 +88,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page_5 - find existing patient
         self.ui.btn_cancel_5.clicked.connect(self.cancel_find_existing_client)
         self.ui.btn_home_5.clicked.connect(lambda x: self.go_home(5))
-        self.ui.btn_findbyID_5.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_5.text()))
-        self.ui.btn_findbyName_5.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_5.text()))
+        self.ui.btn_findbyID_5.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_5.text(), self.ui.tableWidget_clientCandidates_5))
+        self.ui.btn_findbyName_5.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_5.text(), self.ui.tableWidget_clientCandidates_5))
         self.ui.btn_confirmClient_5.clicked.connect(
             lambda x: self.go_to_select_disease_and_allergies(
                 get_first_checked_btn_text_in_tw(self.ui.tableWidget_clientCandidates_5)))
@@ -189,6 +187,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             get_first_checked_btn_text_in_tw(self.ui.tableWidget_nutCandidates_21)))
         #page_22
         self.ui.btn_check_uniq_nut_name_22.clicked.connect(lambda x: self.check_unique_nut_name(self.ui.lineEdit_nut_name_22))
+
+        #page_28 find existing patient for edit
+        self.ui.btn_cancel_28.clicked.connect(self.cancel_find_existing_client)
+        self.ui.btn_findby_patient_id_28.clicked.connect(lambda x: self.find_patients_by_id(self.ui.lineEdit_ID_28.text(), self.ui.tableWidget_patientCandidates_28))
+        self.ui.btn_findby_patient_name_28.clicked.connect(lambda x: self.find_patients_by_name(self.ui.lineEdit_name_28.text(), self.ui.tableWidget_patientCandidates_28))
+        self.ui.btn_confirmPatient_28.clicked.connect(
+            lambda x: self.go_to_edit_patient_basic_info(
+                get_first_checked_btn_text_in_tw(self.ui.tableWidget_patientCandidates_28)))
+
+        #page_6 edit_patient_basic_info
+        self.ui.btn_cancel_6.clicked.connect(lambda x: self.go_to_pageN_with_warning_before_exiting(28))
+        self.ui.btn_save_6.clicked.connect(self.update_patient_basic_info)
+
 
     def cancel_find_existing_nutrient(self):
         self.clear_find_existing_nutrient()
@@ -1487,33 +1498,33 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     #############################
     # Page 1 - find patient
     #############################
-    def find_patients_by_name(self, name):
+    def find_patients_by_name(self, name, tw):
         if not name:
             found_patients = Patient.objects.all()
         else:
             found_patients = Patient.objects(이름=name)
-        self.render_found_patients(found_patients)
+        self.render_found_patients(found_patients, tw)
 
-    def find_patients_by_id(self, id):
+    def find_patients_by_id(self, id, tw):
         if not id:
             found_patients = Patient.objects.all()
         else:
             found_patients = Patient.objects.get(ID=id)
-        self.render_found_patients(found_patients)
+        self.render_found_patients(found_patients, tw)
 
-    def render_found_patients(self, found_patients):
-        self.ui.tableWidget_clientCandidates_5.setRowCount(found_patients.count())
+    def render_found_patients(self, found_patients, tw):
+        tw.setRowCount(found_patients.count())
         i = 0
         for patient in found_patients:
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 0, make_tw_checkbox_item(patient.ID, False))
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 1, make_tw_str_item(patient.이름))
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 2, make_tw_str_item(patient.생년월일.strftime('%Y/%m/%d')))
-            self.ui.tableWidget_clientCandidates_5.setItem(i, 3, make_tw_str_item(patient.주소))
+            tw.setItem(i, 0, make_tw_checkbox_item(patient.ID, False))
+            tw.setItem(i, 1, make_tw_str_item(patient.이름))
+            tw.setItem(i, 2, make_tw_str_item(patient.생년월일.strftime('%Y/%m/%d')))
+            tw.setItem(i, 3, make_tw_str_item(patient.주소))
             i += 1
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(0)
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(1)
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(2)
-        self.ui.tableWidget_clientCandidates_5.resizeColumnToContents(3)
+        tw.resizeColumnToContents(0)
+        tw.resizeColumnToContents(1)
+        tw.resizeColumnToContents(2)
+        tw.resizeColumnToContents(3)
 
 
     def clear_edit_existing_client(self):
@@ -1620,12 +1631,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     #     return None
 
     def go_to_edit_patient_basic_info(self, id):
-        selected_patient_id = get_first_checked_btn_text_in_tw(self.ui.tableWidget_clientCandidates_5)
         self.clear_find_existing_client()
         self.ui.stackedWidget.setCurrentIndex(6)
-        if selected_patient_id:
+        if id:
             # First time a current patient info is stored locally.
-            self.current_patient = Patient.objects.get(ID=selected_patient_id)
+            self.current_patient = Patient.objects.get(ID=id)
             self.ui.lineEdit_ID_6.setText(self.current_patient.ID)
             self.ui.lineEdit_name_6.setText(self.current_patient.이름)
             if self.current_patient.성별 == "남":
@@ -1642,7 +1652,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 True) if self.current_patient.임신여부 == True else self.ui.ckBox_preg_6.setChecked(False)
             self.ui.ckBox_bFeeding_6.setChecked(
                 True) if self.current_patient.수유여부 == True else self.ui.ckBox_bFeeding_6.setChecked(False)
-            self.ui.dateEdit_lastOfficeVisit_6.setDate(QtCore.QDate(datetime.date.today()))
 
     def go_to_page_8(self, currPage):
         if currPage == 7:
@@ -1705,6 +1714,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         isPreg = True if self.ui.ckBox_preg_6.isChecked() else False
         isBFeeding = True if self.ui.ckBox_bFeeding_6.isChecked() else False
         update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding)
+        self.go_to_home_no_warning()
 
     def update_selected_disease_and_allergies_locally(self):
         self.local_diseases = convert_lw_to_str_set(self.ui.listWidget_diseases_7)
