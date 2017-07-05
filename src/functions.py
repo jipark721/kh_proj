@@ -443,3 +443,17 @@ def find_item_index_for_str_in_tw(tw, str, col):
         if str == tw.item(index, col).text():
             return index
     return -1
+
+
+#########################
+##
+## Master Data Editor
+##
+#########################
+
+def update_nutrient_list_from_ingredients(ingredient):
+    for nutrient, level in ingredient.식품영양소관계.items():
+        target_nutrient = Nutrient.objects.get(영양소명=nutrient)
+        target_nutrient.포함식품리스트[ingredient.식품명] = level
+        target_nutrient.save()
+
