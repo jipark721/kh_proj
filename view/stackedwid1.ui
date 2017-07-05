@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>22</number>
+       <number>27</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -8446,42 +8446,6 @@
           <string>업데이트</string>
          </property>
         </widget>
-        <widget class="QWidget" name="widget_74" native="true">
-         <property name="geometry">
-          <rect>
-           <x>1280</x>
-           <y>0</y>
-           <width>141</width>
-           <height>51</height>
-          </rect>
-         </property>
-         <widget class="QPushButton" name="btn_home_23">
-          <property name="geometry">
-           <rect>
-            <x>70</x>
-            <y>0</y>
-            <width>71</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>HOME</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_data_home_23">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>71</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>데이터홈</string>
-          </property>
-         </widget>
-        </widget>
         <widget class="QListWidget" name="listWidget_nutrients1_23">
          <property name="geometry">
           <rect>
@@ -8690,42 +8654,6 @@
           </rect>
          </property>
         </widget>
-        <widget class="QWidget" name="widget_76" native="true">
-         <property name="geometry">
-          <rect>
-           <x>1280</x>
-           <y>0</y>
-           <width>141</width>
-           <height>51</height>
-          </rect>
-         </property>
-         <widget class="QPushButton" name="btn_home_22">
-          <property name="geometry">
-           <rect>
-            <x>70</x>
-            <y>0</y>
-            <width>71</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>HOME</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_data_home_22">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>71</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>데이터홈</string>
-          </property>
-         </widget>
-        </widget>
         <widget class="QListWidget" name="listWidget_nutrients3_24">
          <property name="geometry">
           <rect>
@@ -8810,7 +8738,7 @@
          <property name="geometry">
           <rect>
            <x>840</x>
-           <y>30</y>
+           <y>32</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -8823,7 +8751,7 @@
          <property name="geometry">
           <rect>
            <x>370</x>
-           <y>30</y>
+           <y>32</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -8836,7 +8764,7 @@
          <property name="geometry">
           <rect>
            <x>1000</x>
-           <y>30</y>
+           <y>32</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -8849,7 +8777,7 @@
          <property name="geometry">
           <rect>
            <x>680</x>
-           <y>30</y>
+           <y>32</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -8862,7 +8790,7 @@
          <property name="geometry">
           <rect>
            <x>50</x>
-           <y>29</y>
+           <y>31</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -8875,7 +8803,7 @@
          <property name="geometry">
           <rect>
            <x>530</x>
-           <y>30</y>
+           <y>32</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -8888,7 +8816,7 @@
          <property name="geometry">
           <rect>
            <x>210</x>
-           <y>30</y>
+           <y>32</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -8901,7 +8829,7 @@
          <property name="geometry">
           <rect>
            <x>1160</x>
-           <y>30</y>
+           <y>32</y>
            <width>81</width>
            <height>30</height>
           </rect>
@@ -9373,8 +9301,8 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>610</x>
-          <y>250</y>
+          <x>750</x>
+          <y>280</y>
           <width>611</width>
           <height>451</height>
          </rect>
@@ -9570,7 +9498,7 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>660</x>
+          <x>780</x>
           <y>10</y>
           <width>571</width>
           <height>451</height>
