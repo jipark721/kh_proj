@@ -143,9 +143,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_next_9.clicked.connect(lambda x: self.go_to_page_10(9))
         self.ui.btn_check_duplicate_ing_9.clicked.connect(self.handle_duplicate_ingredients)
         self.ui.btn_check_duplicate_single_ing_9.clicked.connect(self.handle_single_duplicate_ingredient)
-        self.ui.btn_uncheck_all_9.clicked.connect(self.uncheck_all_ckbtns_page9)
+        self.ui.btn_uncheck_all_9.clicked.connect(self.make_all_ckbtns_default_page9)
         self.ui.btn_render_rec_unrec_ing_from_nut_9.clicked.connect(self.render_rec_unrec_ing_from_nut)
-        self.ui.btn_delete_selected_9.clicked.connect(self.remove_selected_items_tws)
+        self.ui.btn_delete_selected_9.clicked.connect(self.remove_selected_items_page_9)
         # page 10 - see current collapsed rec/unrec ingredients page
         self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
         self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(9))
@@ -395,13 +395,18 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(10)
         self.render_basic_patient_info_on_top(10)
 
-    def build_ultimate_rec_ing_level_dict(self):
-        rec_dict = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 1)
-        rec_dict.update(convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_dis_9, 1))
 
-        unrec_dict = convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_nut_9, 1)
-        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_dis_9, 1))
-        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_allergies_9, 1))
+
+    def build_ultimate_rec_ing_level_dict(self):
+        #FETCTHING EVERYTHING ATM
+        rec_dict = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 3)
+        rec_dict.update(convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_dis_9, 3))
+
+        unrec_dict = convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_nut_9, 3)
+        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_dis_9, 3))
+        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_allergies_9, 3))
+        unrec_dict.update(convert_lw_to_dict_with_int_value(self.ui.listWidget_always_unrec_9, 0, 2))
+
 
         self.ui.tableWidget_current_rec_ing_10.setRowCount(len(rec_dict))
         self.ui.tableWidget_current_unrec_ing_10.setRowCount(len(unrec_dict))
@@ -526,17 +531,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                         relevant_ingredient[rel_ingredient] = level
         return relevant_ingredient
 
-    def remove_selected_items_tws(self):
-        self.remove_selected_items_tw(self.ui.tableWidget_rec_ing_from_nut_9)
-        self.remove_selected_items_tw(self.ui.tableWidget_unrec_ing_from_nut_9)
-        self.remove_selected_items_tw(self.ui.tableWidget_rec_ing_from_dis_9)
-        self.remove_selected_items_tw(self.ui.tableWidget_unrec_ing_from_dis_9)
-        self.remove_selected_items_tw(self.ui.tableWidget_unrec_ing_from_allergies_9)
+    def remove_selected_items_page_9(self):
+        for i in range(len(self.list_of_ing_tw)):
+            remove_selected_items_tw(self.list_of_ing_tw[i])
 
-    def remove_selected_items_tw(self, tw):
-        for rowIndex in range(tw.rowCount(), -1, -1):
-            if tw.item(rowIndex, 0) and tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
-                tw.removeRow(rowIndex)
+
+
+
+
 
     def build_rec_or_unrec_level_nut_dict(self, tw, dict):
         for index in range(tw.rowCount()):
@@ -931,15 +933,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def handle_single_duplicate_ingredient(self):
         ing_str = self.find_first_checked_ing_str_page_9()
         if ing_str is not None:
-            self.uncheck_all_ckbtns_page9()
+            self.make_all_ckbtns_default_page9()
             for i in range(len(self.list_of_ing_tw)):
                 for rowIndex in range(self.list_of_ing_tw[i].rowCount()):
                     if self.list_of_ing_tw[i].item(rowIndex, 0).text() == ing_str:
-                        self.list_of_ing_tw[i].item(rowIndex, 0).setBackground(QtGui.QColor(255, 128, 128))
+                        set_background_color_single_item(self.list_of_ing_tw[i].item(rowIndex, 0),
+                                                         QtGui.QColor(255, 128, 128))
             for rowIndex in range(self.ui.listWidget_always_unrec_9.count()):
                 if self.ui.listWidget_always_unrec_9.item(rowIndex).text() == ing_str:
-                    self.list_of_ing_tw[i].item(rowIndex, 0).setBackground(QtGui.QColor(255, 128, 128))
-
+                    set_background_color_single_item(self.ui.listWidget_always_unrec_9.item(rowIndex),
+                                                     QtGui.QColor(255, 128, 128))
     def find_first_checked_ing_str_page_9(self):
         for index in range(len(self.list_of_ing_tw)):
             if get_first_checked_btn_text_in_tw(self.list_of_ing_tw[index]) is not None:
@@ -948,14 +951,23 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             return get_first_checked_btn_text_in_lw(self.ui.listWidget_always_unrec_9)
         return None
 
+    def make_default_background_color_all_ckbtns_page9(self):
+        for index in range(len(self.list_of_ing_tw)):
+            set_background_color_tw(self.list_of_ing_tw[index], QtGui.QColor(255, 255, 255))
+        set_background_color_lw(self.ui.listWidget_always_unrec_9, QtGui.QColor(255, 255, 255))
+
+    def make_all_ckbtns_default_page9(self):
+        self.uncheck_all_ckbtns_page9()
+        self.make_default_background_color_all_ckbtns_page9()
+
     def uncheck_all_ckbtns_page9(self):
         for index in range(len(self.list_of_ing_tw)):
-            tw = self.list_of_ing_tw[index]
-            set_all_ckbox_state_in_tw(tw, 0, False)
-        clear_checkbox_lw(self.ui.listWidget_always_unrec_9)
+            set_all_ckbox_state_in_tw(self.list_of_ing_tw[index], 0, False)
+        uncheck_all_checkbox_lw(self.ui.listWidget_always_unrec_9)
+
 
     def handle_duplicate_ingredients(self):
-        self.uncheck_all_ckbtns_page9()
+        self.make_all_ckbtns_default_page9()
         tw1_items = get_tw_items(self.ui.tableWidget_rec_ing_from_nut_9)
         tw2_items = get_tw_items(self.ui.tableWidget_unrec_ing_from_nut_9)
         tw3_items = get_tw_items(self.ui.tableWidget_rec_ing_from_dis_9)

@@ -59,21 +59,20 @@ def convert_tw_to_dict(tw, fetchItemCode):
             dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
     return dict
 
-# def convert_lw_to_dict_with_str_value(lw, str, fetchItemCode):
-#     dict = {}
-#     for index in range(lw.count()):
-#         if fetchItemCode == 1:
-#             if lw.item(index).checkState() == QtCore.Qt.Checked:
-#                 dict[lw.item(index).text()] = str
-#         elif fetchItemCode == 0:
-#             if lw.item(index).checkState() == QtCore.Qt.Unchecked:
-#                 dict[lw.item(index).text()] = str
-#         elif fetchItemCode == 2:
-#             dict[.item(index, 0).text()] = float(tw.item(index, 1).text())
-#         elif fetchItemCode == 3:
-#             dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
-#     return dict
-# #
+#0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything
+def convert_lw_to_dict_with_int_value(lw, int_val, fetchItemCode):
+    dict = {}
+    for index in range(lw.count()):
+        if fetchItemCode == 0:
+            if lw.item(index).checkState() == QtCore.Qt.Unchecked:
+                dict[lw.item(index).text()] = int_val
+        elif fetchItemCode == 1:
+            if lw.item(index).checkState() == QtCore.Qt.Checked:
+                dict[lw.item(index).text()] = int_val
+        elif fetchItemCode == 2:
+            dict[lw.item(index).text()] = int_val
+    return dict
+#
 # def update_dict_with_another_tw(original_dict, tw):
 #     for index in range(tw.rowCount()):
 #         level = int(tw.item(index, 1).text())
@@ -130,7 +129,7 @@ def populate_checkbox_tw_from_dict(tw, content_collection):
         tw.setItem(rowIndex, 0, ckbtnitem)
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex+=1
-    tw.resizeColumnToContents(0)
+    tw.resizeColumnsToContents()
 
 
 def update_checkbox_state_and_level_tw(tw, checked_content_dict):
@@ -143,12 +142,16 @@ def update_checkbox_state_and_level_tw(tw, checked_content_dict):
             tw.item(index, 0).setCheckState(QtCore.Qt.Unchecked)
             tw.item(index, 1).setText("0")
 
+# def remove_checked_items_from_tw(nutrient_tw, nutrient_dict):
+#     for i in range(nutrient_tw.rowCount()):
+#         if nutrient_tw.item(i,0).checkState():
+#             nutrient_dict.pop(nutrient_tw.item(i,0).text(), None)
+#     populate_checkbox_tw_from_dict(nutrient_tw, nutrient_dict)
 
-def remove_checked_items_from_tw(nutrient_tw, nutrient_dict):
-    for i in range(nutrient_tw.rowCount()):
-        if nutrient_tw.item(i,0).checkState():
-            nutrient_dict.pop(nutrient_tw.item(i,0).text(), None)
-    populate_checkbox_tw_from_dict(nutrient_tw, nutrient_dict)
+def remove_selected_items_tw(tw):
+    for rowIndex in range(tw.rowCount(), -1, -1):
+        if tw.item(rowIndex, 0) and tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
+            tw.removeRow(rowIndex)
 
 
 def create_checkbox_lw(cursorToCollection, lw, content, isNewPatient, patientDiseaseSet):
@@ -179,7 +182,7 @@ def render_all_checkbox_level_tw(content_collection, tw, content_field_name, che
         tw.setItem(rowIndex, 0, ckbtnitem)
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex = rowIndex + 1
-    tw.resizeColumnToContents(1)
+        tw.resizeColumnsToContents()
 
 def render_checkbox_level_tw(tw, checked_content_dict, positive_direction):
     tw.setRowCount(len(checked_content_dict))
@@ -209,7 +212,7 @@ def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_conte
     positive_tw.resizeColumnsToContents()
     negative_tw.resizeColumnsToContents()
 
-def clear_checkbox_lw(lw):
+def uncheck_all_checkbox_lw(lw):
     for index in range(lw.count()):
         lw.item(index).setCheckState(QtCore.Qt.Unchecked)
 
@@ -473,6 +476,17 @@ def highlight_dups(tw, duplicate_items):
             tw.item(index, 0).setBackground(QtGui.QColor(255, 128, 128))
         else:
             tw.item(index, 0).setBackground(QtGui.QColor(255, 255, 255))
+
+def set_background_color_tw(tw, qcolor):
+    for index in range(tw.rowCount()):
+        set_background_color_single_item(tw.item(index, 0), qcolor)
+
+def set_background_color_lw(lw, qcolor):
+    for index in range(lw.count()):
+        set_background_color_single_item(lw.item(index), qcolor)
+
+def set_background_color_single_item(item, qcolor):
+    item.setBackground(qcolor)
 
 def set_checkstate_for_ckbtn(ckbtn, shouldCheck):
     if shouldCheck:
