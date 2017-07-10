@@ -72,9 +72,9 @@ def add_dummy_nutrient(i):
     Nutrient(
         영양소명="영양소명_" + str(i),
         영양소분류=nut_cat_list[random.randint(0, 10)],
-        하루권장량RDA="하루권장량RDA_" + str(i),
-        최대권장량WHO="최대권장량WHO_" + str(i),
-        최대권장량식약처="최대권장량식약처_" + str(i),
+        하루권장량RDA=random.uniform(0, 50),
+        최대권장량WHO=random.uniform(0, 50),
+        최대권장량식약처=random.uniform(0, 50),
         설명="설명_" + str(i),
         조리시주의할점="조리시주의할점_" + str(i),
         이야기거리="이야기거리_" + str(i),
@@ -131,8 +131,8 @@ def add_dummy_ingredient(i):
         폐기율=random.uniform(1, 5),
         단백질가식부=random.uniform(1, 5),
         가성알레르기등급=random.randint(1, 5),
-        급성알레르기가능여부=random.uniform(0, 1) < 0.1,
-        만성알레르기가능여부=random.uniform(0, 1) < 0.1,
+        급성알레르기가능여부=random.uniform(0, 1) < 0.03,
+        만성알레르기가능여부=random.uniform(0, 1) < 0.03,
         만성lgG4과민반응가능여부=random.uniform(0, 1) < 0.01,
         멸종등급=random.randint(1, 5),
         원산지분류1="원산지분류1_" + str(i),
@@ -145,7 +145,7 @@ def add_dummy_ingredient(i):
         특산지분류3="특산지분류3_" + str(i),
         특산지분류4="특산지분류4_" + str(i),
         특산지분류5="특산지분류5_" + str(i),
-        항상비권고식품여부=random.uniform(0, 1) < 0.5).save()
+        항상비권고식품여부=random.uniform(0, 1) < 0.01).save()
 
 
 def add_dummy_disease(i):
@@ -182,9 +182,9 @@ def add_dummy_relations():
             ] = random.uniform(0, 100)
         ingredient.save()
 
-        for nutrient, level in ingredient.식품영양소관계.items():
+        for nutrient, quant in ingredient.식품영양소관계.items():
             target_nutrient = Nutrient.objects.get(영양소명=nutrient)
-            target_nutrient.포함식품리스트[ingredient.식품명] = level
+            target_nutrient.포함식품리스트[ingredient.식품명] = quant
             target_nutrient.save()
 
 
@@ -195,7 +195,7 @@ if reset:
     add_dummy_patient()
     for i in range(100):
         add_dummy_nutrient(i)
-    for i in range(5000):
+    for i in range(2000):
         add_dummy_ingredient(i)
     for i in range(100):
         add_dummy_disease(i)

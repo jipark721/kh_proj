@@ -52,13 +52,28 @@ def convert_tw_to_dict(tw, fetchItemCode):
                 dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
         elif fetchItemCode == 0:
             if tw.item(index, 0).checkState() == QtCore.Qt.Unchecked and Decimal(tw.item(index, 1).text()) != 0:
-                dict[tw.item(index, 0).text()] = Decimal(tw.item(index, 1).text())
+                dict[tw.item(index, 0).text()] = Decimal(float(tw.item(index, 1).text()))
         elif fetchItemCode == 2:
-            dict[tw.item(index, 0).text()] = Decimal(tw.item(index, 1).text())
+            dict[tw.item(index, 0).text()] = float(tw.item(index, 1).text())
         elif fetchItemCode == 3:
             dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
     return dict
-#
+
+# def convert_lw_to_dict_with_str_value(lw, str, fetchItemCode):
+#     dict = {}
+#     for index in range(lw.count()):
+#         if fetchItemCode == 1:
+#             if lw.item(index).checkState() == QtCore.Qt.Checked:
+#                 dict[lw.item(index).text()] = str
+#         elif fetchItemCode == 0:
+#             if lw.item(index).checkState() == QtCore.Qt.Unchecked:
+#                 dict[lw.item(index).text()] = str
+#         elif fetchItemCode == 2:
+#             dict[.item(index, 0).text()] = float(tw.item(index, 1).text())
+#         elif fetchItemCode == 3:
+#             dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
+#     return dict
+# #
 # def update_dict_with_another_tw(original_dict, tw):
 #     for index in range(tw.rowCount()):
 #         level = int(tw.item(index, 1).text())
@@ -105,6 +120,7 @@ def populate_checkbox_tw_from_dict(tw, content_collection):
         tw.setItem(rowIndex, 0, ckbtnitem)
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex+=1
+    tw.resizeColumnToContents(0)
 
 
 def update_checkbox_state_and_level_tw(tw, checked_content_dict):
@@ -168,7 +184,7 @@ def render_checkbox_level_tw(tw, checked_content_dict, positive_direction):
         tw.setItem(rowIndex, 0, ckbtnitem)
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex = rowIndex + 1
-    tw.resizeColumnToContents(1)
+    tw.resizeColumnsToContents()
 
 def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_content_dict, rec_threshold, nonrec_threshold):
     positive_content_dict = {}
@@ -180,6 +196,8 @@ def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_conte
             negative_content_dict[elem] = level
     render_checkbox_level_tw(positive_tw, positive_content_dict, 1)
     render_checkbox_level_tw(negative_tw, negative_content_dict, 0)
+    positive_tw.resizeColumnsToContents()
+    negative_tw.resizeColumnsToContents()
 
 def clear_checkbox_lw(lw):
     for index in range(lw.count()):
@@ -263,6 +281,8 @@ def set_all_ckbox_state_in_tw(tw, col, toCheck):
             tw.item(rowIndex, col).setCheckState(QtCore.Qt.Checked)
         else:
             tw.item(rowIndex, col).setCheckState(QtCore.Qt.Unchecked)
+
+
 
 # iterate through listwidget and build a set of indices of checked diseases
 def build_disease_index_set_from_lw(lw):
@@ -351,24 +371,6 @@ def get_relevant_nutrients_from_diseases_str(diseases, remove_duplicates):
             #     relevant_nutrient[rel_nutrient] = (level, disease_str)
     return relevant_nutrient
 
-def get_relevant_ingredients_from_diseases_str(diseases, remove_duplicates):
-    relevant_ingredient = {}
-    removed = {}
-    for disease in diseases:
-        disease = Disease.objects.get(질병명=disease)
-        for rel_ingredient, level in disease.질병식품관계.items():
-            if rel_ingredient not in relevant_ingredient and rel_ingredient not in removed:
-                relevant_ingredient[rel_ingredient] =  level
-            elif rel_ingredient in relevant_ingredient and remove_duplicates:
-                del relevant_ingredient[rel_ingredient]
-                removed[rel_ingredient] = True
-            elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] > 0:
-                if level > relevant_ingredient[rel_ingredient] or level < 0:
-                    relevant_ingredient[rel_ingredient] = level
-            elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] < 0 and level < relevant_ingredient[rel_ingredient]:
-                relevant_ingredient[rel_ingredient] = level
-    return relevant_ingredient
-
 def get_portion_code(one_portion_first, gram_first, mortality_first, protein_first):
     code = 0
     if one_portion_first:
@@ -417,18 +419,25 @@ def get_five_combobox_texts(cb1, cb2, cb3, cb4, cb5, le1, le2, le3, le4, le5):
         str5 = cb5.currentText()
     return str1, str2, str3, str4, str5
 
-def highlight_duplicate_ingredients_page_9(tw1, tw2, tw3, tw4, tw5):
+def highlight_duplicate_ingredients_page_9(tw1, tw2, tw3, tw4, tw5, lw1):
     tw1_items = get_tw_items(tw1)
     tw2_items = get_tw_items(tw2)
     tw3_items = get_tw_items(tw3)
     tw4_items = get_tw_items(tw4)
     tw5_items = get_tw_items(tw5)
+    lw1_items = get_lw_items(lw1)
 
     highlight_dups(tw1, tw2_items | tw3_items | tw4_items | tw5_items)
     highlight_dups(tw2, tw1_items | tw3_items | tw4_items | tw5_items)
     highlight_dups(tw3, tw1_items | tw2_items | tw4_items | tw5_items)
     highlight_dups(tw4, tw1_items | tw2_items | tw3_items | tw5_items)
     highlight_dups(tw5, tw1_items | tw2_items | tw3_items | tw4_items)
+
+def get_lw_items(lw):
+    items = set()
+    for index in range(lw.count()):
+        items.add(lw.item(index).text())
+    return items
 
 def get_tw_items(tw):
     items = set()
