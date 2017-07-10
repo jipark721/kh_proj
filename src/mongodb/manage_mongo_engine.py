@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 from mongoengine import *
-from models import *
+from mongodb.models import *
 from bson import json_util
 import datetime
 import random
-from pprint import pprint
 
 connect('khdb')
 
 print("\nPrinting mongodb configurations...\n")
-# Patient.to_mongo(Patient.objects[0])
 
 def reset_database():
     Patient.objects.all().delete()
@@ -17,18 +15,25 @@ def reset_database():
     Disease.objects.all().delete()
     Nutrient.objects.all().delete()
 
-def export_db():
-    collections = [(Patient.objects(), "json/patient.json"), (Ingredient.objects(), "json/ingredient.json"), (Disease.objects(), "json/disease.json"), (Nutrient.objects(), "json/nutrient.json")]
+def export_db(path):
+    print("Exporting db to " + path)
+    collections = [(Patient.objects(), path + "patient.json"), (Ingredient.objects(), path +"ingredient.json"), (Disease.objects(), path + "disease.json"), (Nutrient.objects(), path + "nutrient.json")]
     for collection, file_name in collections:
         with open(file_name, 'w') as f:
             f.write(json_util.dumps(collection._collection_obj.find(collection._query), ensure_ascii=False, indent=4))
+    print_db_stats()
+    print("...done!\n")
 
-def import_db():
-    json_collections = [(Patient, "json/patient.json"), (Ingredient, "json/ingredient.json"), (Disease, "json/disease.json"), (Nutrient, "json/nutrient.json")]
+def import_db(path):
+    print("Importing db from " + path)
+    reset_database()
+    json_collections = [(Patient, path + "patient.json"), (Ingredient, path + "ingredient.json"), (Disease, path + "disease.json"), (Nutrient, path + "nutrient.json")]
     for obj, file_name in json_collections:
         with open(file_name, 'r') as f:
             for i in json_util.loads(f.read()):
                 obj(**i).save()
+    print_db_stats()
+    print("...done!\n")
 
 def print_collection(collection):
     print(json_util.dumps(collection._collection_obj.find(collection._query), ensure_ascii=False, indent=4))
@@ -193,13 +198,13 @@ def add_dummy_relations():
             target_nutrient.포함식품리스트[ingredient.식품명] = quant
             target_nutrient.save()
 
+def print_db_stats():
+    print("\n\nThere are %d many patients data" % Patient.objects.count())
+    print("There are %d many diseases data" % Disease.objects.count())
+    print("There are %d many ingredients data" % Ingredient.objects.count())
+    print("There are %d many nutrients data\n\n" % Nutrient.objects.count())
 
-reset_database()
-import_db()
-
-# populate dummy data
-reset = True
-if reset:
+def populate_dummy():
     reset_database()
     add_dummy_patient()
     for i in range(100):
@@ -209,16 +214,3 @@ if reset:
     for i in range(100):
         add_dummy_disease(i)
     add_dummy_relations()
-
-export_db()
-
-# print_all_patients()
-# print_all_diseases()
-# print_all_ingredients()
-# print_all_nutrients()
-# export_db()
-
-print("\n\nThere are %d many patients data" % Patient.objects.count())
-print("There are %d many diseases data" % Disease.objects.count())
-print("There are %d many ingredients data" % Ingredient.objects.count())
-print("There are %d many nutrients data\n\n" % Nutrient.objects.count())

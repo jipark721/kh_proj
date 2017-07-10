@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import operator
-from mongoengine import *
-from mongoengine.queryset.visitor import Q
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
 from functions import *
-from mongodb.models import *
+from mongodb.manage_mongo_engine import *
 from decimal import *
-import math
-
+from PyQt5.QtWidgets import QFileDialog
+from mongodb.read_from_xlsx import read_xlsx_db
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -162,6 +159,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_edit_ingredients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
         self.ui.btn_edit_nutrients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(20))
         self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(25))
+        self.ui.btn_read_json_db_12.clicked.connect(lambda x: import_db("mongodb/json/"))
+        self.ui.btn_read_xlsx_db_12.clicked.connect(self.load_xlsx_for_db)
+        self.ui.btn_export_database_12.clicked.connect(lambda x: export_db("mongodb/json/"))
+
         # page_13 - data ingredient home
         self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
         self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home_with_no_warning)
@@ -2702,6 +2703,18 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_ing_category5_15.clear()
         self.ui.comboBox_ing_category5_15.addItem("")
         self.ui.comboBox_ing_category5_15.addItems(listOfCat5)
+
+    def load_xlsx_for_db(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        if fileName:
+            success = read_xlsx_db(fileName)
+            if success:
+                create_normal_message("Successfully loaded.")
+            else:
+                create_normal_message("Loading failed.")
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
