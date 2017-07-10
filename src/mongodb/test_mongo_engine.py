@@ -6,7 +6,7 @@ import datetime
 import random
 from pprint import pprint
 
-# connect('khdb')
+connect('khdb')
 
 print("\nPrinting mongodb configurations...\n")
 # Patient.to_mongo(Patient.objects[0])
@@ -23,6 +23,12 @@ def export_db():
         with open(file_name, 'w') as f:
             f.write(json_util.dumps(collection._collection_obj.find(collection._query), ensure_ascii=False, indent=4))
 
+def import_db():
+    json_collections = [(Patient, "json/patient.json"), (Ingredient, "json/ingredient.json"), (Disease, "json/disease.json"), (Nutrient, "json/nutrient.json")]
+    for obj, file_name in json_collections:
+        with open(file_name, 'r') as f:
+            for i in json_util.loads(f.read()):
+                obj(**i).save()
 
 def print_collection(collection):
     print(json_util.dumps(collection._collection_obj.find(collection._query), ensure_ascii=False, indent=4))
@@ -188,6 +194,9 @@ def add_dummy_relations():
             target_nutrient.save()
 
 
+reset_database()
+import_db()
+
 # populate dummy data
 reset = True
 if reset:
@@ -195,17 +204,19 @@ if reset:
     add_dummy_patient()
     for i in range(100):
         add_dummy_nutrient(i)
-    for i in range(2000):
+    for i in range(100):
         add_dummy_ingredient(i)
     for i in range(100):
         add_dummy_disease(i)
     add_dummy_relations()
 
+export_db()
+
 # print_all_patients()
 # print_all_diseases()
-#print_all_ingredients()
+# print_all_ingredients()
 # print_all_nutrients()
-export_db()
+# export_db()
 
 print("\n\nThere are %d many patients data" % Patient.objects.count())
 print("There are %d many diseases data" % Disease.objects.count())

@@ -5,6 +5,7 @@ connect('khdb')
 
 
 class Patient(Document):
+    _id = DynamicField()
     ID = StringField(required=True, max_length=100)
     이름 = StringField(required=True, max_length=10)
     성별 = StringField(required=True, max_length=1)
@@ -25,6 +26,7 @@ class Patient(Document):
         return "ID: " + str(self.ID) + "\n" + "이름: " + str(self.이름) + "\n" + "성별: " + str(self.성별) + "\n" + "생년월일: " + str(self.생년월일) + "\n" + "주소: " + str(self.주소) + "\n" + "방문횟수: " + str(self.방문횟수) + "\n" + "키: " + str(self.키) + "\n" + "몸무게: " + str(self.몸무게) + "\n" + "임신여부: " + str(self.임신여부) + "\n" + "수유여부: " + str(self.수유여부) + "\n" + "급성알레르기음식: " + str(self.급성알레르기음식) + "\n" + "만성알레르기음식: " + str(self.만성알레르기음식) + "\n" + "만성lgG4과민반응음식: " + str(self.만성lgG4과민반응음식) + "\n" + "진단: " + str(self.진단) + "\n" + "진료일: " + str(self.진료일)
 
 class Disease(Document):
+    _id = DynamicField()
     질병명 = StringField(required=True, max_length=50)
     질병명영어 = StringField(max_length=50)
     질병식품관계 = DictField()
@@ -35,6 +37,7 @@ class Disease(Document):
 
 
 class Ingredient(Document):
+    _id = DynamicField()
     식품명 = StringField(required=True, max_length=100)
     식품명영어 = StringField(max_length=100)
     식품영양소관계 = DictField() # { 영양소명 : 함량 }
@@ -88,6 +91,7 @@ class Ingredient(Document):
         return self.식품명
 
 class Nutrient(Document):
+    _id = DynamicField()
     영양소명 = StringField(required=True, max_length=100)
     영양소분류 = StringField(max_length=100)
     하루권장량RDA = DecimalField(max_length=100)
