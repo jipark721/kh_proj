@@ -15,24 +15,32 @@ def reset_database():
     Nutrient.objects.all().delete()
 
 def export_db(path):
-    print("Exporting db to " + path)
-    collections = [(Patient.objects(), path + "patient.json"), (Ingredient.objects(), path +"ingredient.json"), (Disease.objects(), path + "disease.json"), (Nutrient.objects(), path + "nutrient.json")]
-    for collection, file_name in collections:
-        with open(file_name, 'w') as f:
-            f.write(json_util.dumps(collection._collection_obj.find(collection._query), ensure_ascii=False, indent=4))
-    print_db_stats()
-    print("...done!\n")
+    try:
+        print("Exporting db to " + path)
+        collections = [(Patient.objects(), path + "patient.json"), (Ingredient.objects(), path +"ingredient.json"), (Disease.objects(), path + "disease.json"), (Nutrient.objects(), path + "nutrient.json")]
+        for collection, file_name in collections:
+            with open(file_name, 'w') as f:
+                f.write(json_util.dumps(collection._collection_obj.find(collection._query), ensure_ascii=False, indent=4))
+        print_db_stats()
+        print("...done!\n")
+        return True
+    except:
+        return False
 
 def import_db(path):
-    print("Importing db from " + path)
-    reset_database()
-    json_collections = [(Patient, path + "patient.json"), (Ingredient, path + "ingredient.json"), (Disease, path + "disease.json"), (Nutrient, path + "nutrient.json")]
-    for obj, file_name in json_collections:
-        with open(file_name, 'r') as f:
-            for i in json_util.loads(f.read()):
-                obj(**i).save()
-    print_db_stats()
-    print("...done!\n")
+    try:
+        print("Importing db from " + path)
+        reset_database()
+        json_collections = [(Patient, path + "patient.json"), (Ingredient, path + "ingredient.json"), (Disease, path + "disease.json"), (Nutrient, path + "nutrient.json")]
+        for obj, file_name in json_collections:
+            with open(file_name, 'r') as f:
+                for i in json_util.loads(f.read()):
+                    obj(**i).save()
+        print_db_stats()
+        print("...done!\n")
+        return True
+    except:
+        return False
 
 def print_collection(collection):
     print(json_util.dumps(collection._collection_obj.find(collection._query), ensure_ascii=False, indent=4))

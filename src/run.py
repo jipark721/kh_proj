@@ -159,9 +159,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_edit_ingredients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
         self.ui.btn_edit_nutrients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(20))
         self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(25))
-        self.ui.btn_read_json_db_12.clicked.connect(lambda x: import_db("mongodb/json/"))
+        self.ui.btn_read_json_db_12.clicked.connect(self.load_db_json)
         self.ui.btn_read_xlsx_db_12.clicked.connect(self.load_xlsx_for_db)
-        self.ui.btn_export_database_12.clicked.connect(lambda x: export_db("mongodb/json/"))
+        self.ui.btn_export_database_12.clicked.connect(self.export_db_json)
 
         # page_13 - data ingredient home
         self.ui.btn_home_13.clicked.connect(self.go_to_home_no_warning)
@@ -1702,7 +1702,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             elif currPage == 4 or currPage == 29 or currPage == 7 or currPage == 8 or currPage == 9 or currPage == 10:
                 self.clear_current_patient_info_and_all_related_pages()
             elif currPage == 5:
-                self.clear_find_existing_patient()
+                self.clear_find_existing_patient(5)
             elif currPage == 6:
                 self.clear_edit_existing_patient()
 
@@ -2726,6 +2726,21 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 create_normal_message("Successfully loaded.")
             else:
                 create_normal_message("Loading failed.")
+
+    def load_db_json(self):
+        success = import_db("mongodb/json/")
+        if success:
+            create_normal_message("Successfully imported from json.")
+        else:
+            create_normal_message("Importing json failed.")
+
+    def export_db_json(self):
+        success = export_db("mongodb/json/")
+        if success:
+            create_normal_message("Successfully exported to json.")
+        else:
+            create_normal_message("Exporting json failed.")
+
 
 
 def main():
