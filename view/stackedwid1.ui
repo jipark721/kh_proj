@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>12</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -4935,7 +4935,7 @@
           <x>560</x>
           <y>170</y>
           <width>301</width>
-          <height>311</height>
+          <height>391</height>
          </rect>
         </property>
         <widget class="QPushButton" name="btn_edit_ingredients_data_12">
@@ -5001,6 +5001,45 @@
          </property>
          <property name="text">
           <string>기존 환자 정보 수정</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btn_read_xlsx_db_12">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>240</y>
+           <width>140</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>엑셀 데이터 읽어오기</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btn_export_database_12">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>320</y>
+           <width>140</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>데이터 백업하기</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btn_read_json_db_12">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>280</y>
+           <width>140</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>백업 데이터 가져오기</string>
          </property>
         </widget>
        </widget>
@@ -10817,7 +10856,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>
