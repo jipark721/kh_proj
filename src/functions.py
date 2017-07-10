@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
-from mongodb.models import *
+from models import *
 import operator
 import datetime
 from decimal import *

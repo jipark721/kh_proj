@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-from mongoengine import *
-from mongodb.models import *
+import sys
+import os
+if not os.getcwd().endswith("mongodb"):
+    sys.path.insert(0, os.getcwd() + "/mongodb")
+from models import *
 from bson import json_util
 import datetime
 import random
-
-connect('khdb')
-
-print("\nPrinting mongodb configurations...\n")
 
 def reset_database():
     Patient.objects.all().delete()
@@ -209,7 +208,7 @@ def populate_dummy():
     add_dummy_patient()
     for i in range(100):
         add_dummy_nutrient(i)
-    for i in range(100):
+    for i in range(1000):
         add_dummy_ingredient(i)
     for i in range(100):
         add_dummy_disease(i)

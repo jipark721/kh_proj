@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-from mongodb.models import *
+import sys
+import os
+if not os.getcwd().endswith("mongodb"):
+    sys.path.insert(0, os.getcwd() + "/mongodb")
+from models import *
+from manage_mongo_engine import reset_database, print_db_stats
 import ast
 import xlrd
 import pandas as pd
@@ -9,6 +14,8 @@ def read_xlsx_db(xls_file_name):
     if not xls_file_name.endswith(".xlsx"):
         print("Invalid file.\n")
         return False
+
+    reset_database()
 
     workbook = xlrd.open_workbook(xls_file_name, encoding_override="utf_8")
 
@@ -40,7 +47,6 @@ def read_xlsx_db(xls_file_name):
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
         Nutrient(**row_data).save()
-
 
     # Ingredient
     worksheet = workbook.sheet_by_name("ingredient")
@@ -92,6 +98,7 @@ def read_xlsx_db(xls_file_name):
 
         Disease(**row_data).save()
 
+    print_db_stats()
     return True
 
 if __name__ == '__main__':

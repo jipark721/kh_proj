@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import sys
+import os
+if not os.getcwd().endswith("mongodb"):
+    sys.path.insert(0, os.getcwd() + "/mongodb")
 from mongoengine import *
 import datetime
 connect('khdb')

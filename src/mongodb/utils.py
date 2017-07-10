@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-from mongodb.models import *
-import json
-
+import sys
+import os
+if not os.getcwd().endswith("mongodb"):
+    sys.path.insert(0, os.getcwd() + "/mongodb")
+from models import *
 
 def reset_database():
     Patient.objects.filter().delete()
     Disease.objects.filter().delete()
     Ingredient.objects.filter().delete()
     Nutrient.objects.filter().delete()
-
 
 
 def update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding):
