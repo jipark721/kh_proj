@@ -74,7 +74,7 @@ class Ingredient(Document):
     단일식사분량설명 = StringField(max_length=100)
     폐기율 = DecimalField()
     단백질가식부 = DecimalField()
-    가성알레르기등급 = IntField(max_value=5, min_value=0)
+    가성알레르기등급 = IntField(max_value=0, min_value=-5)
     급성알레르기가능여부 = BooleanField()
     만성알레르기가능여부 = BooleanField()
     만성lgG4과민반응가능여부 = BooleanField()

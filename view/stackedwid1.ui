@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>12</number>
+       <number>10</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -2781,13 +2781,13 @@
            </rect>
           </property>
           <property name="minimum">
-           <number>1</number>
+           <number>-6</number>
           </property>
           <property name="maximum">
-           <number>6</number>
+           <number>-1</number>
           </property>
           <property name="value">
-           <number>1</number>
+           <number>-1</number>
           </property>
          </widget>
          <widget class="QLabel" name="label_203">
@@ -2839,13 +2839,13 @@
            </rect>
           </property>
           <property name="minimum">
-           <number>1</number>
+           <number>-6</number>
           </property>
           <property name="maximum">
-           <number>6</number>
+           <number>-1</number>
           </property>
           <property name="value">
-           <number>1</number>
+           <number>-1</number>
           </property>
          </widget>
          <widget class="QLabel" name="label_194">
@@ -2897,13 +2897,13 @@
            </rect>
           </property>
           <property name="minimum">
-           <number>1</number>
+           <number>-6</number>
           </property>
           <property name="maximum">
-           <number>6</number>
+           <number>-1</number>
           </property>
           <property name="value">
-           <number>1</number>
+           <number>-1</number>
           </property>
          </widget>
          <widget class="QSpinBox" name="spinBox_allergy_gs_level_8">
@@ -2916,13 +2916,13 @@
            </rect>
           </property>
           <property name="minimum">
-           <number>1</number>
+           <number>-6</number>
           </property>
           <property name="maximum">
-           <number>6</number>
+           <number>-1</number>
           </property>
           <property name="value">
-           <number>1</number>
+           <number>-1</number>
           </property>
          </widget>
          <widget class="QLabel" name="label_198">
@@ -2954,14 +2954,14 @@
          <widget class="QLabel" name="label_240">
           <property name="geometry">
            <rect>
-            <x>50</x>
-            <y>290</y>
+            <x>151</x>
+            <y>10</y>
             <width>651</width>
             <height>20</height>
            </rect>
           </property>
           <property name="text">
-           <string>**6등급으로 표시하면 해당 알레르기는 아무것도 비권고로 표시하지 않게 됩니다.</string>
+           <string>(-6등급으로 표시하면 해당 알레르기는 아무것도 비권고로 표시하지 않습니다.)</string>
           </property>
          </widget>
          <widget class="QComboBox" name="comboBox_allergy_gasung_ing_cat_8">
@@ -10856,7 +10856,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
  </buttongroups>
 </ui>
