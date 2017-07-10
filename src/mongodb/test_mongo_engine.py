@@ -130,7 +130,7 @@ def add_dummy_ingredient(i):
         단일식사분량설명="단일식사분량설명_" + str(i),
         폐기율=random.uniform(1, 5),
         단백질가식부=random.uniform(1, 5),
-        가성알레르기등급=random.randint(1, 5),
+        가성알레르기등급=random.randint(0, 5),
         급성알레르기가능여부=random.uniform(0, 1) < 0.03,
         만성알레르기가능여부=random.uniform(0, 1) < 0.03,
         만성lgG4과민반응가능여부=random.uniform(0, 1) < 0.01,

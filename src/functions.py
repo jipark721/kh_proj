@@ -98,13 +98,23 @@ def convert_lw_to_str_set(lw):
             toReturn.add(ckbtn.text())
     return toReturn
 
-def render_checkbox_lw(lw, content_collection, content_field_name, checked_content):
+def render_checkbox_lw_for_collection(lw, content_collection, content_field_name, checked_content):
     lw.clear()
     for item in content_collection:
         ckbtnitem = QtWidgets.QListWidgetItem(item[content_field_name])
         ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
         if checked_content and item[content_field_name] in checked_content:
+            ckbtnitem.setCheckState(QtCore.Qt.Checked)
+        lw.addItem(ckbtnitem)
+
+def render_checkbox_lw_for_list(lw, list, checked_content):
+    lw.clear()
+    for item in list:
+        ckbtnitem = QtWidgets.QListWidgetItem(item)
+        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
+        if checked_content and item in checked_content:
             ckbtnitem.setCheckState(QtCore.Qt.Checked)
         lw.addItem(ckbtnitem)
 
@@ -382,6 +392,18 @@ def get_portion_code(one_portion_first, gram_first, mortality_first, protein_fir
     if protein_first:
         code += 8
     return code
+
+def get_ing_cat_from_str(ing_obj, ing_cat):
+    if ing_cat == "식품분류1":
+        return ing_obj.식품분류1
+    elif ing_cat == "식품분류2":
+        return ing_obj.식품분류2
+    elif ing_cat == "식품분류3":
+        return ing_obj.식품분류3
+    elif ing_cat == "식품분류4":
+        return ing_obj.식품분류4
+    elif ing_cat == "식품분류5":
+        return ing_obj.식품분류5
 
 def get_relevant_ingredients_from_nutrients_str(nutrients, count_for_single_nut, portion_code, printing_rep_level, extinction_level):
     pass

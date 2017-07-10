@@ -33,9 +33,13 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_allergic_ingredients = {}
         self.local_diseases = {}
 
-        # local filters
+        # local filters - getting set when moving from page 8 to page 4
         self.local_printing_rep_level = 0
         self.local_extinction_level = 0
+        self.local_origin = None
+        self.local_origin_level = -1
+        self.local_specialty = None
+        self.local_specialty_level = -1
         self.local_remove_duplicates = True
         self.local_rec_threshold = 0
         self.local_nonrec_threshold = 0
@@ -43,6 +47,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_threshold = 0
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
+
 
         # edit
         self.local_disease_to_edit = None
@@ -136,6 +141,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_go_to_unrec_29.clicked.connect(lambda x: self.put_selected_nutrients_to_tw(self.ui.tableWidget_nutrients_unrec_29, False))
         self.ui.btn_undo_go_to_unrec_29.clicked.connect(lambda x: self.take_out_selected_nutrients_from_tw(self.ui.tableWidget_nutrients_unrec_29, False))
         # page_9 - get rec/unrec ingredients page
+        self.ui.btn_home_9.clicked.connect(lambda x: self.go_home(9))
         self.ui.btn_back_9.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(4))
         self.ui.btn_next_9.clicked.connect(lambda x: self.go_to_page_10(9))
         self.ui.btn_check_duplicate_ing_9.clicked.connect(self.handle_duplicate_ingredients)
@@ -364,6 +370,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def go_to_page_4(self):
         self.local_printing_rep_level = self.ui.spinBox_printingRep_level_8.value()
         self.local_extinction_level = self.ui.spinBox_extinction_level_8.value()
+        self.local_origin, self.local_origin_level = self.get_most_specified_origin_and_level(8)
+        self.local_specialty, self.local_specialty_level = self.get_most_specified_specialty_and_level(8)
         self.local_remove_duplicates = True if self.ui.radioButton_handle_duplicate_auto_8.isChecked() else False
         self.local_rec_threshold = self.ui.spinBox_dis_rel_ing_level_rec_8.value()
         self.local_nonrec_threshold = self.ui.spinBox_dis_rel_ing_level_unrec_8.value()
@@ -487,7 +495,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                                  self.get_relevant_ingredients_from_all_allergies(),
                                  -1)
 
-        render_checkbox_lw(self.ui.listWidget_always_unrec_9, Ingredient.objects(항상비권고식품여부 = True), "식품명", None)
+        render_checkbox_lw_for_list(self.ui.listWidget_always_unrec_9, self.get_always_unrec_ingredients(), None)
+
+    def get_always_unrec_ingredients(self):
+        relevant_ingredient = []
+        for ing_obj in Ingredient.objects(항상비권고식품여부 = True):
+            if self.basic_filtering_for_single_ing_obj(ing_obj):
+                relevant_ingredient.append(ing_obj.식품명)
+        return relevant_ingredient
 
     def get_relevant_ingredients_from_diseases_str(self):
         relevant_ingredient = {}
@@ -496,8 +511,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             disease = Disease.objects.get(질병명=disease)
             for rel_ingredient, level in disease.질병식품관계.items():
                 ing_obj = Ingredient.objects.get(식품명=rel_ingredient)
-                if ing_obj.출력대표성등급 <= self.local_printing_rep_level and ing_obj.멸종등급 > self.local_extinction_level \
-                        and self.isOriginAndSpecialtyBothSatisfied(rel_ingredient):
+                if self.basic_filtering_for_single_ing_obj(ing_obj):
                     if rel_ingredient not in relevant_ingredient and rel_ingredient not in removed:
                         relevant_ingredient[rel_ingredient] = level
                     elif rel_ingredient in relevant_ingredient and self.local_remove_duplicates:
@@ -589,30 +603,28 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.render_tw_for_ing_from_nut(self.ui.tableWidget_unrec_ing_from_nut_9, self.unrec_level_nut_dict, False)
 
     def isOriginAndSpecialtyBothSatisfied(self, ing_str):
-        origin, origin_level = self.get_most_specified_origin_and_level(8)
-        specialty, specialty_level = self.get_most_specified_specialty_and_level(8)
         ing = Ingredient.objects.get(식품명 = ing_str)
-        if origin_level != -1:
-            if origin_level == 1 and ing.원산지분류1 != origin:
+        if self.local_origin_level != -1:
+            if self.local_origin_level == 1 and ing.원산지분류1 != self.local_origin:
                 return False
-            elif origin_level == 2 and ing.원산지분류2 != origin:
+            elif self.local_origin_level == 2 and ing.원산지분류2 != self.local_origin:
                 return False
-            elif origin_level == 3 and ing.원산지분류3 != origin:
+            elif self.local_origin_level == 3 and ing.원산지분류3 != self.local_origin:
                 return False
-            elif origin_level == 4 and ing.원산지분류4 != origin:
+            elif self.local_origin_level == 4 and ing.원산지분류4 != self.local_origin:
                 return False
-            elif origin_level == 5 and ing.원산지분류5 != origin:
+            elif self.local_origin_level == 5 and ing.원산지분류5 != self.local_origin:
                 return False
-        if specialty_level != -1:
-            if specialty_level == 1 and ing.특산지분류1 != specialty:
+        if self.local_specialty_level != -1:
+            if self.local_specialty_level == 1 and ing.특산지분류1 != self.local_specialty:
                 return False
-            elif specialty_level == 2 and ing.특산지분류2 != specialty:
+            elif self.local_specialty_level == 2 and ing.특산지분류2 != self.local_specialty:
                 return False
-            elif specialty_level == 3 and ing.특산지분류3 != specialty:
+            elif self.local_specialty_level == 3 and ing.특산지분류3 != self.local_specialty:
                 return False
-            elif specialty_level == 4 and ing.특산지분류4 != specialty:
+            elif self.local_specialty_level == 4 and ing.특산지분류4 != self.local_specialty:
                 return False
-            elif specialty_level == 5 and ing.특산지분류5 != specialty:
+            elif self.local_specialty_level == 5 and ing.특산지분류5 != self.local_specialty:
                 return False
         return True
 
@@ -637,9 +649,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
                     ingredients_containing_nut = Nutrient.objects.get(영양소명 = nut_str).포함식품리스트.keys()
                     for ing_str in ingredients_containing_nut:
-                        if self.isOriginAndSpecialtyBothSatisfied(ing_str) and \
-                                        Ingredient.objects.get(식품명 = ing_str).출력대표성등급 <= self.local_printing_rep_level and \
-                                        Ingredient.objects.get(식품명 = ing_str).멸종등급 > self.local_extinction_level:
+                        if self.basic_filtering_for_single_ing_obj(Ingredient.objects.get(식품명=ing_str)):
                             ing_quant_dict_for_nut[ing_str] = self.calculate_nut_quant_for_ing(ing_str, nut_str,
                                                                                                portion_code, False)
                             if is_one_portion_first and is_100g_first: #1회식사와 100그램 중복 설정시 1회식사분량 먼저 표시후 100그램 표시
@@ -852,45 +862,69 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             pass
 
     def get_all_allergies_ing_cat(self):
-        if self.ui.ckBox_allergy_gasung_ing_cat_8.isChecked():
-            gasung_ing_cat = self.ui.spinBox_allergy_gasung_ing_cat_level_8.value()
-        else:
-            gasung_ing_cat = -1
-        if self.ui.ckBox_allergy_gs_ing_cat_8.isChecked():
-            gs_ing_cat = self.ui.spinBox_allergy_gs_ing_cat_level_8.value()
-        else:
-            gs_ing_cat = -1
-        if self.ui.ckBox_allergy_ms_ing_cat_8.isChecked():
-            ms_ing_cat = self.ui.spinBox_allergy_ms_ing_cat_level_8.value()
-        else:
-            ms_ing_cat = -1
-        if self.ui.ckBox_allergy_lgg4_ing_cat_8.isChecked():
-            lgg4_ing_cat = self.ui.spinBox_allergy_lgg4_ing_cat_level_8.value()
-        else:
-            lgg4_ing_cat = -1
-        return (gasung_ing_cat, gs_ing_cat, ms_ing_cat, lgg4_ing_cat)
+        return (self.ui.comboBox_allergy_gasung_ing_cat_8.currentText(), self.ui.comboBox_allergy_gs_ing_cat_8.currentText(),
+                self.ui.comboBox_allergy_ms_ing_cat_8.currentText(), self.ui.comboBox_allergy_lgg4_ing_cat_8.currentText())
+
+    def get_similar_ingredients_for_allergy(self, ing_obj, ing_cat_level_str): #ex) ing_cat_level_str = "식품분류3"
+        ing_cat_str = get_ing_cat_from_str(ing_obj, ing_cat_level_str) #ing의 진짜 식품분류
+        if ing_cat_level_str == "식품분류1":
+            return Ingredient.objects(식품분류1 = ing_cat_str)
+        elif ing_cat_level_str == "식품분류2":
+            return Ingredient.objects(식품분류2 = ing_cat_str)
+        elif ing_cat_level_str == "식품분류3":
+            return Ingredient.objects(식품분류3=ing_cat_str)
+        elif ing_cat_level_str == "식품분류4":
+            return Ingredient.objects(식품분류4=ing_cat_str)
+        elif ing_cat_level_str == "식품분류5":
+            return Ingredient.objects(식품분류5=ing_cat_str)
+
+    def basic_filtering_for_single_ing_obj(self, ing_obj):
+        return ing_obj.출력대표성등급 <= self.local_printing_rep_level and ing_obj.멸종등급 > self.local_extinction_level \
+               and self.isOriginAndSpecialtyBothSatisfied(ing_obj.식품명)
+
+    def insert_similar_ingredients_for_each_allergy(self, relevant_ings, ing_obj, ing_cat_level, lvl, ):
+        similar_ingredients = self.get_similar_ingredients_for_allergy(ing_obj, ing_cat_level)
+        for similar_ing in similar_ingredients:
+            similar_ing_str = similar_ing.식품명
+            if similar_ing_str not in relevant_ings or relevant_ings[similar_ing_str] < lvl:
+                relevant_ings[similar_ing_str] = lvl
 
     def get_relevant_ingredients_from_all_allergies(self):
-        gasung_ing_cat, gs_ing_cat, ms_ing_cat, lgg4_ing_cat = self.get_all_allergies_ing_cat()
+        gasung_ing_cat_level, gs_ing_cat_level, ms_ing_cat_level, lgg4_ing_cat_level = self.get_all_allergies_ing_cat()
         relevant_ingredients = {}
-        for ing_str, lvl in self.local_gs_allergic_ingredients.items():
-            if lvl >= self.local_gs_threshold:
-                if ing_str not in relevant_ingredients or lvl >= relevant_ingredients[ing_str]:
-                    relevant_ingredients[ing_str] = lvl
-                
-        for ing_str, lvl in self.local_lgG4_allergic_ingredients.items():
-            if lvl >= self.local_lgG4_threshold:
-                if ing_str not in relevant_ingredients or relevant_ingredients[ing_str] > lvl:
-                    relevant_ingredients[ing_str] = lvl
-        for ing_str, lvl in self.local_ms_allergic_ingredients.items():
-            if lvl >= self.local_ms_threshold:
-                if ing_str not in relevant_ingredients or relevant_ingredients[ing_str] > lvl:
-                    relevant_ingredients[ing_str] = lvl
-        for ingredient in Ingredient.objects(가성알레르기등급__lte=self.local_gasung_threshold):
+        for ingredient in Ingredient.objects(가성알레르기등급__gte=self.local_gasung_threshold):
             ing_str = ingredient.식품명
             lvl = ingredient.가성알레르기등급
-            if ing_str not in relevant_ingredients or relevant_ingredients[ing_str] > lvl:
+            if self.basic_filtering_for_single_ing_obj(ingredient) and (ing_str not in relevant_ingredients or
+                                                                            relevant_ingredients[ing_str] < lvl):
                 relevant_ingredients[ing_str] = lvl
+                if gasung_ing_cat_level and gasung_ing_cat_level != "":
+                    self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ingredient, gasung_ing_cat_level, lvl)
+
+        for ing_str, lvl in self.local_gs_allergic_ingredients.items():
+            ing_obj = Ingredient.objects.get(식품명=ing_str)
+            if self.basic_filtering_for_single_ing_obj(ing_obj) and lvl >= self.local_gs_threshold:
+                if ing_str not in relevant_ingredients or relevant_ingredients[ing_str] < lvl:
+                    relevant_ingredients[ing_str] = lvl
+                    if gs_ing_cat_level and gs_ing_cat_level != "":
+                        self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ing_obj, gs_ing_cat_level, lvl)
+
+        for ing_str, lvl in self.local_ms_allergic_ingredients.items():
+            ing_obj = Ingredient.objects.get(식품명=ing_str)
+            if self.basic_filtering_for_single_ing_obj(ing_obj) and lvl >= self.local_ms_threshold:
+                if ing_str not in relevant_ingredients or relevant_ingredients[ing_str] < lvl:
+                    relevant_ingredients[ing_str] = lvl
+                    if ms_ing_cat_level and ms_ing_cat_level != "":
+                        self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ing_obj, ms_ing_cat_level, lvl)
+
+        for ing_str, lvl in self.local_lgG4_allergic_ingredients.items():
+            ing_obj = Ingredient.objects.get(식품명=ing_str)
+            if self.basic_filtering_for_single_ing_obj(ing_obj) and lvl >= self.local_lgG4_threshold:
+                if ing_str not in relevant_ingredients or relevant_ingredients[ing_str] < lvl:
+                    relevant_ingredients[ing_str] = lvl
+                    if lgg4_ing_cat_level and lgg4_ing_cat_level != "":
+                        self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ing_obj, lgg4_ing_cat_level, lvl)
+
         return relevant_ingredients
 
     def handle_single_duplicate_ingredient(self):
@@ -1032,6 +1066,16 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             else:
                 return "", -1
 
+    def activate_all_allergies_ing_cat_combobox(self):
+        list = ["", "식품분류1", "식품분류2", "식품분류3", "식품분류4", "식품분류5"]
+        self.ui.comboBox_allergy_gasung_ing_cat_8.clear()
+        self.ui.comboBox_allergy_gs_ing_cat_8.clear()
+        self.ui.comboBox_allergy_ms_ing_cat_8.clear()
+        self.ui.comboBox_allergy_lgg4_ing_cat_8.clear()
+        self.ui.comboBox_allergy_gasung_ing_cat_8.addItems(list)
+        self.ui.comboBox_allergy_gs_ing_cat_8.addItems(list)
+        self.ui.comboBox_allergy_ms_ing_cat_8.addItems(list)
+        self.ui.comboBox_allergy_lgg4_ing_cat_8.addItems(list)
 
     def activate_origin_and_specialty_combobox(self):
         listOfOrigin1 = Ingredient.objects.distinct("원산지분류1")
@@ -1648,6 +1692,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 self.clear_find_existing_patient()
             elif currPage == 6:
                 self.clear_edit_existing_patient()
+
             elif currPage == 14:
                 self.clear_find_existing_ingredient()
             elif currPage == 15:
@@ -1671,14 +1716,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_allergic_ingredients.clear()
         self.local_diseases.clear()
 
+        self.local_printing_rep_level = 0
+        self.local_extinction_level= 0
+        self.local_origin = None
+        self.local_origin_level = -1
+        self.local_specialty = None
+        self.local_specialty_level = -1
         self.local_rec_threshold = 0
         self.local_nonrec_threshold = 0
         self.local_gs_threshold = 0
         self.local_lgG4_threshold = 0
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
-        self.local_printing_rep_level = 0
-        self.local_extinction_level= 0
+
 
         self.rec_level_nut_dict.clear()
         self.unrec_level_nut_dict.clear()
@@ -2008,8 +2058,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def go_to_page_8(self, currPage):
         if currPage == 7:
             self.update_selected_disease_and_allergies_locally()
+            self.activate_all_allergies_ing_cat_combobox()
+            self.activate_origin_and_specialty_combobox()
         self.ui.stackedWidget.setCurrentIndex(8)
-        self.activate_origin_and_specialty_combobox()
+
 
     def go_to_select_disease_and_allergies(self, id):
         if id == None:
@@ -2036,7 +2088,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_disease_and_allergies_by_date(self, date):
         if date:
-            render_checkbox_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", self.current_patient.진단[date])
+            render_checkbox_lw_for_collection(self.ui.listWidget_diseases_7, Disease.objects, "질병명", self.current_patient.진단[date])
             render_all_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명",
                                          self.current_patient.급성알레르기음식[date])
             render_all_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명",
@@ -2044,7 +2096,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             render_all_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명",
                                          self.current_patient.만성lgG4과민반응음식[date])
         else:
-            render_checkbox_lw(self.ui.listWidget_diseases_7, Disease.objects, "질병명", set())
+            render_checkbox_lw_for_collection(self.ui.listWidget_diseases_7, Disease.objects, "질병명", set())
             render_all_checkbox_level_tw(get_ingredients_guepsung(), self.ui.tableWidget_allergies_gs_7, "식품명", {})
             render_all_checkbox_level_tw(get_ingredients_mansung(), self.ui.tableWidget_allergies_ms_7, "식품명", {})
             render_all_checkbox_level_tw(get_ingredients_mansung_lgg4(), self.ui.tableWidget_allergies_lgg4_7, "식품명", {})
@@ -2476,7 +2528,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def find_existing_disease_for_edit(self):
         tag = self.ui.lineEdit_dis_name_26.text()
         found_diseases = Disease.objects(질병명__icontains=tag)
-        render_checkbox_lw(self.ui.listWidget_dis_candidates_26, found_diseases, "질병명", None)
+        render_checkbox_lw_for_collection(self.ui.listWidget_dis_candidates_26, found_diseases, "질병명", None)
 
     def go_to_register_or_edit_disease_info(self, dis_name):
         if dis_name is not None:
