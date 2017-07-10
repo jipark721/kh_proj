@@ -10,33 +10,6 @@ def reset_database():
     Nutrient.objects.filter().delete()
 
 
-# def initialize_database():
-#     with open("json/patients.json") as patient_data:
-#         patients = json.load(patient_data)
-#         for patient in patients.all():
-#             patient.급성알레르기음식 = convert_list_2_tuple(patient.급성알레르기음식)
-#             patient.만성알레르기음식 = convert_list_2_tuple(patient.만성알레르기음식)
-#             patient.만성lgG4과민반응음식 = convert_list_2_tuple(patient.만성lgG4과민반응음식)
-#             patients_collection.insert_one(patient)
-#
-#     with open("json/diseases.json") as diseases_data:
-#         diseases = json.load(diseases_data)
-#         for disease in diseases:
-#             disease.질병식품관계 = convert_list_2_tuple(disease.질병식품관계)
-#             disease.질병영양소관계 = convert_list_2_tuple(disease.질병영양소관계)
-#             diseases_collection.insert_one(disease)
-#
-#     with open("json/ingredients.json") as ingredients_data:
-#         ingredients = json.load(ingredients_data)
-#         for ingredient in ingredients:
-#             ingredient.식품영양소관계 = convert_list_2_tuple(ingredient.식품영양소관계)
-#             ingredients_collection.insert_one(ingredient)
-#
-#     with open("json/nutrients.json") as nutrients_data:
-#         nutrients = json.load(nutrients_data)
-#         for nutrient in nutrients:
-#             nutrients_collection.insert_one(nutrient)
-
 
 def update_patient_basic_info(id, name, sex, birthdate, address, height, weight, isPreg, isBFeeding):
     patient = Patient.objects.get(ID=id)
