@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 import sys
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
@@ -149,9 +150,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page 10 - see current collapsed rec/unrec ingredients page
         self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
         self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(9))
-        self.ui.btn_next_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(11))
-        # page 11 - print-filtering page2
-        # self.ui.btn_PRINT_11.clicked.connect()
+        self.ui.btn_next_10.clicked.connect(lambda x: self.go_to_page_11())
+
+        # page_11
+        self.ui.btn_next_11.clicked.connect(lambda x: self.get_pdf_from_page_11())
 
         # page_12 - data home
         self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
@@ -168,8 +170,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_data_home_13.clicked.connect(self.go_to_data_home_with_no_warning)
         self.ui.btn_register_new_ing_13.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info(None))
         self.ui.btn_edit_existing_ing_13.clicked.connect(lambda x: self.go_to_find_existing_ingredient_for_editing())
-        # self.ui.btn_edit_gasung_allergy_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(18))
-        # self.ui.btn_edit_common_unrec_ing_list_13.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(19))
+        self.ui.btn_edit_gasung_allergy_ing_list_13.clicked.connect(self.go_to_page_18)
+        self.ui.btn_edit_common_unrec_ing_list_13.clicked.connect(self.go_to_page_19)
         # page_14 - find existing ingredient to look up/edit
         self.ui.btn_home_14.clicked.connect(lambda x: self.go_home(14))
         self.ui.btn_data_home_14.clicked.connect(lambda x: self.go_to_data_home(14))
@@ -195,10 +197,35 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.comboBox_nut_category1_16, self.ui.tableWidget_nutCandidates_16))
         self.ui.btn_add_nut_16.clicked.connect(lambda x: self.add_selected_nutrients_to_tw_and_clear_and_hide_popup(16))
         self.ui.btn_cancel_add_nut_16.clicked.connect(lambda x: self.cancel_popup_add_nut_and_hide_popup())
-        self.ui.btn_delete_selected_nut_16.clicked.connect(lambda x: self.remove_selected_items_tw(self.ui.tableWidget_nut_quant_16))
+        self.ui.btn_delete_selected_nut_16.clicked.connect(lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_nut_quant_16, 16))
         self.ui.btn_back_16.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
         self.ui.btn_cancel_16.clicked.connect(lambda x: self.cancel_edit_existing_ingredient())
         self.ui.btn_save_16.clicked.connect(lambda x: self.save_or_update_ingredient())
+
+        # page_18 -gasung allergy list
+        self.ui.btn_lookup_ing_18.clicked.connect(self.show_popup_ing_for_gasung_allergy)
+        self.ui.btn_findby_ing_name_18.clicked.connect(
+            lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_18.text(), 18))
+        self.ui.btn_findby_ing_category_18.clicked.connect(lambda x: self.find_ingredients_by_category(18))
+        self.ui.btn_cancel_popup_ing_18.clicked.connect(lambda x: self.cancel_popup_add_ing_and_hide_popup(18))
+        self.ui.btn_add_selected_ing_18.clicked.connect(
+            lambda x: self.add_selected_ingredients_to_tw_and_clear_and_hide_popup(18))
+        self.ui.btn_delete_selected_ings_18.clicked.connect(
+            lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_gasung_allergy_18, 18))
+        #self.ui.btn_cancel_18.clicked.connect(self.cancel_edit_gasung_ingredients)
+        self.ui.btn_save_18.clicked.connect(self.update_gasung_ingredients)
+        # page_19-always_unrec_list
+        self.ui.btn_lookup_ing_19.clicked.connect(self.show_popup_ing_for_always_unrec_ing)
+        self.ui.btn_findby_ing_name_19.clicked.connect(
+            lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_19.text(), 19))
+        self.ui.btn_findby_ing_category_19.clicked.connect(lambda x: self.find_ingredients_by_category(19))
+        self.ui.btn_cancel_popup_ing_19.clicked.connect(lambda x: self.cancel_popup_add_ing_and_hide_popup(19))
+        self.ui.btn_add_selected_ing_19.clicked.connect(
+            lambda x: self.add_selected_ingredients_to_tw_and_clear_and_hide_popup(19))
+        self.ui.btn_delete_selected_ings_19.clicked.connect(
+            lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_always_unrec_ing_19, 19))
+        #self.ui.btn_cancel_19.clicked.connect(self.cancel_edit_always_unrec_ingredients)
+        self.ui.btn_save_19.clicked.connect(self.update_always_unrec_ingredients)
         # page_20 - data nutrient home
         self.ui.btn_home_20.clicked.connect(self.go_to_home_no_warning)
         self.ui.btn_data_home_20.clicked.connect(self.go_to_data_home_with_no_warning)
@@ -268,16 +295,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_lookup_nut_27.clicked.connect(self.show_popup_nut_for_dis_nut_rel)
         self.ui.btn_findby_ing_name_27.clicked.connect(lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_27.text(), 27))
         self.ui.btn_findby_ing_category_27.clicked.connect(lambda x: self.find_ingredients_by_category(27))
-        self.ui.btn_cancel_popup_ing_27.clicked.connect(lambda x: self.cancel_popup_add_ing_and_hide_popup())
+        self.ui.btn_cancel_popup_ing_27.clicked.connect(lambda x: self.cancel_popup_add_ing_and_hide_popup(27))
         self.ui.btn_add_selected_ing_27.clicked.connect(
-            lambda x: self.add_selected_ingredients_to_tw_and_clear_and_hide_popup())
-        self.ui.btn_delete_selected_ings_27.clicked.connect(lambda x: self.remove_selected_items_tw(self.ui.tableWidget_dis_ing_27))
+            lambda x: self.add_selected_ingredients_to_tw_and_clear_and_hide_popup(27))
+        self.ui.btn_delete_selected_ings_27.clicked.connect(lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_dis_ing_27, 27))
+
+
+
 
         self.ui.btn_findby_nut_name_27.clicked.connect(lambda x: self.find_nutrients_by_name(self.ui.lineEdit_nut_name_27.text(), self.ui.tableWidget_nut_candidates_27))
         self.ui.btn_findby_nut_category_27.clicked.connect(lambda x: self.find_nutrients_by_category(self.ui.comboBox_nut_category1_27, self.ui.tableWidget_nut_candidates_27))
         self.ui.btn_cancel_popup_nut_27.clicked.connect(lambda x: self.cancel_popup_add_nut_and_hide_popup(27))
         self.ui.btn_add_selected_nut_27.clicked.connect(lambda x: self.add_selected_nutrients_to_tw_and_clear_and_hide_popup(27))
-        self.ui.btn_delete_selected_nuts_27.clicked.connect(lambda x: self.remove_selected_items_tw(self.ui.tableWidget_dis_nut_27))
+        self.ui.btn_delete_selected_nuts_27.clicked.connect(lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_dis_nut_27, 27))
 
         self.ui.btn_cancel_27.clicked.connect(lambda x: self.cancel_edit_existing_disease())
         self.ui.btn_save_27.clicked.connect(self.register_or_update_disease)
@@ -320,6 +350,29 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 nut_item = make_lw_str_item(nutrient.영양소명)
                 self.list_of_nut_lw[i].addItem(nut_item)
 
+    def remove_selected_items_tw_and_update_data(self, tw, currPage):
+        for rowIndex in range(tw.rowCount(), -1, -1):
+            if tw.item(rowIndex, 0) and tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
+                if currPage == 18:
+                    # Ingredient.objects.get(식품명=tw.item(rowIndex, 0).text()).update(
+                    #     가성알레르기등급=0
+                    # )
+                    # Ingredient.objects.get(식품명=tw.item(rowIndex, 0).text()).save()
+                    # print(tw.item(rowIndex,0).text()+"의 가성알레르기등급: "+ str(Ingredient.objects.get(식품명=tw.item(rowIndex, 0).text()).가성알레르기등급))
+                    try:
+                        Ingredient.objects.get(식품명 = tw.item(rowIndex, 0).text()).update(
+                            가성알레르기등급 = 0
+                        )
+                    except Ingredient.DoesNotExist:
+                        create_warning_message("가성알레르기 무효화가 실패했습니다.")
+                elif currPage == 19:
+                    try:
+                        Ingredient.objects.get(식품명 = tw.item(rowIndex, 0).text()).update(
+                            항상비권고식품여부 = False
+                        )
+                    except Ingredient.DoesNotExists:
+                        create_warning_message("항상비권고식품여부 무효화가 실패했습니다.")
+                tw.removeRow(rowIndex)
 
     def put_selected_nutrients_to_tw(self, rec_or_unrec_tw, isRec):
         lv = self.get_level_page29()
@@ -395,30 +448,94 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(10)
         self.render_basic_patient_info_on_top(10)
 
+    def go_to_page_11(self):
+        list_of_lang_to_print = ["식품명영어", "식품명중국어", "식품명일본어", "식품명러시아어", "식품명몽골어", "식품명아랍어", "식품명스페인어",
+                                 "식품명외국어8", "식품명외국어9", "식품명외국어10", "식품명외국어11"]
+        list_to_print = ["식품분류1", "식품분류2", "식품분류3", "식품분류4", "식품분류5", "학명", "식품설명", "특징", "이야기거리", "보관법",
+                         "조리시특성", "도정상태", "가공상태", "즉시섭취", "항상비권고식품여부", "출력대표성등급", "단일식사분량",
+                         "단일식사분량설명", "폐기율", "단백질가식부", "가성알레르기등급", "급성알레르기가능여부", "만성알레르기가능여부",
+                         "만성lgG4과민반응가능여부", "멸종등급", "원산지분류1", "원산지분류2", "원산지분류3", "원산지분류4", "원산지분류5",
+                         "특산지분류1", "특산지분류2", "특산지분류3", "특산지분류4", "특산지분류5"]
 
+        self.ui.stackedWidget.setCurrentIndex(11)
+        render_checkbox_lw_for_list(self.ui.listWidget_ing_data_lang_to_print_11, list_of_lang_to_print, set())
+        render_checkbox_lw_for_list(self.ui.listWidget_ing_data_cat_to_print_11, list_to_print, set())
+
+    #TODO - export to pdf?
+    def get_pdf_from_page_11(self):
+        checked_lang_set = convert_lw_to_str_set(self.ui.listWidget_ing_data_lang_to_print_11)
+        checked_cat_set = convert_lw_to_str_set(self.ui.listWidget_ing_data_cat_to_print_11)
+        print(len(checked_lang_set))
+        print(len(checked_cat_set))
+
+    def go_to_page_18(self):
+        self.ui.stackedWidget.setCurrentIndex(18)
+        self.ui.widget_popup_add_ing_18.hide()
+        collection = Ingredient.objects(가성알레르기등급__lt=0)
+        self.ui.tableWidget_gasung_allergy_18.setRowCount(collection.count())
+        index = 0
+        for ing_obj in collection:
+            name_item = make_tw_checkbox_item(ing_obj.식품명, False)
+            level_item = make_tw_str_item(str(ing_obj.가성알레르기등급))
+            cat1_item = make_tw_str_item(ing_obj.식품분류1)
+            cat2_item = make_tw_str_item(ing_obj.식품분류2)
+            cat3_item = make_tw_str_item(ing_obj.식품분류3)
+            cat4_item = make_tw_str_item(ing_obj.식품분류4)
+            cat5_item = make_tw_str_item(ing_obj.식품분류5)
+            self.ui.tableWidget_gasung_allergy_18.setItem(index, 0, name_item)
+            self.ui.tableWidget_gasung_allergy_18.setItem(index, 1, level_item)
+            self.ui.tableWidget_gasung_allergy_18.setItem(index, 2, cat1_item)
+            self.ui.tableWidget_gasung_allergy_18.setItem(index, 3, cat2_item)
+            self.ui.tableWidget_gasung_allergy_18.setItem(index, 4, cat3_item)
+            self.ui.tableWidget_gasung_allergy_18.setItem(index, 5, cat4_item)
+            self.ui.tableWidget_gasung_allergy_18.setItem(index, 6, cat5_item)
+            index +=1
+        self.ui.tableWidget_gasung_allergy_18.resizeColumnsToContents()
+
+    def go_to_page_19(self):
+        self.ui.stackedWidget.setCurrentIndex(19)
+        self.ui.widget_popup_add_ing_19.hide()
+        collection = Ingredient.objects(항상비권고식품여부 = True)
+        self.ui.tableWidget_always_unrec_ing_19.setRowCount(collection.count())
+        index = 0
+        for ing_obj in collection:
+            name_item = make_tw_checkbox_item(ing_obj.식품명, False)
+            cat1_item = make_tw_str_item(ing_obj.식품분류1)
+            cat2_item = make_tw_str_item(ing_obj.식품분류2)
+            cat3_item = make_tw_str_item(ing_obj.식품분류3)
+            cat4_item = make_tw_str_item(ing_obj.식품분류4)
+            cat5_item = make_tw_str_item(ing_obj.식품분류5)
+            self.ui.tableWidget_always_unrec_ing_19.setItem(index, 0, name_item)
+            self.ui.tableWidget_always_unrec_ing_19.setItem(index, 1, cat1_item)
+            self.ui.tableWidget_always_unrec_ing_19.setItem(index, 2, cat2_item)
+            self.ui.tableWidget_always_unrec_ing_19.setItem(index, 3, cat3_item)
+            self.ui.tableWidget_always_unrec_ing_19.setItem(index, 4, cat4_item)
+            self.ui.tableWidget_always_unrec_ing_19.setItem(index, 5, cat5_item)
+            index +=1
+        self.ui.tableWidget_always_unrec_ing_19.resizeColumnsToContents()
 
     def build_ultimate_rec_ing_level_dict(self):
         #FETCTHING EVERYTHING ATM
-        rec_dict = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 3)
-        rec_dict.update(convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_dis_9, 3))
+        rec_dict_sort_by_level = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 1)
+        rec_dict_sort_by_level.update(convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_dis_9, 1))
 
-        unrec_dict = convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_nut_9, 3)
-        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_dis_9, 3))
-        unrec_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_allergies_9, 3))
-        unrec_dict.update(convert_lw_to_dict_with_int_value(self.ui.listWidget_always_unrec_9, 0, 2))
+        unrec_dict_sort_by_level = convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_nut_9, 1)
+        unrec_dict_sort_by_level.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_dis_9, 1))
+        unrec_dict_sort_by_level.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_allergies_9, 1))
+        unrec_dict_sort_by_level.update(convert_lw_to_dict_with_int_value(self.ui.listWidget_always_unrec_9, 0, 1))
 
 
-        self.ui.tableWidget_current_rec_ing_10.setRowCount(len(rec_dict))
-        self.ui.tableWidget_current_unrec_ing_10.setRowCount(len(unrec_dict))
+        self.ui.tableWidget_current_rec_ing_10.setRowCount(len(rec_dict_sort_by_level))
+        self.ui.tableWidget_current_unrec_ing_10.setRowCount(len(unrec_dict_sort_by_level))
 
         i = 0
-        for rec_ingredient, lvl in rec_dict.items():
+        for rec_ingredient, lvl in rec_dict_sort_by_level.items():
             ingredient = Ingredient.objects.get(식품명=rec_ingredient)
             self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_rec_ing_10, i, ingredient, lvl)
             i+=1
 
         i = 0
-        for unrec_ingredient, lvl in unrec_dict.items():
+        for unrec_ingredient, lvl in unrec_dict_sort_by_level.items():
             ingredient = Ingredient.objects.get(식품명=unrec_ingredient)
             self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_unrec_ing_10, i, ingredient, lvl)
             i+=1
@@ -533,10 +650,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def remove_selected_items_page_9(self):
         for i in range(len(self.list_of_ing_tw)):
-            remove_selected_items_tw(self.list_of_ing_tw[i])
-
-
-
+            self.remove_selected_items_tw_and_update_data(self.list_of_ing_tw[i], 9)
 
 
 
@@ -1671,6 +1785,32 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 found_ingredients = Ingredient.objects(식품분류1=self.ui.comboBox_ing_category1_27.currentText())
             else:
                 found_ingredients = Ingredient.objects.all()
+        elif currPage == 18:
+            if self.ui.comboBox_ing_category5_18.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류5=self.ui.comboBox_ing_category5_18.currentText())
+            elif self.ui.comboBox_ing_category4_18.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류4=self.ui.comboBox_ing_category4_18.currentText())
+            elif self.ui.comboBox_ing_category3_18.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류3=self.ui.comboBox_ing_category3_18.currentText())
+            elif self.ui.comboBox_ing_category2_18.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류2=self.ui.comboBox_ing_category2_18.currentText())
+            elif self.ui.comboBox_ing_category1_18.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류1=self.ui.comboBox_ing_category1_18.currentText())
+            else:
+                found_ingredients = Ingredient.objects.all()
+        elif currPage == 19:
+            if self.ui.comboBox_ing_category5_19.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류5=self.ui.comboBox_ing_category5_19.currentText())
+            elif self.ui.comboBox_ing_category4_19.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류4=self.ui.comboBox_ing_category4_19.currentText())
+            elif self.ui.comboBox_ing_category3_19.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류3=self.ui.comboBox_ing_category3_19.currentText())
+            elif self.ui.comboBox_ing_category2_19.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류2=self.ui.comboBox_ing_category2_19.currentText())
+            elif self.ui.comboBox_ing_category1_19.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류1=self.ui.comboBox_ing_category1_19.currentText())
+            else:
+                found_ingredients = Ingredient.objects.all()
         self.render_found_ingredients(found_ingredients, currPage)
 
     def render_found_ingredients(self, found_ingredients, currPage):
@@ -1678,6 +1818,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             tw = self.ui.tableWidget_ing_candidates_14
         elif currPage == 27:
             tw = self.ui.tableWidget_ing_candidates_27
+        elif currPage == 18:
+            tw = self.ui.tableWidget_ing_candidates_18
+        elif currPage == 19:
+            tw = self.ui.tableWidget_ing_candidates_19
+
         tw.setRowCount(found_ingredients.count())
         i = 0
         for ingredient in found_ingredients:
@@ -2567,30 +2712,111 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_dis_name_26.setText("")
         self.ui.listWidget_dis_candidates_26.clear()
 
-    def add_selected_ingredients_to_tw_and_clear_and_hide_popup(self):
-        selected_ingredients = convert_checked_item_in_tw_to_str_set(self.ui.tableWidget_ing_candidates_27)
-        index = self.ui.tableWidget_dis_ing_27.rowCount()
-        self.ui.tableWidget_dis_ing_27.setRowCount(index+ len(selected_ingredients))
+    def add_selected_ingredients_to_tw_and_clear_and_hide_popup(self, currPage):
+        if currPage == 27:
+            tw = self.ui.tableWidget_ing_candidates_27
+            tw_to_add = self.ui.tableWidget_dis_ing_27
+        elif currPage == 18:
+            tw = self.ui.tableWidget_ing_candidates_18
+            tw_to_add = self.ui.tableWidget_gasung_allergy_18
+        elif currPage == 19:
+            tw = self.ui.tableWidget_ing_candidates_19
+            tw_to_add = self.ui.tableWidget_always_unrec_ing_19
+
+        selected_ingredients = convert_checked_item_in_tw_to_str_set(tw)
+        index = tw_to_add.rowCount()
+        tw_to_add.setRowCount(index+ len(selected_ingredients))
         for ing_str in selected_ingredients:
             ckboxitem = make_tw_checkbox_item(ing_str, False)
-            level_item = make_tw_str_item("0")
-            self.ui.tableWidget_dis_ing_27.setItem(index, 0, ckboxitem)
-            self.ui.tableWidget_dis_ing_27.setItem(index, 1, level_item)
+            tw_to_add.setItem(index, 0, ckboxitem)
+            if currPage == 27 or currPage == 18:
+                level_item = make_tw_str_item("0")
+                tw_to_add.setItem(index, 1, level_item)
+            if currPage == 18 or currPage == 19:
+                ing_obj = Ingredient.objects.get(식품명 = ing_str)
+                cat1_item = make_tw_str_item(ing_obj.식품분류1)
+                cat2_item = make_tw_str_item(ing_obj.식품분류2)
+                cat3_item = make_tw_str_item(ing_obj.식품분류3)
+                cat4_item = make_tw_str_item(ing_obj.식품분류4)
+                cat5_item = make_tw_str_item(ing_obj.식품분류5)
+                if currPage == 18:
+                    tw_to_add.setItem(index, 2, cat1_item)
+                    tw_to_add.setItem(index, 3, cat2_item)
+                    tw_to_add.setItem(index, 4, cat3_item)
+                    tw_to_add.setItem(index, 5, cat4_item)
+                    tw_to_add.setItem(index, 6, cat5_item)
+                else: #currpage == 19
+                    tw_to_add.setItem(index, 1, cat1_item)
+                    tw_to_add.setItem(index, 2, cat2_item)
+                    tw_to_add.setItem(index, 3, cat3_item)
+                    tw_to_add.setItem(index, 4, cat4_item)
+                    tw_to_add.setItem(index, 5, cat5_item)
             index += 1
-        self.cancel_popup_add_ing_and_hide_popup()
+        self.cancel_popup_add_ing_and_hide_popup(currPage)
 
-    def cancel_popup_add_ing_and_hide_popup(self):
-        self.clear_popup_ing_for_dis_ing_rel()
-        self.ui.widget_popup_add_ing_27.hide()
+    def cancel_popup_add_ing_and_hide_popup(self, currPage):
+        self.clear_popup_ing_for_dis_ing_rel(currPage)
+        if currPage == 27:
+            self.ui.widget_popup_add_ing_27.hide()
+        elif currPage == 18:
+            self.ui.widget_popup_add_ing_18.hide()
+        elif currPage == 19:
+            self.ui.widget_popup_add_ing_19.hide()
 
-    def clear_popup_ing_for_dis_ing_rel(self):
-        self.ui.lineEdit_ing_name_27.clear()
-        self.ui.comboBox_ing_category1_27.clear()
-        self.ui.comboBox_ing_category2_27.clear()
-        self.ui.comboBox_ing_category3_27.clear()
-        self.ui.comboBox_ing_category4_27.clear()
-        self.ui.comboBox_ing_category5_27.clear()
-        self.ui.tableWidget_ing_candidates_27.setRowCount(0)
+    def clear_popup_ing_for_dis_ing_rel(self, currPage):
+        if currPage == 27:
+            self.ui.lineEdit_ing_name_27.clear()
+            self.ui.comboBox_ing_category1_27.clear()
+            self.ui.comboBox_ing_category2_27.clear()
+            self.ui.comboBox_ing_category3_27.clear()
+            self.ui.comboBox_ing_category4_27.clear()
+            self.ui.comboBox_ing_category5_27.clear()
+            self.ui.tableWidget_ing_candidates_27.setRowCount(0)
+        elif currPage == 18:
+            self.ui.lineEdit_ing_name_18.clear()
+            self.ui.comboBox_ing_category1_18.clear()
+            self.ui.comboBox_ing_category2_18.clear()
+            self.ui.comboBox_ing_category3_18.clear()
+            self.ui.comboBox_ing_category4_18.clear()
+            self.ui.comboBox_ing_category5_18.clear()
+            self.ui.tableWidget_ing_candidates_18.setRowCount(0)
+        elif currPage == 19:
+            self.ui.lineEdit_ing_name_19.clear()
+            self.ui.comboBox_ing_category1_19.clear()
+            self.ui.comboBox_ing_category2_19.clear()
+            self.ui.comboBox_ing_category3_19.clear()
+            self.ui.comboBox_ing_category4_19.clear()
+            self.ui.comboBox_ing_category5_19.clear()
+            self.ui.tableWidget_ing_candidates_19.setRowCount(0)
+
+    def cancel_edit_gasung_ingredients(self):
+        if self.warn_before_leaving():
+            self.ui.tableWidget_gasung_allergy_18.setRowCount(0)
+            self.go_to_pageN(13)
+
+    def update_gasung_ingredients(self):
+        gasung_dict = convert_tw_to_dict(self.ui.tableWidget_gasung_allergy_18, 3)
+        for int_str in gasung_dict:
+
+            Ingredient.objects.get(식품명=int_str).update(가성알레르기등급 = gasung_dict[int_str])
+
+        self.go_to_pageN(13)
+
+
+    def update_always_unrec_ingredients(self):
+        for ing_str in convert_checked_item_in_tw_to_str_set(self.ui.tableWidget_always_unrec_ing_19):
+            try:
+                Ingredient.objects.get(식품명=ing_str).update(
+                    항상비권고식품여부 = True
+                )
+            except:
+                create_warning_message(ing_str+"의 업데이트를 실패하였습니다.")
+        self.go_to_pageN(13)
+
+    def cancel_edit_always_unrec_ingredients(self):
+        if self.warn_before_leaving():
+            self.ui.tableWidget_always_unrec_ing_19.setRowCount(0)
+            self.go_to_pageN(13)
 
     def cancel_edit_existing_disease(self):
         if self.warn_before_leaving():
@@ -2618,11 +2844,15 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             except:
                 create_warning_message("잘못된 질병정보입니다. 다시 입력해주시길 바랍니다")
         else: #updating an already existing dis
-            Disease.objects.get(질병명 = self.local_disease_to_edit.질병명).update(
-                질병명 = tempName, 질병명영어 = self.ui.lineEdit_dis_name_english_27.text(),
-                질병식품관계=convert_tw_to_dict(self.ui.tableWidget_dis_ing_27, 3),
-                질병영양소관계=convert_tw_to_dict(self.ui.tableWidget_dis_nut_27, 3)
-            )
+            try:
+                Disease.objects.get(질병명 = self.local_disease_to_edit.질병명).update(
+                    질병명 = tempName, 질병명영어 = self.ui.lineEdit_dis_name_english_27.text(),
+                    질병식품관계=convert_tw_to_dict(self.ui.tableWidget_dis_ing_27, 3),
+                    질병영양소관계=convert_tw_to_dict(self.ui.tableWidget_dis_nut_27, 3)
+                )
+            except:
+                create_warning_message("잘못된 질병정보입니다. 다시 입력해주시길 바랍니다")
+
         self.clear_edit_existing_disease()
         self.go_to_pageN(25)
 
@@ -2637,6 +2867,92 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.widget_popup_add_nut_27.show()
         self.ui.comboBox_nut_category1_27.addItem("")
         self.ui.comboBox_nut_category1_27.addItems(self.list_of_nut_cat)
+
+    def show_popup_ing_for_gasung_allergy(self):
+        self.ui.widget_popup_add_ing_18.show()
+        listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_18.addItem("")
+        self.ui.comboBox_ing_category1_18.addItems(listOfCat1)
+        self.ui.comboBox_ing_category1_18.activated[str].connect(self.on_ing_cat1_18_changed)
+
+    def show_popup_ing_for_always_unrec_ing(self):
+        self.ui.widget_popup_add_ing_19.show()
+        listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_19.addItem("")
+        self.ui.comboBox_ing_category1_19.addItems(listOfCat1)
+        self.ui.comboBox_ing_category1_19.activated[str].connect(self.on_ing_cat1_19_changed)
+
+    def on_ing_cat1_18_changed(self, inputText):
+        listOfCat2 = Ingredient.objects(식품분류1=inputText).distinct("식품분류2")
+        self.ui.comboBox_ing_category2_18.clear()
+        self.ui.comboBox_ing_category3_18.clear()
+        self.ui.comboBox_ing_category4_18.clear()
+        self.ui.comboBox_ing_category5_18.clear()
+
+        self.ui.comboBox_ing_category2_18.addItem("")
+        self.ui.comboBox_ing_category2_18.addItems(listOfCat2)
+        self.ui.comboBox_ing_category2_18.activated[str].connect(self.on_ing_cat2_18_changed)
+
+    def on_ing_cat2_18_changed(self, inputText):
+        listOfCat3 = Ingredient.objects(식품분류2=inputText).distinct("식품분류3")
+        self.ui.comboBox_ing_category3_18.clear()
+        self.ui.comboBox_ing_category4_18.clear()
+        self.ui.comboBox_ing_category5_18.clear()
+
+        self.ui.comboBox_ing_category3_18.addItem("")
+        self.ui.comboBox_ing_category3_18.addItems(listOfCat3)
+        self.ui.comboBox_ing_category3_18.activated[str].connect(self.on_ing_cat3_18_changed)
+
+    def on_ing_cat3_18_changed(self, inputText):
+        listOfCat4 = Ingredient.objects(식품분류3=inputText).distinct("식품분류4")
+        self.ui.comboBox_ing_category4_18.clear()
+        self.ui.comboBox_ing_category5_18.clear()
+
+        self.ui.comboBox_ing_category4_18.addItem("")
+        self.ui.comboBox_ing_category4_18.addItems(listOfCat4)
+        self.ui.comboBox_ing_category4_18.activated[str].connect(self.on_ing_cat4_18_changed)
+
+    def on_ing_cat4_18_changed(self, inputText):
+        listOfCat5 = Ingredient.objects(식품분류4=inputText).distinct("식품분류5")
+        self.ui.comboBox_ing_category5_18.clear()
+        self.ui.comboBox_ing_category5_18.addItem("")
+        self.ui.comboBox_ing_category5_18.addItems(listOfCat5)
+
+    def on_ing_cat1_19_changed(self, inputText):
+        listOfCat2 = Ingredient.objects(식품분류1=inputText).distinct("식품분류2")
+        self.ui.comboBox_ing_category2_19.clear()
+        self.ui.comboBox_ing_category3_19.clear()
+        self.ui.comboBox_ing_category4_19.clear()
+        self.ui.comboBox_ing_category5_19.clear()
+
+        self.ui.comboBox_ing_category2_19.addItem("")
+        self.ui.comboBox_ing_category2_19.addItems(listOfCat2)
+        self.ui.comboBox_ing_category2_19.activated[str].connect(self.on_ing_cat2_19_changed)
+
+    def on_ing_cat2_19_changed(self, inputText):
+        listOfCat3 = Ingredient.objects(식품분류2=inputText).distinct("식품분류3")
+        self.ui.comboBox_ing_category3_19.clear()
+        self.ui.comboBox_ing_category4_19.clear()
+        self.ui.comboBox_ing_category5_19.clear()
+
+        self.ui.comboBox_ing_category3_19.addItem("")
+        self.ui.comboBox_ing_category3_19.addItems(listOfCat3)
+        self.ui.comboBox_ing_category3_19.activated[str].connect(self.on_ing_cat3_19_changed)
+
+    def on_ing_cat3_19_changed(self, inputText):
+        listOfCat4 = Ingredient.objects(식품분류3=inputText).distinct("식품분류4")
+        self.ui.comboBox_ing_category4_19.clear()
+        self.ui.comboBox_ing_category5_19.clear()
+
+        self.ui.comboBox_ing_category4_19.addItem("")
+        self.ui.comboBox_ing_category4_19.addItems(listOfCat4)
+        self.ui.comboBox_ing_category4_19.activated[str].connect(self.on_ing_cat4_19_changed)
+
+    def on_ing_cat4_19_changed(self, inputText):
+        listOfCat5 = Ingredient.objects(식품분류4=inputText).distinct("식품분류5")
+        self.ui.comboBox_ing_category5_19.clear()
+        self.ui.comboBox_ing_category5_19.addItem("")
+        self.ui.comboBox_ing_category5_19.addItems(listOfCat5)
 
     def on_ing_cat1_27_changed(self, inputText):
         listOfCat2 = Ingredient.objects(식품분류1=inputText).distinct("식품분류2")

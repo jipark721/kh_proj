@@ -148,11 +148,6 @@ def update_checkbox_state_and_level_tw(tw, checked_content_dict):
 #             nutrient_dict.pop(nutrient_tw.item(i,0).text(), None)
 #     populate_checkbox_tw_from_dict(nutrient_tw, nutrient_dict)
 
-def remove_selected_items_tw(tw):
-    for rowIndex in range(tw.rowCount(), -1, -1):
-        if tw.item(rowIndex, 0) and tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
-            tw.removeRow(rowIndex)
-
 
 def create_checkbox_lw(cursorToCollection, lw, content, isNewPatient, patientDiseaseSet):
     for item in cursorToCollection:

@@ -221,3 +221,6 @@ def populate_dummy():
     for i in range(100):
         add_dummy_disease(i)
     add_dummy_relations()
+
+# reset_database()
+# populate_dummy()
