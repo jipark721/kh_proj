@@ -1,2 +1,2 @@
-killall -15 mongod
+source venv/Scripts/activate
 mongod --dbpath src/mongodb/db/data
