@@ -97,7 +97,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_2 - select patient type
         self.ui.btn_findExistingPatient_2.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(5))
-        self.ui.btn_registerNewPatient_2.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(3))
+        self.ui.btn_registerNewPatient_2.clicked.connect(lambda x: self.go_to_register_new_patient())
         self.ui.btn_home_2.clicked.connect(self.go_to_home_no_warning)
 
         # page_3 - register new patient
@@ -250,7 +250,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_cancel_22.clicked.connect(lambda x: self.cancel_edit_existing_nutrient())
         self.ui.btn_save_22.clicked.connect(lambda x: self.register_or_update_nutrient())
         # page_23
-        self.ui.btn_cancel_23.clicked.connect(lambda x: self.go_to_pageN(20))
+        self.ui.btn_cancel_23.clicked.connect(lambda x: self.cancel_edit_nut_category())
         self.ui.btn_next_23.clicked.connect(lambda x: self.go_to_pageN(24))
         self.ui.btn_update_cat1_23.clicked.connect(lambda x: self.update_nutrient_column_i(1, self.ui.lineEdit_cat1_23))
         self.ui.btn_update_cat2_23.clicked.connect(lambda x: self.update_nutrient_column_i(2, self.ui.lineEdit_cat2_23))
@@ -262,7 +262,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_update_cat8_23.clicked.connect(lambda x: self.update_nutrient_column_i(8, self.ui.lineEdit_cat8_23))
         # page_24
         self.ui.btn_back_24.clicked.connect(lambda x: self.go_to_pageN(23))
-        self.ui.btn_confirm_24.clicked.connect(lambda x: self.go_to_pageN(20))
+        self.ui.btn_confirm_24.clicked.connect(lambda x: self.cancel_edit_nut_category())
         self.ui.btn_update_cat1_24.clicked.connect(lambda x: self.update_nutrient_column_i(1, self.ui.lineEdit_cat1_24))
         self.ui.btn_update_cat2_24.clicked.connect(lambda x: self.update_nutrient_column_i(2, self.ui.lineEdit_cat2_24))
         self.ui.btn_update_cat3_24.clicked.connect(lambda x: self.update_nutrient_column_i(3, self.ui.lineEdit_cat3_24))
@@ -319,7 +319,29 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def cancel_find_existing_nutrient(self):
         self.clear_find_existing_nutrient()
-        self.ui.stackedWidget.setCurrentIndex(20)
+        self.go_to_pageN(20)
+
+    def cancel_edit_nut_category(self):
+        self.clear_edit_nut_category()
+        self.go_to_pageN(20)
+
+    def clear_edit_nut_category(self):
+        self.ui.listWidget_nutrients1_23.clear()
+        self.ui.listWidget_nutrients2_23.clear()
+        self.ui.listWidget_nutrients3_23.clear()
+        self.ui.listWidget_nutrients4_23.clear()
+        self.ui.listWidget_nutrients5_23.clear()
+        self.ui.listWidget_nutrients6_23.clear()
+        self.ui.listWidget_nutrients7_23.clear()
+        self.ui.listWidget_nutrients8_23.clear()
+        self.ui.listWidget_nutrients1_24.clear()
+        self.ui.listWidget_nutrients2_24.clear()
+        self.ui.listWidget_nutrients3_24.clear()
+        self.ui.listWidget_nutrients4_24.clear()
+        self.ui.listWidget_nutrients5_24.clear()
+        self.ui.listWidget_nutrients6_24.clear()
+        self.ui.listWidget_nutrients7_24.clear()
+        self.ui.listWidget_nutrients8_24.clear()
 
     ####################
     # GO TO
@@ -349,7 +371,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                                     self.ui.lineEdit_cat7_23, self.ui.lineEdit_cat8_23,
                                     self.ui.lineEdit_cat1_24, self.ui.lineEdit_cat2_24, self.ui.lineEdit_cat3_24,
                                     self.ui.lineEdit_cat4_24, self.ui.lineEdit_cat5_24, self.ui.lineEdit_cat6_24,
-                                    self.ui.lineEdit_cat7_24, self.ui.lineEdit_cat8_23]
+                                    self.ui.lineEdit_cat7_24, self.ui.lineEdit_cat8_24]
         for i in range(len(self.list_of_nut_cat)):
             nut_cat = self.list_of_nut_cat[i]
             list_of_nut_cat_lineedit[i].setText(nut_cat)
@@ -2015,6 +2037,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def go_to_find_existing_patient(self):
         self.ui.stackedWidget.setCurrentIndex(5)
 
+    def go_to_register_new_patient(self):
+        self.clear_register_new_patient()
+        self.go_to_pageN(3)
+
     def go_back_to_register_new_patient_page1(self):
         self.currPatientDiseaseIndexSet = build_disease_index_set_from_lw(self.ui.listWidget_diseases_4)
         self.currPatientGSIngTupleSet = build_allergy_index_level_tuple_set_from_tw(self.ui.tableWidget_allergies_gs_4)
@@ -2117,10 +2143,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_weight_6.clear()
         self.ui.ckBox_preg_6.setChecked(False)
         self.ui.ckBox_bFeeding_6.setChecked(False)
-        self.currPatientDiseaseIndexSet.clear()
-        self.currPatientGSIngTupleSet.clear()
-        self.currPatientMSIngTupleSet.clear()
-        self.currPatientLGG4IngTupleSet.clear()
 
         self.current_patient = None
 
@@ -2168,10 +2190,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.ckBox_bFeeding_3.setChecked(False)
         self.ui.dateEdit_lastOfficeVisit_3.setDate(QtCore.QDate.currentDate())
 
-        self.currPatientDiseaseIndexSet.clear()
-        self.currPatientGSIngTupleSet.clear()
-        self.currPatientMSIngTupleSet.clear()
-        self.currPatientLGG4IngTupleSet.clear()
+        # self.currPatientDiseaseIndexSet.clear()
+        # self.currPatientGSIngTupleSet.clear()
+        # self.currPatientMSIngTupleSet.clear()
+        # self.currPatientLGG4IngTupleSet.clear()
 
         self.current_patient = None
 
