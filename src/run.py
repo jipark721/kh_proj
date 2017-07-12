@@ -195,6 +195,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_home_15.clicked.connect(lambda x: self.go_home(15))
         self.ui.btn_data_home_15.clicked.connect(lambda x: self.go_to_data_home(15))
         self.ui.btn_check_uniq_ing_name_15.clicked.connect(lambda x: self.check_unique_ing_name(self.ui.lineEdit_ing_name_15))
+        self.ui.btn_show_ing_category_candidates_15.clicked.connect(lambda x: self.show_ing_category_candidates())
         self.ui.btn_cancel_15.clicked.connect(lambda x: self.cancel_edit_existing_ingredient())
         self.ui.btn_next_15.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info_page2())
         #page_16 - register/edit ingredient page 2, adding ing-nut relationship
@@ -352,6 +353,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_view_common_ing_32.clicked.connect(self.show_common_ing)
         self.ui.btn_close_common_ings_32.clicked.connect(self.close_common_ing_widget)
         self.ui.btn_done_32.clicked.connect(self.done_with_from_nut_to_ing)
+
+
+    def show_ing_category_candidates(self):
+
 
 
     ####################
