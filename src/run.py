@@ -356,8 +356,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
 
     def show_ing_category_candidates(self):
+        if (not self.ui.comboBox_ing_category5_15 or self.ui.comboBox_ing_category5_15 == "") and (self.ui.lineEdit_ing_category5_15.text() == ""):
+            create_warning_message("식품분류1-5를 설정해주세요")
+        else:
+            ing_cat1, ing_cat2, ing_cat3, ing_cat4, ing_cat5 = get_five_combobox_texts(
+                self.ui.comboBox_ing_category1_15, self.ui.comboBox_ing_category2_15, self.ui.comboBox_ing_category3_15,
+                self.ui.comboBox_ing_category4_15, self.ui.comboBox_ing_category5_15,
+                self.ui.lineEdit_ing_category1_15, self.ui.lineEdit_ing_category2_15, self.ui.lineEdit_ing_category3_15,
+                self.ui.lineEdit_ing_category4_15, self.ui.lineEdit_ing_category5_15)
 
-
+            for ing_obj in Ingredient.objects(식품분류1 = ing_cat1, 식품분류2 = ing_cat2, 식품분류3 = ing_cat3,식품분류4 = ing_cat4,식품분류5 = ing_cat5):
+                pass
 
     ####################
     # GO TO
@@ -2668,10 +2677,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.comboBox_ing_category1_15, self.ui.comboBox_ing_category2_15, self.ui.comboBox_ing_category3_15, self.ui.comboBox_ing_category4_15, self.ui.comboBox_ing_category5_15,
             self.ui.lineEdit_ing_category1_15, self.ui.lineEdit_ing_category2_15, self.ui.lineEdit_ing_category3_15, self.ui.lineEdit_ing_category4_15, self.ui.lineEdit_ing_category5_15)
 
-        if not self.ui.lineEdit_ing_name_15.text() or not new_ing_cat1 or not new_ing_cat2 or not new_ing_cat3 or not new_ing_cat4 or not new_ing_cat5:
+        if not self.ui.lineEdit_ing_name_15.text() or not new_ing_cat1 or not new_ing_cat2 or not new_ing_cat3 \
+                or not new_ing_cat4 or not new_ing_cat5 or not self.ui.lineEdit_ing_category_index_15.text():
             msgbox = QtWidgets.QMessageBox()
             msgbox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgbox.setText("식품명, 식품분류 1-5는 필수입니다.")
+            msgbox.setText("식품명, 식품분류 1-5, 식품분류인덱스는 필수입니다.")
             msgbox.setWindowTitle("Error")
             msgbox.exec_()
         else:
