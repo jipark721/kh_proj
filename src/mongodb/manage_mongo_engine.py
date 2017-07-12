@@ -224,5 +224,6 @@ def populate_dummy():
         add_dummy_disease(i)
     add_dummy_relations()
 
-# reset_database()
-# populate_dummy()
+reset_database()
+populate_dummy()
+print_db_stats()
