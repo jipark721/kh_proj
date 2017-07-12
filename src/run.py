@@ -356,6 +356,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
 
     def show_ing_category_candidates(self):
+        self.ui.tableWidget_category_ing_candidates_15.setRowCount(0)
         if (not self.ui.comboBox_ing_category5_15 or self.ui.comboBox_ing_category5_15 == "") and (self.ui.lineEdit_ing_category5_15.text() == ""):
             create_warning_message("식품분류1-5를 설정해주세요")
         else:
@@ -365,8 +366,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 self.ui.lineEdit_ing_category1_15, self.ui.lineEdit_ing_category2_15, self.ui.lineEdit_ing_category3_15,
                 self.ui.lineEdit_ing_category4_15, self.ui.lineEdit_ing_category5_15)
 
+            list_ing_index = []
             for ing_obj in Ingredient.objects(식품분류1 = ing_cat1, 식품분류2 = ing_cat2, 식품분류3 = ing_cat3,식품분류4 = ing_cat4,식품분류5 = ing_cat5):
-                pass
+                list_ing_index.append((ing_obj.식품명, ing_obj.식품분류인덱스))
+            sorted_list = sorted(list_ing_index, key=operator.itemgetter(1), reverse=False)
+            self.ui.tableWidget_category_ing_candidates_15.setRowCount(len(sorted_list))
+            for i in range(len(sorted_list)):
+                ing_item = make_tw_str_item(sorted_list[i][0])
+                index_item = make_tw_str_item(str(sorted_list[i][1]))
+                self.ui.tableWidget_category_ing_candidates_15.setItem(i, 0, ing_item)
+                self.ui.tableWidget_category_ing_candidates_15.setItem(i, 1, index_item)
+
 
     ####################
     # GO TO
@@ -1517,6 +1527,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_ing_specialty4_15.setCurrentText(self.current_ingredient.특산지분류4)
         self.ui.comboBox_ing_specialty5_15.setCurrentText(self.current_ingredient.특산지분류5)
 
+        self.ui.lineEdit_ing_category_index_15.setText(str(self.current_ingredient.식품분류인덱스))
         self.ui.plainTextEdit_ing_description_15.setPlainText(self.current_ingredient.식품설명)
         self.ui.lineEdit_ing_academic_name_15.setText(self.current_ingredient.학명)
         self.ui.lineEdit_ing_lang_english_15.setText(self.current_ingredient.식품명영어)
@@ -2604,6 +2615,12 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.comboBox_ing_category3_15.clear()
         self.ui.comboBox_ing_category4_15.clear()
         self.ui.comboBox_ing_category5_15.clear()
+        self.ui.lineEdit_ing_category1_15.clear()
+        self.ui.lineEdit_ing_category2_15.clear()
+        self.ui.lineEdit_ing_category3_15.clear()
+        self.ui.lineEdit_ing_category4_15.clear()
+        self.ui.lineEdit_ing_category5_15.clear()
+        self.ui.lineEdit_ing_category_index_15.clear()
         self.ui.plainTextEdit_ing_description_15.clear()
         self.ui.lineEdit_ing_academic_name_15.clear()
         self.ui.lineEdit_ing_lang_english_15.clear()
@@ -2635,7 +2652,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.plainTextEdit_storage_15.clear()
         self.ui.plainTextEdit_processing_state_15.clear()
         self.ui.plainTextEdit_polishing_state_15.clear()
-
+        self.ui.tableWidget_category_ing_candidates_15.setRowCount(0)
         #page_16 stuff
         self.ui.tableWidget_nut_quant_16.setRowCount(0)
         self.ui.lineEdit_nut_name_16.clear()

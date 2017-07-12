@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>32</number>
+       <number>15</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -6245,6 +6245,16 @@
           <height>171</height>
          </rect>
         </property>
+        <column>
+         <property name="text">
+          <string>식품명</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>index</string>
+         </property>
+        </column>
        </widget>
        <widget class="QPushButton" name="btn_show_ing_category_candidates_15">
         <property name="geometry">
@@ -11433,14 +11443,6 @@
            <string>**식품 1개일때, 해당식품에 포함된 영양소를 함량대로 나열합니다.</string>
           </property>
          </widget>
-         <zorder>tableWidget_ings_31</zorder>
-         <zorder>btn_lookup_ing_31</zorder>
-         <zorder>btn_delete_selected_ings_31</zorder>
-         <zorder>label_71</zorder>
-         <zorder>btn_view_common_nut_31</zorder>
-         <zorder>label_78</zorder>
-         <zorder>widget_show_common_nuts_31</zorder>
-         <zorder>label_260</zorder>
         </widget>
         <widget class="QWidget" name="widget_popup_add_ing_31" native="true">
          <property name="enabled">
