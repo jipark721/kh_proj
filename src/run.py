@@ -4,6 +4,7 @@
 import sys
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
+from mongodb.models import *
 from mongodb.manage_mongo_engine import *
 from functions import *
 from decimal import *
@@ -176,7 +177,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_home_14.clicked.connect(lambda x: self.go_home(14))
         self.ui.btn_data_home_14.clicked.connect(lambda x: self.go_to_data_home(14))
         self.ui.btn_findby_ing_name_14.clicked.connect(lambda x: self.find_ingredients_by_name(
-            self.ui.lineEdit_ing_name_14.text()))
+            self.ui.lineEdit_ing_name_14.text(), 14))
         self.ui.btn_findby_ing_category_14.clicked.connect(lambda x: self.find_ingredients_by_category(14))
         self.ui.btn_cancel_14.clicked.connect(lambda x: self.cancel_find_existing_ingredient())
         self.ui.btn_confirm_ing_14.clicked.connect(lambda x: self.go_to_register_or_edit_ingredient_info(
@@ -332,7 +333,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             if old_nut_cat != new_nut_cat:
                 for i in range(curr_lw.count()):
                     nut_str = curr_lw.item(i).text()
-                    Nutrient.objects.get(영양소명=nut_str).update(영양소분류 = new_nut_cat)
+                    nut_obj = Nutrient.objects.get(영양소명=nut_str)
+                    nut_obj.영양소분류 = new_nut_cat
+                    nut_obj.save()
                 create_normal_message("영양소분류가 정상적으로 업데이트되었습니다.")
                 self.list_of_nut_cat = Nutrient.objects.distinct("영양소분류")
 
@@ -353,26 +356,26 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def remove_selected_items_tw_and_update_data(self, tw, currPage):
         for rowIndex in range(tw.rowCount(), -1, -1):
             if tw.item(rowIndex, 0) and tw.item(rowIndex, 0).checkState() == QtCore.Qt.Checked:
+                ing_str = tw.item(rowIndex, 0).text()
                 if currPage == 18:
-                    # Ingredient.objects.get(식품명=tw.item(rowIndex, 0).text()).update(
-                    #     가성알레르기등급=0
-                    # )
-                    # Ingredient.objects.get(식품명=tw.item(rowIndex, 0).text()).save()
-                    # print(tw.item(rowIndex,0).text()+"의 가성알레르기등급: "+ str(Ingredient.objects.get(식품명=tw.item(rowIndex, 0).text()).가성알레르기등급))
                     try:
-                        Ingredient.objects.get(식품명 = tw.item(rowIndex, 0).text()).update(
-                            가성알레르기등급 = 0
-                        )
+                        ing_obj = Ingredient.objects.get(식품명 = ing_str)
+                        ing_obj.가성알레르기등급 = 0
+                        ing_obj.save()
+                        tw.removeRow(rowIndex)
+
                     except Ingredient.DoesNotExist:
                         create_warning_message("가성알레르기 무효화가 실패했습니다.")
                 elif currPage == 19:
                     try:
-                        Ingredient.objects.get(식품명 = tw.item(rowIndex, 0).text()).update(
-                            항상비권고식품여부 = False
-                        )
-                    except Ingredient.DoesNotExists:
+                        ing_obj = Ingredient.objects.get(식품명=ing_str)
+                        # #ing_obj.reload()
+                        ing_obj.항상비권고식품여부 = False
+                        ing_obj.save()
+                        tw.removeRow(rowIndex)
+                    except Ingredient.DoesNotExist:
                         create_warning_message("항상비권고식품여부 무효화가 실패했습니다.")
-                tw.removeRow(rowIndex)
+
 
     def put_selected_nutrients_to_tw(self, rec_or_unrec_tw, isRec):
         lv = self.get_level_page29()
@@ -1503,17 +1506,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.plainTextEdit_story4_22.setPlainText(self.current_nutrient.이야기4)
 
     def get_nut_cat(self):
-        if self.ui.comboBox_nut_category1_22.currentText():
+        if self.ui.lineEdit_nut_category1_22 and self.ui.lineEdit_nut_category1_22.text() != "":
+            return self.ui.lineEdit_nut_category1_22.text()
+        elif self.ui.comboBox_nut_category1_22.currentText() != "":
             return self.ui.comboBox_nut_category1_22.currentText()
         else:
-            return self.ui.lineEdit_nut_category1_22.text()
+            return ""
 
     def register_or_update_nutrient(self):
         tempName = self.ui.lineEdit_nut_name_22.text()
         tempCat = self.get_nut_cat()
-        if not tempName or not tempCat:
+        if not tempName or not tempCat or tempCat == "":
             create_warning_message("영양소명, 영양소분류는 필수입니다.")
-
+            return
         if self.ui.lineEdit_quant_RDA_22.text():
             rda = Decimal(self.ui.lineEdit_quant_RDA_22.text().strip(' "'))
         else:
@@ -1526,6 +1531,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             fda = Decimal(self.ui.lineEdit_quant_FDA_22.text().strip(' "'))
         else:
             fda = 100
+
+
         if self.current_nutrient is None: #registering new nut
             try:
                 Nutrient(영양소명=tempName,
@@ -1535,8 +1542,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                          영양소명일본어 = self.ui.lineEdit_nut_lang_japanese_22.text(),
                          영양소명러시아어 = self.ui.lineEdit_nut_lang_russian_22.text(),
                          영양소명몽골어 = self.ui.lineEdit_nut_lang_mongolian_22.text(),
-                         영양소어아랍어 = self.ui.lineEdit_nut_lang_arabic_22.text(),
-                         영양소어스페인어 = self.ui.lineEdit_nut_lang_spanish_22.text(),
+                         영양소명아랍어 = self.ui.lineEdit_nut_lang_arabic_22.text(),
+                         영양소명스페인어 = self.ui.lineEdit_nut_lang_spanish_22.text(),
                          영양소명외국어8 = self.ui.lineEdit_nut_lang8_22.text(),
                          영양소명외국어9=self.ui.lineEdit_nut_lang9_22.text(),
                          영양소명외국어10=self.ui.lineEdit_nut_lang10_22.text(),
@@ -1554,35 +1561,38 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                          이야기4=self.ui.plainTextEdit_story4_22.toPlainText()
                          ).save()
                 create_normal_message("영양소가 성공적으로 등록되었습니다.")
-            except:
+            except Nutrient.DoesNotExist:
                 create_warning_message("잘못된 영양소정보입니다. 다시 입력해주시길 바랍니다")
+                return
         else:  # updating an already existing nut
-            Nutrient.objects.get(영양소명=self.current_nutrient.영양소명).update(
-                영양소명=tempName,
-                영양소분류=tempCat,
-                영양소명영어=self.ui.lineEdit_nut_lang_english_22.text(),
-                영양소명중국어=self.ui.lineEdit_nut_lang_chinese_22.text(),
-                영양소명일본어=self.ui.lineEdit_nut_lang_japanese_22.text(),
-                영양소명러시아어=self.ui.lineEdit_nut_lang_russian_22.text(),
-                영양소명몽골어=self.ui.lineEdit_nut_lang_mongolian_22.text(),
-                영양소어아랍어=self.ui.lineEdit_nut_lang_arabic_22.text(),
-                영양소어스페인어=self.ui.lineEdit_nut_lang_spanish_22.text(),
-                영양소명외국어8=self.ui.lineEdit_nut_lang8_22.text(),
-                영양소명외국어9=self.ui.lineEdit_nut_lang9_22.text(),
-                영양소명외국어10=self.ui.lineEdit_nut_lang10_22.text(),
-                영양소명외국어11=self.ui.lineEdit_nut_lang11_22.text(),
-                영양소명외국어12=self.ui.lineEdit_nut_lang12_22.text(),
-                하루권장량RDA=rda,
-                최대권장량WHO=who,
-                최대권장량식약처=fda,
-                설명=self.ui.plainTextEdit_description_22.toPlainText(),
-                조리시주의할점=self.ui.plainTextEdit_cooking_caution_22.toPlainText(),
-                이야기거리=self.ui.plainTextEdit_tale_22.toPlainText(),
-                이야기1=self.ui.plainTextEdit_story1_22.toPlainText(),
-                이야기2=self.ui.plainTextEdit_story2_22.toPlainText(),
-                이야기3=self.ui.plainTextEdit_story3_22.toPlainText(),
-                이야기4=self.ui.plainTextEdit_story4_22.toPlainText()
-            )
+            nut_obj = Nutrient.objects.get(영양소명=self.current_nutrient.영양소명)
+            nut_obj.영양소명 = tempName
+            nut_obj.영양소분류 = tempCat
+            nut_obj.영양소명영어 = self.ui.lineEdit_nut_lang_english_22.text()
+            nut_obj.영양소명중국어 = self.ui.lineEdit_nut_lang_chinese_22.text()
+            nut_obj.영양소명일본어 = self.ui.lineEdit_nut_lang_japanese_22.text()
+            nut_obj.영양소명러시아어 = self.ui.lineEdit_nut_lang_russian_22.text()
+            nut_obj.영양소명몽골어 = self.ui.lineEdit_nut_lang_mongolian_22.text()
+            nut_obj.영양소명아랍어 = self.ui.lineEdit_nut_lang_arabic_22.text()
+            nut_obj.영양소명스페인어 = self.ui.lineEdit_nut_lang_spanish_22.text()
+            nut_obj.영양소명외국어8 = self.ui.lineEdit_nut_lang8_22.text()
+            nut_obj.영양소명외국어9 = self.ui.lineEdit_nut_lang9_22.text()
+            nut_obj.영양소명외국어10 = self.ui.lineEdit_nut_lang10_22.text()
+            nut_obj.영양소명외국어11 = self.ui.lineEdit_nut_lang11_22.text()
+            nut_obj.영양소명외국어12 = self.ui.lineEdit_nut_lang12_22.text()
+            nut_obj.하루권장량RDA = rda
+            nut_obj.최대권장량WHO = who
+            nut_obj.최대권장량식약처 = fda
+            nut_obj.설명 = self.ui.plainTextEdit_description_22.toPlainText()
+            nut_obj.조리시주의할점 = self.ui.plainTextEdit_cooking_caution_22.toPlainText()
+            nut_obj.이야기거리 = self.ui.plainTextEdit_tale_22.toPlainText()
+            nut_obj.이야기1 = self.ui.plainTextEdit_story1_22.toPlainText()
+            nut_obj.이야기2 = self.ui.plainTextEdit_story2_22.toPlainText()
+            nut_obj.이야기3 = self.ui.plainTextEdit_story3_22.toPlainText()
+            nut_obj.이야기4 = self.ui.plainTextEdit_story4_22.toPlainText()
+            nut_obj.save()
+        if tempCat not in self.list_of_nut_cat:
+            self.list_of_nut_cat = Nutrient.objects.distinct("영양소분류")
         self.clear_edit_existing_nutrient()
         self.go_to_pageN(20)
 
@@ -2625,63 +2635,64 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                     식품영양소관계 = nut_quant_dict
                 ).save()
             else: #updating already existing ingredient
-                Ingredient.objects.get(식품명 = self.current_ingredient.식품명).update(
-                    식품명=self.ui.lineEdit_ing_name_15.text(),
-                    식품분류1=new_ing_cat1,
-                    식품분류2=new_ing_cat2,
-                    식품분류3=new_ing_cat3,
-                    식품분류4=new_ing_cat4,
-                    식품분류5=new_ing_cat5,
-                    학명=self.ui.lineEdit_ing_academic_name_15.text(),
-                    식품설명=self.ui.plainTextEdit_ing_description_15.toPlainText(),
-                    식품명영어=self.ui.lineEdit_ing_lang_english_15.text(),
-                    식품명중국어=self.ui.lineEdit_ing_lang_chinese_15.text(),
-                    식품명일본어=self.ui.lineEdit_ing_lang_japanese_15.text(),
-                    식품명러시아어=self.ui.lineEdit_ing_lang_russian_15.text(),
-                    식품명몽골어=self.ui.lineEdit_ing_lang_mongolian_15.text(),
-                    식품명아랍어=self.ui.lineEdit_ing_lang_arabic_15.text(),
-                    식품명스페인어=self.ui.lineEdit_ing_lang_spanish_15.text(),
-                    식품명외국어8=self.ui.lineEdit_ing_lang8_15.text(),
-                    식품명외국어9=self.ui.lineEdit_ing_lang9_15.text(),
-                    식품명외국어10=self.ui.lineEdit_ing_lang10_15.text(),
-                    식품명외국어11=self.ui.lineEdit_ing_lang11_15.text(),
-                    단일식사분량=one_portion,
-                    단일식사분량설명=self.ui.plainTextEdit_one_portion_description_15.toPlainText(),
-                    폐기율=mortality_rate,
-                    단백질가식부=protein,
-                    출력대표성등급=self.ui.spinBox_printingRep_level_15.value(),
-                    멸종등급=self.ui.spinBox_extinction_level_15.value(),
-                    즉시섭취=self.ui.ckBox_immediate_intake_15.isChecked(),
-                    항상비권고식품여부=self.ui.ckBox_always_unrec_15.isChecked(),
-                    가성알레르기등급=self.ui.spinBox_gasung_allergy_level_15.value(),
-                    급성알레르기가능여부=self.ui.ckBox_gs_allergy_15.isChecked(),
-                    만성알레르기가능여부=self.ui.ckBox_ms_allergy_15.isChecked(),
-                    만성lgG4과민반응가능여부=self.ui.ckBox_lgg4_allergy_15.isChecked(),
-                    이야기거리=self.ui.plainTextEdit_tale_15.toPlainText(),
-                    특징=self.ui.plainTextEdit_feature_15.toPlainText(),
-                    조리시특성=self.ui.plainTextEdit_cooking_feature_15.toPlainText(),
-                    보관법=self.ui.plainTextEdit_storage_15.toPlainText(),
-                    도정상태=self.ui.plainTextEdit_polishing_state_15.toPlainText(),
-                    가공상태=self.ui.plainTextEdit_processing_state_15.toPlainText(),
-                    원산지분류1=origin1,
-                    원산지분류2=origin2,
-                    원산지분류3=origin3,
-                    원산지분류4=origin4,
-                    원산지분류5=origin5,
-                    특산지분류1=specialty1,
-                    특산지분류2=specialty2,
-                    특산지분류3=specialty3,
-                    특산지분류4=specialty4,
-                    특산지분류5=specialty5,
-                    식품영양소관계=nut_quant_dict
-                )
+                ing_obj = Ingredient.objects.get(식품명 = self.current_ingredient.식품명)
+                ing_obj.식품명 = self.ui.lineEdit_ing_name_15.text()
+                ing_obj.식품분류1 = new_ing_cat1
+                ing_obj.식품분류2 = new_ing_cat2
+                ing_obj.식품분류3 = new_ing_cat3
+                ing_obj.식품분류4 = new_ing_cat4
+                ing_obj.식품분류5 = new_ing_cat5
+                ing_obj.학명 = self.ui.lineEdit_ing_academic_name_15.text()
+                ing_obj.식품설명 = self.ui.plainTextEdit_ing_description_15.toPlainText()
+                ing_obj.식품명영어 = self.ui.lineEdit_ing_lang_english_15.text()
+                ing_obj.식품명중국어 = self.ui.lineEdit_ing_lang_chinese_15.text()
+                ing_obj.식품명일본어 = self.ui.lineEdit_ing_lang_japanese_15.text()
+                ing_obj.식품명러시아어 = self.ui.lineEdit_ing_lang_russian_15.text()
+                ing_obj.식품명몽골어 = self.ui.lineEdit_ing_lang_mongolian_15.text()
+                ing_obj.식품명아랍어 = self.ui.lineEdit_ing_lang_arabic_15.text()
+                ing_obj.식품명스페인어 = self.ui.lineEdit_ing_lang_spanish_15.text()
+                ing_obj.식품명외국어8 = self.ui.lineEdit_ing_lang8_15.text()
+                ing_obj.식품명외국어9 = self.ui.lineEdit_ing_lang9_15.text()
+                ing_obj.식품명외국어10 = self.ui.lineEdit_ing_lang10_15.text()
+                ing_obj.식품명외국어11 = self.ui.lineEdit_ing_lang11_15.text()
+                ing_obj.단일식사분량 = one_portion
+                ing_obj.단일식사분량설명 = self.ui.plainTextEdit_one_portion_description_15.toPlainText()
+                ing_obj.폐기율 = mortality_rate
+                ing_obj.단백질가식부 = protein
+                ing_obj.출력대표성등급 = self.ui.spinBox_printingRep_level_15.value()
+                ing_obj.멸종등급 = self.ui.spinBox_extinction_level_15.value()
+                ing_obj.즉시섭취 = self.ui.ckBox_immediate_intake_15.isChecked()
+                ing_obj.항상비권고식품여부 = self.ui.ckBox_always_unrec_15.isChecked()
+                ing_obj.가성알레르기등급 = self.ui.spinBox_gasung_allergy_level_15.value()
+                ing_obj.급성알레르기가능여부 = self.ui.ckBox_gs_allergy_15.isChecked()
+                ing_obj.만성알레르기가능여부 = self.ui.ckBox_ms_allergy_15.isChecked()
+                ing_obj.만성lgG4과민반응가능여부 = self.ui.ckBox_lgg4_allergy_15.isChecked()
+                ing_obj.이야기거리 = self.ui.plainTextEdit_tale_15.toPlainText()
+                ing_obj.특징 = self.ui.plainTextEdit_feature_15.toPlainText()
+                ing_obj.조리시특성 = self.ui.plainTextEdit_cooking_feature_15.toPlainText()
+                ing_obj.보관법 = self.ui.plainTextEdit_storage_15.toPlainText()
+                ing_obj.도정상태 = self.ui.plainTextEdit_polishing_state_15.toPlainText()
+                ing_obj.가공상태 = self.ui.plainTextEdit_processing_state_15.toPlainText()
+                ing_obj.원산지분류1 = origin1
+                ing_obj.원산지분류2 = origin2
+                ing_obj.원산지분류3 = origin3
+                ing_obj.원산지분류4 = origin4
+                ing_obj.원산지분류5 = origin5
+                ing_obj.특산지분류1 = specialty1
+                ing_obj.특산지분류2 = specialty2
+                ing_obj.특산지분류3 = specialty3
+                ing_obj.특산지분류4 = specialty4
+                ing_obj.특산지분류5 = specialty5
+                ing_obj.식품영양소관계 = nut_quant_dict
+                ing_obj.save()
+
             for nut_str in nut_quant_dict:
                 nut = Nutrient.objects.get(영양소명 = nut_str)
                 nut.포함식품리스트[self.ui.lineEdit_ing_name_15.text()] = nut_quant_dict[nut_str]
                 nut.save()
 
-        self.clear_edit_existing_ingredient()
-        self.ui.stackedWidget.setCurrentIndex(13)
+            self.clear_edit_existing_ingredient()
+            self.ui.stackedWidget.setCurrentIndex(13)
 
     def find_existing_disease_for_edit(self):
         tag = self.ui.lineEdit_dis_name_26.text()
@@ -2796,9 +2807,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def update_gasung_ingredients(self):
         gasung_dict = convert_tw_to_dict(self.ui.tableWidget_gasung_allergy_18, 3)
-        for int_str in gasung_dict:
-
-            Ingredient.objects.get(식품명=int_str).update(가성알레르기등급 = gasung_dict[int_str])
+        for ing_str in gasung_dict:
+            ing_obj = Ingredient.objects.get(식품명=ing_str)
+            # ing_obj.reload()
+            ing_obj.가성알레르기등급 = gasung_dict[ing_str]
+            ing_obj.save()
 
         self.go_to_pageN(13)
 
@@ -2806,9 +2819,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def update_always_unrec_ingredients(self):
         for ing_str in convert_checked_item_in_tw_to_str_set(self.ui.tableWidget_always_unrec_ing_19):
             try:
-                Ingredient.objects.get(식품명=ing_str).update(
-                    항상비권고식품여부 = True
-                )
+                ing_obj = Ingredient.objects.get(식품명=ing_str)
+                ing_obj.reload()
+                ing_obj.항상비권고식품여부 = True
+                ing_obj.save()
+
             except:
                 create_warning_message(ing_str+"의 업데이트를 실패하였습니다.")
         self.go_to_pageN(13)
@@ -2845,11 +2860,12 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 create_warning_message("잘못된 질병정보입니다. 다시 입력해주시길 바랍니다")
         else: #updating an already existing dis
             try:
-                Disease.objects.get(질병명 = self.local_disease_to_edit.질병명).update(
-                    질병명 = tempName, 질병명영어 = self.ui.lineEdit_dis_name_english_27.text(),
-                    질병식품관계=convert_tw_to_dict(self.ui.tableWidget_dis_ing_27, 3),
-                    질병영양소관계=convert_tw_to_dict(self.ui.tableWidget_dis_nut_27, 3)
-                )
+                dis_obj = Disease.objects.get(질병명 = self.local_disease_to_edit.질병명)
+                dis_obj.질병명 = tempName
+                dis_obj.질병명영어 = self.ui.lineEdit_dis_name_english_27.text()
+                dis_obj.질병식품관계=convert_tw_to_dict(self.ui.tableWidget_dis_ing_27, 3)
+                dis_obj.질병영양소관계=convert_tw_to_dict(self.ui.tableWidget_dis_nut_27, 3)
+                dis_obj.save()
             except:
                 create_warning_message("잘못된 질병정보입니다. 다시 입력해주시길 바랍니다")
 
@@ -3056,7 +3072,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             create_normal_message("Successfully exported to json.")
         else:
             create_normal_message("Exporting json failed.")
-
 
 
 def main():

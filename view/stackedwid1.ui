@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>11</number>
+       <number>15</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -4834,9 +4834,9 @@
         <widget class="QPushButton" name="btn_edit_ingredients_data_12">
          <property name="geometry">
           <rect>
-           <x>80</x>
+           <x>60</x>
            <y>80</y>
-           <width>140</width>
+           <width>180</width>
            <height>41</height>
           </rect>
          </property>
@@ -4847,9 +4847,9 @@
         <widget class="QPushButton" name="btn_edit_nutrients_data_12">
          <property name="geometry">
           <rect>
-           <x>80</x>
+           <x>60</x>
            <y>120</y>
-           <width>140</width>
+           <width>180</width>
            <height>41</height>
           </rect>
          </property>
@@ -4860,9 +4860,9 @@
         <widget class="QPushButton" name="btn_edit_diseases_data_12">
          <property name="geometry">
           <rect>
-           <x>80</x>
+           <x>60</x>
            <y>160</y>
-           <width>140</width>
+           <width>180</width>
            <height>41</height>
           </rect>
          </property>
@@ -4886,9 +4886,9 @@
         <widget class="QPushButton" name="btn_edit_patients_data_12">
          <property name="geometry">
           <rect>
-           <x>80</x>
+           <x>60</x>
            <y>200</y>
-           <width>140</width>
+           <width>180</width>
            <height>41</height>
           </rect>
          </property>
@@ -4899,9 +4899,9 @@
         <widget class="QPushButton" name="btn_read_xlsx_db_12">
          <property name="geometry">
           <rect>
-           <x>80</x>
+           <x>60</x>
            <y>240</y>
-           <width>140</width>
+           <width>180</width>
            <height>41</height>
           </rect>
          </property>
@@ -4912,9 +4912,9 @@
         <widget class="QPushButton" name="btn_export_database_12">
          <property name="geometry">
           <rect>
-           <x>80</x>
+           <x>60</x>
            <y>320</y>
-           <width>140</width>
+           <width>180</width>
            <height>41</height>
           </rect>
          </property>
@@ -4925,9 +4925,9 @@
         <widget class="QPushButton" name="btn_read_json_db_12">
          <property name="geometry">
           <rect>
-           <x>80</x>
+           <x>60</x>
            <y>280</y>
-           <width>140</width>
+           <width>180</width>
            <height>41</height>
           </rect>
          </property>
@@ -5369,7 +5369,7 @@
         <property name="geometry">
          <rect>
           <x>80</x>
-          <y>180</y>
+          <y>190</y>
           <width>301</width>
           <height>21</height>
          </rect>
@@ -5379,7 +5379,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>180</y>
+          <y>190</y>
           <width>60</width>
           <height>21</height>
          </rect>
@@ -5392,7 +5392,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>210</y>
+          <y>220</y>
           <width>60</width>
           <height>21</height>
          </rect>
@@ -5547,7 +5547,7 @@
         <property name="geometry">
          <rect>
           <x>80</x>
-          <y>210</y>
+          <y>220</y>
           <width>301</width>
           <height>61</height>
          </rect>
@@ -5848,10 +5848,10 @@
           </rect>
          </property>
          <property name="minimum">
-          <number>0</number>
+          <number>-5</number>
          </property>
          <property name="maximum">
-          <number>5</number>
+          <number>0</number>
          </property>
          <property name="value">
           <number>0</number>
@@ -6755,6 +6755,19 @@
          </property>
         </widget>
        </widget>
+       <widget class="QLabel" name="label_122">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>150</y>
+          <width>531</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>**아래 텍스트로 쓰는 식품분류가 우선적으로 등록됩니다.</string>
+        </property>
+       </widget>
        <zorder>widget_57</zorder>
        <zorder>label_9</zorder>
        <zorder>label_89</zorder>
@@ -6785,6 +6798,7 @@
        <zorder>widget_64</zorder>
        <zorder>widget_32</zorder>
        <zorder>widget_58</zorder>
+       <zorder>label_122</zorder>
       </widget>
       <widget class="QWidget" name="page_data_ing_4_16">
        <widget class="QWidget" name="widget_61" native="true">
@@ -7985,7 +7999,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>611</width>
+          <width>731</width>
           <height>711</height>
          </rect>
         </property>
@@ -8442,6 +8456,19 @@
          </property>
          <property name="text">
           <string>영양소명-러시아어:</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_143">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>140</y>
+           <width>351</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>**아래 텍스트칸에 있는 영양소분류가 우선으로 등록됩니다.</string>
          </property>
         </widget>
        </widget>
