@@ -4782,7 +4782,7 @@
            <string>뒤로</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="btn_next_11">
+         <widget class="QPushButton" name="btn_end_diagnosis_11">
           <property name="geometry">
            <rect>
             <x>272</x>
@@ -4792,7 +4792,7 @@
            </rect>
           </property>
           <property name="text">
-           <string>다음</string>
+           <string>진단 끝내기</string>
           </property>
          </widget>
         </widget>
@@ -11240,7 +11240,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
  </buttongroups>
 </ui>
