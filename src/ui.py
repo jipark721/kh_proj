@@ -1436,7 +1436,7 @@ class Ui_MainWindow(object):
         self.listWidget_ing_data_lang_to_print_11.setGeometry(QtCore.QRect(150, 30, 201, 371))
         self.listWidget_ing_data_lang_to_print_11.setObjectName("listWidget_ing_data_lang_to_print_11")
         self.take_screenshot_11 = QtWidgets.QPushButton(self.widget_10)
-        self.take_screenshot_11.setGeometry(QtCore.QRect(700, 30, 121, 61))
+        self.take_screenshot_11.setGeometry(QtCore.QRect(680, 30, 121, 61))
         self.take_screenshot_11.setObjectName("take_screenshot_11")
         self.stackedWidget.addWidget(self.page_11)
         self.page_data_home_12 = QtWidgets.QWidget()
@@ -3328,7 +3328,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(11)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -3683,7 +3683,7 @@ class Ui_MainWindow(object):
         self.btn_back_11.setText(_translate("MainWindow", "뒤로"))
         self.btn_next_11.setText(_translate("MainWindow", "다음"))
         self.label_77.setText(_translate("MainWindow", "식품명 언어선택:"))
-        self.take_screenshot_11.setText(_translate("MainWindow", "스크린샷 저장"))
+        self.take_screenshot_11.setText(_translate("MainWindow", "PDF 저장"))
         self.btn_edit_ingredients_data_12.setText(_translate("MainWindow", "식품 정보 수정"))
         self.btn_edit_nutrients_data_12.setText(_translate("MainWindow", "영양소 정보 수정"))
         self.btn_edit_diseases_data_12.setText(_translate("MainWindow", "질병 정보 수정"))
