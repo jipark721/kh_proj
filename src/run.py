@@ -2467,7 +2467,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 uniqIDChecked = True
 
     def save_local_data_to_patient(self, patient):
-        if patient:
+        if patient and self.current_date:
             patient.진료일.append(str(self.current_date))
             patient.급성알레르기음식[str(self.current_date)] = self.local_gs_allergic_ingredients
             patient.만성알레르기음식[str(self.current_date)] = self.local_ms_allergic_ingredients
