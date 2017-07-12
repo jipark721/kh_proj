@@ -4819,6 +4819,19 @@
           </rect>
          </property>
         </widget>
+        <widget class="QPushButton" name="take_screenshot_11">
+         <property name="geometry">
+          <rect>
+           <x>700</x>
+           <y>30</y>
+           <width>121</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>스크린샷 저장</string>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="page_data_home_12">
@@ -11227,7 +11240,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

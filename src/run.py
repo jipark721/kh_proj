@@ -8,7 +8,9 @@ from mongodb.models import *
 from mongodb.manage_mongo_engine import *
 from functions import *
 from decimal import *
+from PyQt5 import QtGui, QtPrintSupport
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QScreen, QGuiApplication
 from mongodb.read_from_xlsx import read_xlsx_db
 
 class MyFoodRecommender(QtWidgets.QMainWindow):
@@ -16,6 +18,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         super(MyFoodRecommender, self).__init__(parent)
         self.ui = UI()
         self.ui.setupUi(self)
+        self.init_text_edit()
 
         # contains the 진단명s
         self.currPatientDiseaseIndexSet = set()
@@ -155,6 +158,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_11
         self.ui.btn_next_11.clicked.connect(lambda x: self.get_pdf_from_page_11())
+        self.ui.take_screenshot_11.clicked.connect(self.take_screenshot)
 
         # page_12 - data home
         self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
@@ -3073,6 +3077,48 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         else:
             create_normal_message("Exporting json failed.")
 
+    def take_screenshot(self):
+        filename = QFileDialog.getSaveFileName(self, 'Save to PDF')
+
+        if filename:
+            printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+            printer.setPageSize(QtPrintSupport.QPrinter.A4)
+            printer.setColorMode(QtPrintSupport.QPrinter.Color)
+            printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
+            printer.setOutputFileName(filename[0])
+            self.text.setText(self.generate_report_text())
+            self.text.document().print_(printer)
+
+    def generate_report_text(self):
+        report = ""
+        fields = convert_lw_to_str_set(self.ui.listWidget_ing_data_cat_to_print_11)
+
+        rec_ings = convert_tw_to_dict(self.ui.tableWidget_current_rec_ing_10, 4)
+        unrec_ings = convert_tw_to_dict(self.ui.tableWidget_current_unrec_ing_10, 4)
+
+        i = 0
+        report += "<RECOMMENDED INGREDIENTS>"
+        for ingredient in [Ingredient.objects.get(식품명=rec_ing) for rec_ing in rec_ings]:
+            report += "\n=============================================\n"
+            report += "\n" + str(i) + ". " + ingredient.식품명 + "\n\n"
+            for field in fields:
+                report += field + ": " + str(ingredient[field]) + "\n"
+            report += "\n\n\n\n\n\n\n\n"
+            i+=1
+        i = 0
+        report += "<NOT RECOMMENDED INGREDIENTS>"
+        for ingredient in [Ingredient.objects.get(식품명=unrec_ing) for unrec_ing in unrec_ings]:
+            report += "\n=============================================\n"
+            report += "\n" + str(i) + ". " + ingredient.식품명 + "\n\n"
+            for field in fields:
+                report += field + ": " + str(ingredient[field]) + "\n"
+            report += "\n\n\n\n\n\n\n\n"
+            i+=1
+        return report
+
+    def init_text_edit(self):
+        self.text = QtWidgets.QTextEdit(self)
+        self.text.hide()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

@@ -44,6 +44,7 @@ def make_lw_checkbox_item(content, isChecked):
 
 #for allergy table widgets and nut_quant tablewidgets, iterate through rows and return a list of tuple(알레르기음식, level)
 #0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything(decimal) 3 - fetch everything(integer)
+#4 - fetch only first columned name
 def convert_tw_to_dict(tw, fetchItemCode):
     dict = {}
     for index in range(tw.rowCount()):
@@ -57,6 +58,8 @@ def convert_tw_to_dict(tw, fetchItemCode):
             dict[tw.item(index, 0).text()] = float(tw.item(index, 1).text())
         elif fetchItemCode == 3:
             dict[tw.item(index, 0).text()] = int(tw.item(index, 1).text())
+        elif fetchItemCode == 4:
+            dict[tw.item(index, 0).text()] = True
     return dict
 
 #0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything
