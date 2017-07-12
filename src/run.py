@@ -27,9 +27,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.currPatientLGG4IngTupleSet = set()
 
         # local classes
-        self.current_date = datetime.date.today()
         self.current_patient = None
 
+        self.local_office_visit_date_str = datetime.date.today()
         self.local_gs_allergic_ingredients = {}
         self.local_ms_allergic_ingredients = {}
         self.local_lgG4_allergic_ingredients = {}
@@ -157,7 +157,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_next_10.clicked.connect(lambda x: self.go_to_page_11())
 
         # page_11
-        self.ui.btn_next_11.clicked.connect(lambda x: self.get_pdf_from_page_11())
+        #self.ui.btn_next_11.clicked.connect(lambda x: self.get_pdf_from_page_11())
         self.ui.take_screenshot_11.clicked.connect(self.take_screenshot)
 
         # page_12 - data home
@@ -165,6 +165,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_edit_patients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(28))
         self.ui.btn_edit_ingredients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(13))
         self.ui.btn_edit_nutrients_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(20))
+        self.ui.btn_view_ing_nut_rel_12.clicked.connect(lambda x: self.go_to_pageN(30))
         self.ui.btn_edit_diseases_data_12.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(25))
         self.ui.btn_read_json_db_12.clicked.connect(self.load_db_json)
         self.ui.btn_read_xlsx_db_12.clicked.connect(self.load_xlsx_for_db)
@@ -201,7 +202,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_findby_nut_category_16.clicked.connect(lambda x: self.find_nutrients_by_category(
             self.ui.comboBox_nut_category1_16, self.ui.tableWidget_nutCandidates_16))
         self.ui.btn_add_nut_16.clicked.connect(lambda x: self.add_selected_nutrients_to_tw_and_clear_and_hide_popup(16))
-        self.ui.btn_cancel_add_nut_16.clicked.connect(lambda x: self.cancel_popup_add_nut_and_hide_popup())
+        self.ui.btn_cancel_add_nut_16.clicked.connect(lambda x: self.cancel_popup_add_nut_and_hide_popup(16))
         self.ui.btn_delete_selected_nut_16.clicked.connect(lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_nut_quant_16, 16))
         self.ui.btn_back_16.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(15))
         self.ui.btn_cancel_16.clicked.connect(lambda x: self.cancel_edit_existing_ingredient())
@@ -304,10 +305,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_add_selected_ing_27.clicked.connect(
             lambda x: self.add_selected_ingredients_to_tw_and_clear_and_hide_popup(27))
         self.ui.btn_delete_selected_ings_27.clicked.connect(lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_dis_ing_27, 27))
-
-
-
-
         self.ui.btn_findby_nut_name_27.clicked.connect(lambda x: self.find_nutrients_by_name(self.ui.lineEdit_nut_name_27.text(), self.ui.tableWidget_nut_candidates_27))
         self.ui.btn_findby_nut_category_27.clicked.connect(lambda x: self.find_nutrients_by_category(self.ui.comboBox_nut_category1_27, self.ui.tableWidget_nut_candidates_27))
         self.ui.btn_cancel_popup_nut_27.clicked.connect(lambda x: self.cancel_popup_add_nut_and_hide_popup(27))
@@ -317,35 +314,57 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_cancel_27.clicked.connect(lambda x: self.cancel_edit_existing_disease())
         self.ui.btn_save_27.clicked.connect(self.register_or_update_disease)
 
-    def cancel_find_existing_nutrient(self):
-        self.clear_find_existing_nutrient()
-        self.go_to_pageN(20)
+        #page_30
+        self.ui.btn_home_30.clicked.connect(self.go_to_home_no_warning)
+        self.ui.btn_data_home_30.clicked.connect(self.go_to_data_home_with_no_warning)
+        self.ui.btn_view_from_ing_to_nut_30.clicked.connect(lambda x: self.go_to_view_from_ing_to_nut())
+        self.ui.btn_view_from_nut_to_ing_30.clicked.connect(lambda x: self.go_to_view_from_nut_to_ing())
 
-    def cancel_edit_nut_category(self):
-        self.clear_edit_nut_category()
-        self.go_to_pageN(20)
+        #page_31
+        self.ui.btn_lookup_ing_31.clicked.connect(self.show_popup_ing_for_from_ing_to_nut_rel)
+        self.ui.btn_findby_ing_name_31.clicked.connect(
+            lambda x: self.find_ingredients_by_name(self.ui.lineEdit_ing_name_31.text(), 31))
+        self.ui.btn_findby_ing_category_31.clicked.connect(lambda x: self.find_ingredients_by_category(31))
+        self.ui.btn_cancel_popup_ing_31.clicked.connect(lambda x: self.cancel_popup_add_ing_and_hide_popup(31))
+        self.ui.btn_add_selected_ing_31.clicked.connect(
+            lambda x: self.add_selected_ingredients_to_tw_and_clear_and_hide_popup(31))
+        self.ui.btn_delete_selected_ings_31.clicked.connect(
+            lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_ings_31, 31))
+        self.ui.btn_view_common_nut_31.clicked.connect(self.show_common_nut)
+        self.ui.btn_close_common_nuts_31.clicked.connect(self.close_common_nut_widget)
+        self.ui.btn_done_31.clicked.connect(self.done_with_from_ing_to_nut)
 
-    def clear_edit_nut_category(self):
-        self.ui.listWidget_nutrients1_23.clear()
-        self.ui.listWidget_nutrients2_23.clear()
-        self.ui.listWidget_nutrients3_23.clear()
-        self.ui.listWidget_nutrients4_23.clear()
-        self.ui.listWidget_nutrients5_23.clear()
-        self.ui.listWidget_nutrients6_23.clear()
-        self.ui.listWidget_nutrients7_23.clear()
-        self.ui.listWidget_nutrients8_23.clear()
-        self.ui.listWidget_nutrients1_24.clear()
-        self.ui.listWidget_nutrients2_24.clear()
-        self.ui.listWidget_nutrients3_24.clear()
-        self.ui.listWidget_nutrients4_24.clear()
-        self.ui.listWidget_nutrients5_24.clear()
-        self.ui.listWidget_nutrients6_24.clear()
-        self.ui.listWidget_nutrients7_24.clear()
-        self.ui.listWidget_nutrients8_24.clear()
+        #page_32
+        self.ui.btn_lookup_nut_32.clicked.connect(self.show_popup_ing_for_from_nut_to_ing_rel)
+        self.ui.btn_findby_nut_name_32.clicked.connect(
+            lambda x: self.find_nutrients_by_name(self.ui.lineEdit_nut_name_32.text(), self.ui.tableWidget_nut_candidates_32))
+        self.ui.btn_findby_nut_category_32.clicked.connect(lambda x: self.find_nutrients_by_category(self.ui.comboBox_nut_category1_32,
+                                                      self.ui.tableWidget_nut_candidates_32))
+        self.ui.btn_cancel_popup_nut_32.clicked.connect(lambda x: self.cancel_popup_add_nut_and_hide_popup(32))
+        self.ui.btn_add_selected_nut_32.clicked.connect(
+            lambda x: self.add_selected_nutrients_to_tw_and_clear_and_hide_popup(32))
+        self.ui.btn_delete_selected_nuts_32.clicked.connect(
+            lambda x: self.remove_selected_items_tw_and_update_data(self.ui.tableWidget_nuts_32, 32))
+        self.ui.btn_view_common_ing_32.clicked.connect(self.show_common_ing)
+        self.ui.btn_close_common_ings_32.clicked.connect(self.close_common_ing_widget)
+        self.ui.btn_done_32.clicked.connect(self.done_with_from_nut_to_ing)
+
 
     ####################
     # GO TO
     ####################
+    def go_to_view_from_ing_to_nut(self):
+        self.go_to_pageN(31)
+        self.ui.tableWidget_ings_31.setRowCount(0)
+        self.ui.widget_popup_add_ing_31.hide()
+        self.ui.widget_show_common_nuts_31.hide()
+
+    def go_to_view_from_nut_to_ing(self):
+        self.go_to_pageN(32)
+        self.ui.tableWidget_nuts_32.setRowCount(0)
+        self.ui.widget_popup_add_nut_32.hide()
+        self.ui.widget_show_common_ings_32.hide()
+
     def go_to_edit_nut_category(self):
         self.ui.stackedWidget.setCurrentIndex(23)
         self.render_edit_nut_category()
@@ -401,6 +420,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                         tw.removeRow(rowIndex)
                     except Ingredient.DoesNotExist:
                         create_warning_message("항상비권고식품여부 무효화가 실패했습니다.")
+                elif currPage == 31 or currPage == 32:
+                    tw.removeRow(rowIndex)
 
 
     def put_selected_nutrients_to_tw(self, rec_or_unrec_tw, isRec):
@@ -964,7 +985,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_ID_4.setText(self.current_patient.ID)
             self.ui.lineEdit_birthdate_4.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
             self.ui.lineEdit_age_4.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-            self.ui.lineEdit_lastOfficeVisit_4.setText(str(datetime.date.today()))
+            self.ui.lineEdit_lastOfficeVisit_4.setText(self.local_office_visit_date_str)
             self.ui.lineEdit_height_4.setText(str(self.current_patient.키))
             self.ui.lineEdit_weight_4.setText(str(self.current_patient.몸무게))
             self.ui.lineEdit_nthVisit_4.setText(str(self.current_patient.방문횟수 + 1))
@@ -973,7 +994,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_ID_7.setText(self.current_patient.ID)
             self.ui.lineEdit_birthdate_7.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
             self.ui.lineEdit_age_7.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-            self.ui.lineEdit_lastOfficeVisit_7.setText(str(datetime.date.today()))
+            self.ui.lineEdit_lastOfficeVisit_7.setText(self.local_office_visit_date_str)
             self.ui.lineEdit_height_7.setText(str(self.current_patient.키))
             self.ui.lineEdit_weight_7.setText(str(self.current_patient.몸무게))
             self.ui.lineEdit_nthVisit_7.setText(str(self.current_patient.방문횟수 + 1))
@@ -982,7 +1003,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_ID_9.setText(self.current_patient.ID)
             self.ui.lineEdit_birthdate_9.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
             self.ui.lineEdit_age_9.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-            self.ui.lineEdit_lastOfficeVisit_9.setText(str(datetime.date.today()))
+            self.ui.lineEdit_lastOfficeVisit_9.setText(self.local_office_visit_date_str)
             self.ui.lineEdit_height_9.setText(str(self.current_patient.키))
             self.ui.lineEdit_weight_9.setText(str(self.current_patient.몸무게))
             self.ui.lineEdit_nthVisit_9.setText(str(self.current_patient.방문횟수 + 1))
@@ -991,7 +1012,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_ID_10.setText(self.current_patient.ID)
             self.ui.lineEdit_birthdate_10.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
             self.ui.lineEdit_age_10.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-            self.ui.lineEdit_lastOfficeVisit_10.setText(str(datetime.date.today()))
+            self.ui.lineEdit_lastOfficeVisit_10.setText(self.local_office_visit_date_str)
             self.ui.lineEdit_height_10.setText(str(self.current_patient.키))
             self.ui.lineEdit_weight_10.setText(str(self.current_patient.몸무게))
             self.ui.lineEdit_nthVisit_10.setText(str(self.current_patient.방문횟수 + 1))
@@ -1000,7 +1021,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_ID_29.setText(self.current_patient.ID)
             self.ui.lineEdit_birthdate_29.setText(self.current_patient.생년월일.strftime('%Y/%m/%d'))
             self.ui.lineEdit_age_29.setText(calculate_age_from_birthdate_string(self.current_patient.생년월일))
-            self.ui.lineEdit_lastOfficeVisit_29.setText(str(datetime.date.today()))
+            self.ui.lineEdit_lastOfficeVisit_29.setText(self.local_office_visit_date_str)
             self.ui.lineEdit_height_29.setText(str(self.current_patient.키))
             self.ui.lineEdit_weight_29.setText(str(self.current_patient.몸무게))
             self.ui.lineEdit_nthVisit_29.setText(str(self.current_patient.방문횟수 + 1))
@@ -1658,6 +1679,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.plainTextEdit_story4_22.clear()
 
     def render_nut_category1_dropdown_menu(self):
+        self.ui.comboBox_nut_category1_21.clear()
         self.ui.comboBox_nut_category1_21.addItem("")
         self.ui.comboBox_nut_category1_21.addItems(self.list_of_nut_cat)
 
@@ -1747,6 +1769,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_ing_category1_dropdown_menu(self):
         listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_14.clear()
         self.ui.comboBox_ing_category1_14.addItem("")
         self.ui.comboBox_ing_category1_14.addItems(listOfCat1)
         self.ui.comboBox_ing_category1_14.activated[str].connect(self.on_ing_cat1_changed)
@@ -1847,6 +1870,19 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 found_ingredients = Ingredient.objects(식품분류1=self.ui.comboBox_ing_category1_19.currentText())
             else:
                 found_ingredients = Ingredient.objects.all()
+        elif currPage == 31:
+            if self.ui.comboBox_ing_category5_31.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류5=self.ui.comboBox_ing_category5_31.currentText())
+            elif self.ui.comboBox_ing_category4_31.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류4=self.ui.comboBox_ing_category4_31.currentText())
+            elif self.ui.comboBox_ing_category3_31.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류3=self.ui.comboBox_ing_category3_31.currentText())
+            elif self.ui.comboBox_ing_category2_31.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류2=self.ui.comboBox_ing_category2_31.currentText())
+            elif self.ui.comboBox_ing_category1_31.currentText() != "":
+                found_ingredients = Ingredient.objects(식품분류1=self.ui.comboBox_ing_category1_31.currentText())
+            else:
+                found_ingredients = Ingredient.objects.all()
         self.render_found_ingredients(found_ingredients, currPage)
 
     def render_found_ingredients(self, found_ingredients, currPage):
@@ -1858,6 +1894,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             tw = self.ui.tableWidget_ing_candidates_18
         elif currPage == 19:
             tw = self.ui.tableWidget_ing_candidates_19
+        elif currPage == 31:
+            tw = self.ui.tableWidget_ing_candidates_31
 
         tw.setRowCount(found_ingredients.count())
         i = 0
@@ -2066,7 +2104,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                         생년월일 = convert_DateEditWidget_to_string(self.ui.dateEdit_birthdate_3),
                         주소 = self.ui.lineEdit_address_3.text(),
                         키=h, 몸무게=w, 임신여부=isPreg, 수유여부 = isBFeeding).save()
-
+                self.local_office_visit_date_str = convert_DateEditWidget_to_string(self.ui.dateEdit_lastOfficeVisit_3)
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setWindowTitle("Information")
                 msgbox.setText("회원 " + tempName + "이/가 등록되었습니다. 진단을 계속하시겠습니까?")
@@ -2267,6 +2305,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_existing_patient_info_disease_and_allergies(self, id):
         self.current_patient = Patient.objects.get(ID=id)
+        self.local_office_visit_date_str = str(datetime.date.today())
         self.render_basic_patient_info_on_top(7)
 
         # Render all elements to lw and tw
@@ -2392,12 +2431,12 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 uniqIDChecked = True
 
     def save_local_data_to_patient(self, patient):
-        patient.급성알레르기음식[str(self.current_date)] = self.local_gs_allergic_ingredients
-        patient.만성알레르기음식[str(self.current_date)] = self.local_ms_allergic_ingredients
-        patient.만성lgG4과민반응음식[str(self.current_date)] = self.local_lgG4_allergic_ingredients
-        patient.진단[str(self.current_date)] = self.local_diseases
+        patient.급성알레르기음식[self.local_office_visit_date_str] = self.local_gs_allergic_ingredients
+        patient.만성알레르기음식[self.local_office_visit_date_str] = self.local_ms_allergic_ingredients
+        patient.만성lgG4과민반응음식[self.local_office_visit_date_str] = self.local_lgG4_allergic_ingredients
+        patient.진단[self.local_office_visit_date_str] = self.local_diseases
         local_진료일 = patient.진료일
-        local_진료일.append(self.current_date)
+        local_진료일.append(self.local_office_visit_date_str)
         patient.진료일 = local_진료일
         patient.save()
 
@@ -2443,6 +2482,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def show_popup_nut_for_ing_nut_rel(self):
         self.ui.widget_popup_nut_16.show()
+        self.ui.comboBox_nut_category1_16.clear()
 
         self.ui.comboBox_nut_category1_16.addItem("")
         self.ui.comboBox_nut_category1_16.addItems(self.list_of_nut_cat)
@@ -2454,6 +2494,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         elif currPage == 27:
             selected_nutrients = convert_checked_item_in_tw_to_str_set(self.ui.tableWidget_nut_candidates_27)
             tw_to_add = self.ui.tableWidget_dis_nut_27
+        elif currPage == 32:
+            selected_nutrients = convert_checked_item_in_tw_to_str_set(self.ui.tableWidget_nut_candidates_32)
+            tw_to_add = self.ui.tableWidget_nuts_32
         index = tw_to_add.rowCount()
         tw_to_add.setRowCount(index+ len(selected_nutrients))
         for nut_str in selected_nutrients:
@@ -2470,6 +2513,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.widget_popup_nut_16.hide()
         elif currPage == 27:
             self.ui.widget_popup_add_nut_27.hide()
+        elif currPage == 32:
+            self.ui.widget_popup_add_nut_32.hide()
 
     def clear_popup_nut(self, currPage):
         if currPage == 16:
@@ -2480,6 +2525,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.lineEdit_nut_name_27.clear()
             self.ui.comboBox_nut_category1_27.clear()
             self.ui.tableWidget_nut_candidates_27.setRowCount(0)
+        elif currPage == 32:
+            self.ui.lineEdit_nut_name_32.clear()
+            self.ui.comboBox_nut_category1_32.clear()
+            self.ui.tableWidget_nut_candidates_32.setRowCount(0)
 
     def clear_find_existing_ingredient(self):
         self.ui.lineEdit_ing_name_14.clear()
@@ -2759,6 +2808,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         elif currPage == 19:
             tw = self.ui.tableWidget_ing_candidates_19
             tw_to_add = self.ui.tableWidget_always_unrec_ing_19
+        elif currPage == 31:
+            tw = self.ui.tableWidget_ing_candidates_31
+            tw_to_add = self.ui.tableWidget_ings_31
 
         selected_ingredients = convert_checked_item_in_tw_to_str_set(tw)
         index = tw_to_add.rowCount()
@@ -2792,15 +2844,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.cancel_popup_add_ing_and_hide_popup(currPage)
 
     def cancel_popup_add_ing_and_hide_popup(self, currPage):
-        self.clear_popup_ing_for_dis_ing_rel(currPage)
+        self.clear_popup_ing(currPage)
         if currPage == 27:
             self.ui.widget_popup_add_ing_27.hide()
         elif currPage == 18:
             self.ui.widget_popup_add_ing_18.hide()
         elif currPage == 19:
             self.ui.widget_popup_add_ing_19.hide()
+        elif currPage == 31:
+            self.ui.widget_popup_add_ing_31.hide()
 
-    def clear_popup_ing_for_dis_ing_rel(self, currPage):
+    def clear_popup_ing(self, currPage):
         if currPage == 27:
             self.ui.lineEdit_ing_name_27.clear()
             self.ui.comboBox_ing_category1_27.clear()
@@ -2825,6 +2879,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             self.ui.comboBox_ing_category4_19.clear()
             self.ui.comboBox_ing_category5_19.clear()
             self.ui.tableWidget_ing_candidates_19.setRowCount(0)
+        elif currPage == 31:
+            self.ui.lineEdit_ing_name_31.clear()
+            self.ui.comboBox_ing_category1_31.clear()
+            self.ui.comboBox_ing_category2_31.clear()
+            self.ui.comboBox_ing_category3_31.clear()
+            self.ui.comboBox_ing_category4_31.clear()
+            self.ui.comboBox_ing_category5_31.clear()
+            self.ui.tableWidget_ing_candidates_31.setRowCount(0)
 
     def cancel_edit_gasung_ingredients(self):
         if self.warn_before_leaving():
@@ -2898,21 +2960,192 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.clear_edit_existing_disease()
         self.go_to_pageN(25)
 
+    def done_with_from_ing_to_nut(self):
+        self.ui.tableWidget_ings_31.setRowCount(0)
+        self.ui.tableWidget_common_nuts_31.setRowCount(0)
+        self.ui.tableWidget_ing_candidates_31.setRowCount(0)
+        self.ui.lineEdit_ing_name_31.clear()
+        self.ui.comboBox_ing_category1_31.clear()
+        self.ui.comboBox_ing_category2_31.clear()
+        self.ui.comboBox_ing_category3_31.clear()
+        self.ui.comboBox_ing_category4_31.clear()
+        self.ui.comboBox_ing_category5_31.clear()
+        self.go_to_pageN(30)
+
+    def done_with_from_nut_to_ing(self):
+        self.ui.tableWidget_nuts_32.setRowCount(0)
+        self.ui.tableWidget_common_ings_32.setRowCount(0)
+        self.ui.tableWidget_nut_candidates_32.setRowCount(0)
+        self.ui.lineEdit_nut_name_32.clear()
+        self.ui.comboBox_nut_category1_32.clear()
+        self.go_to_pageN(30)
+
+    def close_common_nut_widget(self):
+        self.ui.tableWidget_common_nuts_31.setRowCount(0)
+        self.ui.widget_show_common_nuts_31.hide()
+
+    def close_common_ing_widget(self):
+        self.ui.tableWidget_common_ings_32.setRowCount(0)
+        self.ui.widget_show_common_ings_32.hide()
+
+    def show_common_ing(self):
+        self.ui.widget_popup_add_nut_32.hide()
+        self.ui.widget_show_common_ings_32.show()
+        self.ui.tableWidget_common_ings_32.setRowCount(0)
+
+        nut_set = get_tw_items(self.ui.tableWidget_nuts_32)
+        ing_set = set()
+        isFirst = True
+        for nut_str in nut_set:
+            nut_obj = Nutrient.objects.get(영양소명=nut_str)
+            if isFirst:
+                ing_set = nut_obj.포함식품리스트.keys()
+                isFirst = False
+            else:
+                ing_set = ing_set & nut_obj.포함식품리스트.keys()
+        ing_list = list(ing_set)
+        nut_list = list(nut_set)
+
+        self.ui.tableWidget_common_ings_32.setColumnCount(len(ing_list) + 1)
+        self.ui.tableWidget_common_ings_32.setRowCount(len(nut_list))
+
+        if len(nut_list) == 1:
+            nut_str = nut_list[0]
+            nut_item = make_tw_str_item(nut_str)
+            self.ui.tableWidget_common_ings_32.setItem(0, 0, nut_item)
+
+            nut_obj = Nutrient.objects.get(영양소명=nut_str)
+            print("nut:"+nut_str)
+            print(nut_obj.포함식품리스트.items())
+            if nut_obj.포함식품리스트 or len(nut_obj.포함식품리스트.keys()) != 0:
+                sorted_ing_list = sorted(nut_obj.포함식품리스트.items(), key=operator.itemgetter(1), reverse=True)
+                for i in range(1, len(sorted_ing_list)+1):
+                    ing_str = sorted_ing_list[i-1][0]
+                    header_item = QtWidgets.QTableWidgetItem(ing_str)
+                    self.ui.tableWidget_common_ings_32.setHorizontalHeaderItem(i, header_item)
+
+                    quant = sorted_ing_list[i-1][1]
+                    quant_item = make_tw_str_item(str(quant))
+                    self.ui.tableWidget_common_ings_32.setItem(0, i, quant_item)
+        else:
+            for colIndex in range(1, len(ing_list) + 1):
+                header_item = QtWidgets.QTableWidgetItem(ing_list[colIndex - 1])
+                self.ui.tableWidget_common_ings_32.setHorizontalHeaderItem(colIndex, header_item)
+
+            for rowIndex in range(len(nut_list)):
+                nut_item = make_tw_str_item(nut_list[rowIndex])
+                self.ui.tableWidget_common_ings_32.setItem(rowIndex, 0, nut_item)
+                nut_obj = Nutrient.objects.get(영양소명=nut_list[rowIndex])
+
+                for i in range(1, len(ing_list) + 1):
+                    ing_str = ing_list[i - 1]
+                    quant = nut_obj.포함식품리스트[ing_str]
+                    quant_item = make_tw_str_item(str(quant))
+                    self.ui.tableWidget_common_ings_32.setItem(rowIndex, i, quant_item)
+        self.ui.tableWidget_common_ings_32.resizeColumnsToContents()
+
+    def show_common_nut(self):
+        self.ui.widget_popup_add_ing_31.hide()
+        self.ui.widget_show_common_nuts_31.show()
+        self.ui.tableWidget_common_nuts_31.setRowCount(0)
+
+        ing_set = get_tw_items(self.ui.tableWidget_ings_31)
+        nut_set = set()
+        isFirst = True
+        for ing_str in ing_set:
+            ing_obj = Ingredient.objects.get(식품명 = ing_str)
+            if isFirst:
+                nut_set = ing_obj.식품영양소관계.keys()
+                isFirst = False
+            else:
+                nut_set = nut_set & ing_obj.식품영양소관계.keys()
+        ing_list = list(ing_set)
+        nut_list = list(nut_set)
+
+        self.ui.tableWidget_common_nuts_31.setColumnCount(len(nut_list)+1)
+        self.ui.tableWidget_common_nuts_31.setRowCount(len(ing_list))
+
+        if len(ing_list) == 1:
+            ing_str = ing_list[0]
+            ing_item = make_tw_str_item(ing_str)
+            self.ui.tableWidget_common_nuts_31.setItem(0, 0, ing_item)
+
+            ing_obj = Ingredient.objects.get(식품명 = ing_str)
+
+            if ing_obj.식품영양소관계 or len(ing_obj.식품영양소관계.keys()) != 0:
+                sorted_nut_list = sorted(ing_obj.식품영양소관계.items(), key=operator.itemgetter(1), reverse=True)
+                for i in range(1, len(sorted_nut_list) + 1):
+                    nut_str = sorted_nut_list[i - 1][0]
+                    header_item = QtWidgets.QTableWidgetItem(nut_str)
+                    self.ui.tableWidget_common_nuts_31.setHorizontalHeaderItem(i, header_item)
+
+                    quant = sorted_nut_list[i - 1][1]
+                    quant_item = make_tw_str_item(str(quant))
+                    self.ui.tableWidget_common_nuts_31.setItem(0, i, quant_item)
+        else:
+            for colIndex in range(1, len(nut_list)+1):
+                header_item = QtWidgets.QTableWidgetItem(nut_list[colIndex-1])
+                self.ui.tableWidget_common_nuts_31.setHorizontalHeaderItem(colIndex, header_item)
+
+            for rowIndex in range(len(ing_list)):
+                ing_item = make_tw_str_item(ing_list[rowIndex])
+                self.ui.tableWidget_common_nuts_31.setItem(rowIndex, 0, ing_item)
+                ing_obj = Ingredient.objects.get(식품명=ing_list[rowIndex])
+
+                for i in range(1, len(nut_list)+1):
+                    nut_str = nut_list[i-1]
+                    quant = ing_obj.식품영양소관계[nut_str]
+                    quant_item = make_tw_str_item(str(quant))
+                    self.ui.tableWidget_common_nuts_31.setItem(rowIndex, i, quant_item)
+        self.ui.tableWidget_common_nuts_31.resizeColumnsToContents()
+
+
+    def cancel_find_existing_nutrient(self):
+        self.clear_find_existing_nutrient()
+        self.go_to_pageN(20)
+
+    def cancel_edit_nut_category(self):
+        self.clear_edit_nut_category()
+        self.go_to_pageN(20)
+
+    def clear_edit_nut_category(self):
+        self.ui.listWidget_nutrients1_23.clear()
+        self.ui.listWidget_nutrients2_23.clear()
+        self.ui.listWidget_nutrients3_23.clear()
+        self.ui.listWidget_nutrients4_23.clear()
+        self.ui.listWidget_nutrients5_23.clear()
+        self.ui.listWidget_nutrients6_23.clear()
+        self.ui.listWidget_nutrients7_23.clear()
+        self.ui.listWidget_nutrients8_23.clear()
+        self.ui.listWidget_nutrients1_24.clear()
+        self.ui.listWidget_nutrients2_24.clear()
+        self.ui.listWidget_nutrients3_24.clear()
+        self.ui.listWidget_nutrients4_24.clear()
+        self.ui.listWidget_nutrients5_24.clear()
+        self.ui.listWidget_nutrients6_24.clear()
+        self.ui.listWidget_nutrients7_24.clear()
+        self.ui.listWidget_nutrients8_24.clear()
+
     def show_popup_ing_for_dis_ing_rel(self):
+        self.ui.widget_popup_add_nut_27.hide()
         self.ui.widget_popup_add_ing_27.show()
         listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_27.clear()
         self.ui.comboBox_ing_category1_27.addItem("")
         self.ui.comboBox_ing_category1_27.addItems(listOfCat1)
         self.ui.comboBox_ing_category1_27.activated[str].connect(self.on_ing_cat1_27_changed)
 
     def show_popup_nut_for_dis_nut_rel(self):
+        self.ui.widget_popup_add_ing_27.hide()
         self.ui.widget_popup_add_nut_27.show()
+        self.ui.comboBox_nut_category1_27.clear()
         self.ui.comboBox_nut_category1_27.addItem("")
         self.ui.comboBox_nut_category1_27.addItems(self.list_of_nut_cat)
 
     def show_popup_ing_for_gasung_allergy(self):
         self.ui.widget_popup_add_ing_18.show()
         listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_18.clear()
         self.ui.comboBox_ing_category1_18.addItem("")
         self.ui.comboBox_ing_category1_18.addItems(listOfCat1)
         self.ui.comboBox_ing_category1_18.activated[str].connect(self.on_ing_cat1_18_changed)
@@ -2920,9 +3153,62 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
     def show_popup_ing_for_always_unrec_ing(self):
         self.ui.widget_popup_add_ing_19.show()
         listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_19.clear()
         self.ui.comboBox_ing_category1_19.addItem("")
         self.ui.comboBox_ing_category1_19.addItems(listOfCat1)
         self.ui.comboBox_ing_category1_19.activated[str].connect(self.on_ing_cat1_19_changed)
+
+    def show_popup_ing_for_from_ing_to_nut_rel(self):
+        self.ui.widget_show_common_nuts_31.hide()
+        self.ui.widget_popup_add_ing_31.show()
+        listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_31.clear()
+        self.ui.comboBox_ing_category1_31.addItem("")
+        self.ui.comboBox_ing_category1_31.addItems(listOfCat1)
+        self.ui.comboBox_ing_category1_31.activated[str].connect(self.on_ing_cat1_31_changed)
+
+    def show_popup_ing_for_from_nut_to_ing_rel(self):
+        self.ui.widget_show_common_ings_32.hide()
+        self.ui.widget_popup_add_nut_32.show()
+        self.ui.comboBox_nut_category1_32.clear()
+        self.ui.comboBox_nut_category1_32.addItem("")
+        self.ui.comboBox_nut_category1_32.addItems(self.list_of_nut_cat)
+
+    def on_ing_cat1_31_changed(self, inputText):
+        listOfCat2 = Ingredient.objects(식품분류1=inputText).distinct("식품분류2")
+        self.ui.comboBox_ing_category2_31.clear()
+        self.ui.comboBox_ing_category3_31.clear()
+        self.ui.comboBox_ing_category4_31.clear()
+        self.ui.comboBox_ing_category5_31.clear()
+
+        self.ui.comboBox_ing_category2_31.addItem("")
+        self.ui.comboBox_ing_category2_31.addItems(listOfCat2)
+        self.ui.comboBox_ing_category2_31.activated[str].connect(self.on_ing_cat2_31_changed)
+
+    def on_ing_cat2_31_changed(self, inputText):
+        listOfCat3 = Ingredient.objects(식품분류2=inputText).distinct("식품분류3")
+        self.ui.comboBox_ing_category3_31.clear()
+        self.ui.comboBox_ing_category4_31.clear()
+        self.ui.comboBox_ing_category5_31.clear()
+
+        self.ui.comboBox_ing_category3_31.addItem("")
+        self.ui.comboBox_ing_category3_31.addItems(listOfCat3)
+        self.ui.comboBox_ing_category3_31.activated[str].connect(self.on_ing_cat3_31_changed)
+
+    def on_ing_cat3_31_changed(self, inputText):
+        listOfCat4 = Ingredient.objects(식품분류3=inputText).distinct("식품분류4")
+        self.ui.comboBox_ing_category4_31.clear()
+        self.ui.comboBox_ing_category5_31.clear()
+
+        self.ui.comboBox_ing_category4_31.addItem("")
+        self.ui.comboBox_ing_category4_31.addItems(listOfCat4)
+        self.ui.comboBox_ing_category4_31.activated[str].connect(self.on_ing_cat4_31_changed)
+
+    def on_ing_cat4_31_changed(self, inputText):
+        listOfCat5 = Ingredient.objects(식품분류4=inputText).distinct("식품분류5")
+        self.ui.comboBox_ing_category5_31.clear()
+        self.ui.comboBox_ing_category5_31.addItem("")
+        self.ui.comboBox_ing_category5_31.addItems(listOfCat5)
 
     def on_ing_cat1_18_changed(self, inputText):
         listOfCat2 = Ingredient.objects(식품분류1=inputText).distinct("식품분류2")
@@ -3034,6 +3320,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def render_ing_category1_dropdown_menu_page15(self):
         listOfCat1 = Ingredient.objects.distinct("식품분류1")
+        self.ui.comboBox_ing_category1_15.clear()
         self.ui.comboBox_ing_category1_15.addItem("")
         self.ui.comboBox_ing_category1_15.addItems(listOfCat1)
         self.ui.comboBox_ing_category1_15.activated[str].connect(self.on_ing_cat1_changed_page15)
