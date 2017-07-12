@@ -216,7 +216,7 @@ def populate_dummy():
     add_dummy_patient()
     for i in range(100):
         add_dummy_nutrient(i)
-    for i in range(1000):
+    for i in range(300):
         add_dummy_ingredient(i)
     for i in range(100):
         add_dummy_disease(i)

@@ -2,6 +2,7 @@
 
 
 import sys
+import webbrowser
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
 from mongodb.models import *
@@ -34,6 +35,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_ms_allergic_ingredients = {}
         self.local_lgG4_allergic_ingredients = {}
         self.local_diseases = {}
+        self.local_rec_ingredients = {}
+        self.local_unrec_ingredients = {}
 
         # local filters - getting set when moving from page 8 to page 4
         self.local_printing_rep_level = 0
@@ -49,7 +52,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_threshold = 0
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
-
 
         # edit
         self.local_disease_to_edit = None
@@ -157,8 +159,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_next_10.clicked.connect(lambda x: self.go_to_page_11())
 
         # page_11
-        #self.ui.btn_next_11.clicked.connect(lambda x: self.get_pdf_from_page_11())
-        self.ui.take_screenshot_11.clicked.connect(self.take_screenshot)
+        self.ui.btn_end_diagnosis_11 .clicked.connect(lambda x: self.end_diagnosis())
+        self.ui.take_screenshot_11.clicked.connect(lambda x: self.get_pdf_from_page_11())
+        self.ui.btn_home_11.clicked.connect(lambda x: self.go_to_home_no_warning())
+        self.ui.btn_back_11.clicked.connect(lambda x: self.go_to_previous_page(11))
 
         # page_12 - data home
         self.ui.btn_home_12.clicked.connect(self.go_to_home_no_warning)
@@ -494,9 +498,40 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def go_to_page_10(self, currPage):
         self.build_ultimate_rec_ing_level_dict()
-
         self.ui.stackedWidget.setCurrentIndex(10)
         self.render_basic_patient_info_on_top(10)
+        self.render_past_list_combo_box()
+
+    def render_past_list_combo_box(self):
+        past_dates = [str(date).split()[0] for date in self.current_patient.진료일]
+        self.ui.comboBox_past_list_10.clear()
+        self.ui.comboBox_past_list_10.addItem("")
+        self.ui.comboBox_past_list_10.addItems(past_dates)
+        self.ui.comboBox_past_list_10.activated[str].connect(self.render_rec_unrec_ing_from_date)
+
+    def render_rec_unrec_ing_from_date(self, date):
+        if date:
+            try:
+                past_rec_ing = self.current_patient.권고식품진단[date]
+                past_unrec_ing = self.current_patient.비권고식품진단[date]
+            except:
+                self.ui.tableWidget_past_rec_ing_10.setRowCount(0)
+                self.ui.tableWidget_past_unrec_ing_10.setRowCount(0)
+                print("Invalid date.")
+                return
+            self.ui.tableWidget_past_rec_ing_10.setRowCount(len(past_rec_ing))
+            self.ui.tableWidget_past_unrec_ing_10.setRowCount(len(past_unrec_ing))
+            i = 0
+            for rec_ingredient, lvl in past_rec_ing.items():
+                ingredient = Ingredient.objects.get(식품명=rec_ingredient)
+                self.make_rec_ingredient_tw_item(self.ui.tableWidget_past_rec_ing_10, i, ingredient, lvl)
+                i += 1
+
+            i = 0
+            for unrec_ingredient, lvl in past_unrec_ing.items():
+                ingredient = Ingredient.objects.get(식품명=unrec_ingredient)
+                self.make_rec_ingredient_tw_item(self.ui.tableWidget_past_unrec_ing_10, i, ingredient, lvl)
+                i += 1
 
     def go_to_page_11(self):
         list_of_lang_to_print = ["식품명영어", "식품명중국어", "식품명일본어", "식품명러시아어", "식품명몽골어", "식품명아랍어", "식품명스페인어",
@@ -510,13 +545,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(11)
         render_checkbox_lw_for_list(self.ui.listWidget_ing_data_lang_to_print_11, list_of_lang_to_print, set())
         render_checkbox_lw_for_list(self.ui.listWidget_ing_data_cat_to_print_11, list_to_print, set())
-
-    #TODO - export to pdf?
-    def get_pdf_from_page_11(self):
-        checked_lang_set = convert_lw_to_str_set(self.ui.listWidget_ing_data_lang_to_print_11)
-        checked_cat_set = convert_lw_to_str_set(self.ui.listWidget_ing_data_cat_to_print_11)
-        print(len(checked_lang_set))
-        print(len(checked_cat_set))
 
     def go_to_page_18(self):
         self.ui.stackedWidget.setCurrentIndex(18)
@@ -1960,10 +1988,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_threshold = 0
         self.local_ms_threshold = 0
         self.local_gasung_threshold = 0
-
+        self.local_rec_ingredients = None
+        self.local_unrec_ingredients = None
 
         self.rec_level_nut_dict.clear()
         self.unrec_level_nut_dict.clear()
+
+    def reset_page_5(self):
+        self.ui.tableWidget_clientCandidates_5.setRowCount(0)
 
     def reset_page_10(self):
         self.ui.lineEdit_ID_10.clear()
@@ -1978,6 +2010,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.tableWidget_current_unrec_ing_10.setRowCount(0)
         self.ui.tableWidget_past_rec_ing_10.setRowCount(0)
         self.ui.tableWidget_past_unrec_ing_10.setRowCount(0)
+
+    def reset_page_11(self):
+        self.ui.listWidget_ing_data_lang_to_print_11.clear()
+        self.ui.listWidget_ing_data_cat_to_print_11.clear()
 
     def reset_page_9(self):
         self.ui.lineEdit_ID_9.clear()
@@ -2431,14 +2467,15 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 uniqIDChecked = True
 
     def save_local_data_to_patient(self, patient):
-        patient.급성알레르기음식[self.local_office_visit_date_str] = self.local_gs_allergic_ingredients
-        patient.만성알레르기음식[self.local_office_visit_date_str] = self.local_ms_allergic_ingredients
-        patient.만성lgG4과민반응음식[self.local_office_visit_date_str] = self.local_lgG4_allergic_ingredients
-        patient.진단[self.local_office_visit_date_str] = self.local_diseases
-        local_진료일 = patient.진료일
-        local_진료일.append(self.local_office_visit_date_str)
-        patient.진료일 = local_진료일
-        patient.save()
+        if patient:
+            patient.진료일.append(str(self.current_date))
+            patient.급성알레르기음식[str(self.current_date)] = self.local_gs_allergic_ingredients
+            patient.만성알레르기음식[str(self.current_date)] = self.local_ms_allergic_ingredients
+            patient.만성lgG4과민반응음식[str(self.current_date)] = self.local_lgG4_allergic_ingredients
+            patient.진단[str(self.current_date)] = self.local_diseases
+            patient.권고식품진단[str(self.current_date)] = self.local_rec_ingredients
+            patient.비권고식품진단[str(self.current_date)] = self.local_unrec_ingredients
+            patient.save()
 
     def reset_local_data(self):
         self.current_patient = None
@@ -3386,7 +3423,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         else:
             create_normal_message("Exporting json failed.")
 
-    def take_screenshot(self):
+    def get_pdf_from_page_11(self):
         filename = QFileDialog.getSaveFileName(self, 'Save to PDF')
 
         if filename:
@@ -3397,37 +3434,47 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             printer.setOutputFileName(filename[0])
             self.text.setText(self.generate_report_text())
             self.text.document().print_(printer)
+            webbrowser.open_new(r'file://' + filename[0])
 
     def generate_report_text(self):
         report = ""
         fields = convert_lw_to_str_set(self.ui.listWidget_ing_data_cat_to_print_11)
+        rec_ings = convert_tw_to_dict(self.ui.tableWidget_current_rec_ing_10, 3)
+        unrec_ings = convert_tw_to_dict(self.ui.tableWidget_current_unrec_ing_10, 3)
 
         rec_ings = convert_tw_to_dict(self.ui.tableWidget_current_rec_ing_10, 4)
         unrec_ings = convert_tw_to_dict(self.ui.tableWidget_current_unrec_ing_10, 4)
 
         i = 0
         report += "<RECOMMENDED INGREDIENTS>"
-        for ingredient in [Ingredient.objects.get(식품명=rec_ing) for rec_ing in rec_ings]:
+        for i, ingredient in enumerate([Ingredient.objects.get(식품명=rec_ing) for rec_ing in rec_ings]):
             report += "\n=============================================\n"
-            report += "\n" + str(i) + ". " + ingredient.식품명 + "\n\n"
+            report += "\n" + str(i+1) + ". " + ingredient.식품명 + "\n\n"
             for field in fields:
                 report += field + ": " + str(ingredient[field]) + "\n"
             report += "\n\n\n\n\n\n\n\n"
-            i+=1
-        i = 0
         report += "<NOT RECOMMENDED INGREDIENTS>"
-        for ingredient in [Ingredient.objects.get(식품명=unrec_ing) for unrec_ing in unrec_ings]:
+        for i, ingredient in enumerate([Ingredient.objects.get(식품명=unrec_ing) for unrec_ing in unrec_ings]):
             report += "\n=============================================\n"
-            report += "\n" + str(i) + ". " + ingredient.식품명 + "\n\n"
+            report += "\n" + str(i+1) + ". " + ingredient.식품명 + "\n\n"
             for field in fields:
                 report += field + ": " + str(ingredient[field]) + "\n"
             report += "\n\n\n\n\n\n\n\n"
-            i+=1
         return report
 
     def init_text_edit(self):
         self.text = QtWidgets.QTextEdit(self)
         self.text.hide()
+
+    def end_diagnosis(self):
+        rec_ings = convert_tw_to_dict(self.ui.tableWidget_current_rec_ing_10, 3)
+        unrec_ings = convert_tw_to_dict(self.ui.tableWidget_current_unrec_ing_10, 3)
+        self.local_rec_ingredients = rec_ings
+        self.local_unrec_ingredients = unrec_ings
+
+        self.save_local_data_to_patient(self.current_patient)
+        self.clear_current_patient_info_and_all_related_pages()
+        self.go_to_home_no_warning()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
