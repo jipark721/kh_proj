@@ -23,6 +23,8 @@ class Patient(Document):
     급성알레르기음식 = DictField() # Map of DateTimeField to Map of Alg:lvl { 진료일 : { 알레르기음식: 레벨 } }
     만성알레르기음식 = DictField()
     만성lgG4과민반응음식 = DictField()
+    권고식품진단 = DictField()
+    비권고식품진단 = DictField()
     진단 = DictField() # Map of DateTimeField to set of strings { 진료일 : { 질병명 } }
     진료일 = SortedListField(DateTimeField())
 
