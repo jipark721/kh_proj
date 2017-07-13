@@ -62,6 +62,17 @@ def convert_tw_to_dict(tw, fetchItemCode):
             dict[tw.item(index, 0).text()] = True
     return dict
 
+def convert_tw_to_dict_with_key_value_level(tw):
+    dict = {}
+    for index in range(tw.rowCount()):
+        if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
+            lvl = int(tw.item(index, 1).text())
+            if lvl in dict.keys():
+                dict[lvl].add(tw.item(index, 0).text())
+            else:
+                dict[lvl] = set(tw.item(index, 0).text())
+    return dict
+
 #0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything
 def convert_lw_to_dict_with_int_value(lw, int_val, fetchItemCode):
     dict = {}
@@ -75,11 +86,16 @@ def convert_lw_to_dict_with_int_value(lw, int_val, fetchItemCode):
         elif fetchItemCode == 2:
             dict[lw.item(index).text()] = int_val
     return dict
-#
-# def update_dict_with_another_tw(original_dict, tw):
-#     for index in range(tw.rowCount()):
-#         level = int(tw.item(index, 1).text())
-#         if level in original_dict.keys():
+
+def convert_lw_to_dict_with_key_value_default_level(lw, default_val):
+    dict = {}
+    for index in range(lw.count()):
+        if lw.item(index).checkState() == QtCore.Qt.Checked:
+            if default_val in dict.keys():
+                dict[default_val].add(lw.item(index).text())
+            else:
+                dict[default_val] = set(lw.item(index).text())
+    return dict
 
 
 #for table widgets, iterate through rows and return a set of checked items
@@ -92,7 +108,7 @@ def convert_checked_item_in_tw_to_str_set(tw):
     return toReturn
 
 #for diagnosed diseases, iterate through rows and return a string separated by ","
-def convert_lw_to_str_set(lw):
+def convert_checked_item_in_lw_to_str_set(lw):
     toReturn =  set()
     for i in range(lw.count()):
         ckbtn = lw.item(i)
@@ -133,7 +149,6 @@ def populate_checkbox_tw_from_dict(tw, content_collection):
         tw.setItem(rowIndex, 1, levelitem)
         rowIndex+=1
     tw.resizeColumnsToContents()
-
 
 def update_checkbox_state_and_level_tw(tw, checked_content_dict):
     for index in range(tw.rowCount()):
