@@ -283,7 +283,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_update_cat7_24.clicked.connect(lambda x: self.update_nutrient_column_i(7, self.ui.lineEdit_cat7_24))
         self.ui.btn_update_cat8_24.clicked.connect(lambda x: self.update_nutrient_column_i(8, self.ui.lineEdit_cat8_24))
         #page_28 find existing patient for edit
-        self.ui.btn_cancel_28.clicked.connect(self.cancel_find_existing_client(28))
+        self.ui.btn_cancel_28.clicked.connect(lambda x: self.cancel_find_existing_client(28))
         self.ui.btn_findby_patient_id_28.clicked.connect(lambda x: self.find_patients_by_id(
             self.ui.lineEdit_ID_28.text(), self.ui.tableWidget_patientCandidates_28))
         self.ui.btn_findby_patient_name_28.clicked.connect(lambda x: self.find_patients_by_name(
