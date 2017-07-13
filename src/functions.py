@@ -67,11 +67,24 @@ def convert_tw_to_dict_with_key_value_level(tw):
     for index in range(tw.rowCount()):
         if tw.item(index, 0).checkState() == QtCore.Qt.Checked and int(tw.item(index, 1).text()) != 0:
             lvl = int(tw.item(index, 1).text())
-            if lvl in dict.keys():
+            if lvl in dict:
                 dict[lvl].add(tw.item(index, 0).text())
             else:
-                dict[lvl] = set(tw.item(index, 0).text())
+                s = set()
+                s.add(tw.item(index, 0).text())
+                dict[lvl] = s
     return dict
+
+def combine_two_dicts_key_level_value_set_of_ings(d1, d2):
+    for key1 in d1:
+        if key1 in d2:
+            s1 = d1[key1]
+            s2 = d2[key1]
+            d1[key1] = s1 | s2
+    for key2 in d2:
+        if key2 not in d1:
+            d1[key2] = d2[key2]
+    return d1
 
 #0 - fetch unchecked items, 1 - fetch checked items, 2 - fetch everything
 def convert_lw_to_dict_with_int_value(lw, int_val, fetchItemCode):
@@ -215,10 +228,12 @@ def render_checkbox_level_tw(tw, checked_content_dict, positive_direction):
 def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_content_dict, rec_threshold, nonrec_threshold):
     positive_content_dict = {}
     negative_content_dict = {}
+    print("dis related ings")
+    print(checked_content_dict.items())
     for elem, level in checked_content_dict.items():
-        if level > rec_threshold:
+        if level >= rec_threshold:
             positive_content_dict[elem] = level
-        if level < nonrec_threshold:
+        if level <= nonrec_threshold:
             negative_content_dict[elem] = level
     render_checkbox_level_tw(positive_tw, positive_content_dict, 1)
     render_checkbox_level_tw(negative_tw, negative_content_dict, 0)
@@ -307,8 +322,6 @@ def set_all_ckbox_state_in_tw(tw, col, toCheck):
             tw.item(rowIndex, col).setCheckState(QtCore.Qt.Checked)
         else:
             tw.item(rowIndex, col).setCheckState(QtCore.Qt.Unchecked)
-
-
 
 # iterate through listwidget and build a set of indices of checked diseases
 def build_disease_index_set_from_lw(lw):

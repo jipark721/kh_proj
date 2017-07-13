@@ -139,10 +139,12 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_home_4.clicked.connect(lambda x: self.go_home(4))
         self.ui.btn_next_4.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(29))
         self.ui.btn_back_4.clicked.connect(lambda x: self.go_to_page_8(4))
+        self.ui.btn_check_all_4.clicked.connect(lambda x: self.select_all_checkboxes_page_4_and_29())
         # page_29
         self.ui.btn_home_29.clicked.connect(lambda x: self.go_home(29))
         self.ui.btn_back_29.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(4))
         self.ui.btn_next_29.clicked.connect(lambda x: self.go_to_page_9())
+        self.ui.btn_check_all_29.clicked.connect(lambda x: self.select_all_checkboxes_page_4_and_29())
         self.ui.btn_go_to_rec_29.clicked.connect(lambda x: self.put_selected_nutrients_to_tw(self.ui.tableWidget_nutrients_rec_29, True))
         self.ui.btn_undo_go_to_rec_29.clicked.connect(lambda x: self.take_out_selected_nutrients_from_tw(self.ui.tableWidget_nutrients_rec_29, True))
         self.ui.btn_go_to_unrec_29.clicked.connect(lambda x: self.put_selected_nutrients_to_tw(self.ui.tableWidget_nutrients_unrec_29, False))
@@ -359,6 +361,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_close_common_ings_32.clicked.connect(self.close_common_ing_widget)
         self.ui.btn_done_32.clicked.connect(self.done_with_from_nut_to_ing)
 
+    def select_all_checkboxes_page_4_and_29(self):
+        for index in range(len(self.list_of_nut_tw)):
+            set_all_ckbox_state_in_tw(self.list_of_nut_tw[index], 0, True)
 
     def show_ing_category_candidates(self):
         self.ui.tableWidget_category_ing_candidates_15.setRowCount(0)
@@ -625,37 +630,61 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         #FETCTHING checked items
         self.ultimate_rec_ing_level_dict = convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_nut_9, 1)
         self.ultimate_rec_ing_level_dict.update(convert_tw_to_dict(self.ui.tableWidget_rec_ing_from_dis_9, 1))
-        self.ultimate_rec_level_ing_dict = convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_rec_ing_from_nut_9)
-        self.ultimate_rec_level_ing_dict.update(convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_rec_ing_from_dis_9))
-
         self.ultimate_unrec_ing_level_dict = convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_nut_9, 1)
         self.ultimate_unrec_ing_level_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_dis_9, 1))
         self.ultimate_unrec_ing_level_dict.update(convert_tw_to_dict(self.ui.tableWidget_unrec_ing_from_allergies_9, 1))
-        self.ultimate_unrec_ing_level_dict.update(convert_lw_to_dict_with_int_value(self.ui.listWidget_always_unrec_9, 0, 1))
+        self.ultimate_unrec_ing_level_dict.update(
+            convert_lw_to_dict_with_int_value(self.ui.listWidget_always_unrec_9, -5, 1))
+
+        self.ultimate_rec_level_ing_dict = convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_rec_ing_from_nut_9)
+        self.ultimate_rec_level_ing_dict = combine_two_dicts_key_level_value_set_of_ings(self.ultimate_rec_level_ing_dict, convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_rec_ing_from_dis_9))
+
+
         self.ultimate_unrec_level_ing_dict = convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_nut_9)
-        self.ultimate_unrec_level_ing_dict.update(
-            convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_dis_9))
-        self.ultimate_unrec_level_ing_dict.update(
-            convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_allergies_9))
-        self.ultimate_unrec_level_ing_dict.update(convert_lw_to_dict_with_key_value_default_level(self.ui.listWidget_always_unrec_9, 0))
+        self.ultimate_unrec_level_ing_dict = combine_two_dicts_key_level_value_set_of_ings(self.ultimate_unrec_level_ing_dict, convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_dis_9))
+        self.ultimate_unrec_level_ing_dict = combine_two_dicts_key_level_value_set_of_ings(self.ultimate_unrec_level_ing_dict, convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_allergies_9))
+        self.ultimate_unrec_level_ing_dict = combine_two_dicts_key_level_value_set_of_ings(self.ultimate_unrec_level_ing_dict, convert_lw_to_dict_with_key_value_default_level(self.ui.listWidget_always_unrec_9, -5))
+
+        print("rec ing-level dict")
+        print(self.ultimate_rec_ing_level_dict.items())
+        print("unrec ing-level dict")
+        print(self.ultimate_unrec_ing_level_dict.items())
+        print("rec level-ing set dict")
+        print(self.ultimate_rec_level_ing_dict.items())
+        print("unrec level-ing set dict")
+
+        print(self.ultimate_unrec_level_ing_dict.items())
+
         self.render_ultimate_rec_and_unrec_tw_by_level()
 
+
+
     def render_ultimate_rec_and_unrec_tw_by_level(self):
-        # self.ui.tableWidget_current_rec_ing_10.setRowCount(len(self.ultimate_rec_ing_level_dict))
-        # self.ui.tableWidget_current_unrec_ing_10.setRowCount(len(self.ultimate_unrec_ing_level_dict))
-        #
-        # i = 0
-        # for rec_ingredient, lvl in self.ultimate_rec_ing_level_dict.items():
-        #     ingredient = Ingredient.objects.get(식품명=rec_ingredient)
-        #     self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_rec_ing_10, i, ingredient, lvl)
-        #     i+=1
-        #
-        # i = 0
-        # for unrec_ingredient, lvl in unrec_dict_sort_by_level.items():
-        #     ingredient = Ingredient.objects.get(식품명=unrec_ingredient)
-        #     self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_unrec_ing_10, i, ingredient, lvl)
-        #     i+=1
-        pass
+        self.ui.tableWidget_current_rec_ing_10.setRowCount(0)
+        self.ui.tableWidget_current_unrec_ing_10.setRowCount(0)
+
+        self.ui.tableWidget_current_rec_ing_10.setRowCount(len(self.ultimate_rec_ing_level_dict))
+        self.ui.tableWidget_current_unrec_ing_10.setRowCount(len(self.ultimate_unrec_ing_level_dict))
+
+        i = 0
+        for lvl_index in reversed(range(1, 6)):
+            if lvl_index in self.ultimate_rec_level_ing_dict.keys():
+                for ing_str in self.ultimate_rec_level_ing_dict[lvl_index]:
+                    ing_obj = Ingredient.objects.get(식품명=ing_str)
+                    self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_rec_ing_10, i, ing_obj, lvl_index)
+                    i += 1
+
+        i = 0
+        for lvl_index in reversed(range(1, 6)):
+            lvl_index = lvl_index * (-1)
+            if lvl_index in self.ultimate_unrec_level_ing_dict.keys():
+                for ing_str in self.ultimate_unrec_level_ing_dict[lvl_index]:
+                    ing_obj = Ingredient.objects.get(식품명=ing_str)
+                    self.make_rec_ingredient_tw_item(self.ui.tableWidget_current_unrec_ing_10, i, ing_obj, lvl_index)
+                    i += 1
+
+        self.ui.tableWidget_current_rec_ing_10.resizeColumnsToContents()
+        self.ui.tableWidget_current_unrec_ing_10.resizeColumnsToContents()
 
 
     def make_rec_ingredient_tw_item(self, tw, rowIndex, ingredient, lvl):
@@ -723,7 +752,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.render_all_selected_nutrients()
         self.build_rec_or_unrec_level_nut_dict(self.ui.tableWidget_nutrients_rec_29, self.rec_level_nut_dict)
         self.build_rec_or_unrec_level_nut_dict(self.ui.tableWidget_nutrients_unrec_29, self.unrec_level_nut_dict)
-
+        print("질병 threshold")
+        print(self.local_rec_threshold)
+        print(self.local_nonrec_threshold)
         # render rec/nonrec ingredients by disease
         render_checkbox_pos_and_neg_level_tw(self.ui.tableWidget_rec_ing_from_dis_9,
                                              self.ui.tableWidget_unrec_ing_from_dis_9,
@@ -751,18 +782,20 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             disease = Disease.objects.get(질병명=disease)
             for rel_ingredient, level in disease.질병식품관계.items():
                 ing_obj = Ingredient.objects.get(식품명=rel_ingredient)
-                if self.basic_filtering_for_single_ing_obj(ing_obj):
-                    if rel_ingredient not in relevant_ingredient and rel_ingredient not in removed:
+                # if self.basic_filtering_for_single_ing_obj(ing_obj):
+                if rel_ingredient not in relevant_ingredient and rel_ingredient not in removed:
+                    relevant_ingredient[rel_ingredient] = level
+                elif rel_ingredient in relevant_ingredient and self.local_remove_duplicates:
+                    del relevant_ingredient[rel_ingredient]
+                    removed[rel_ingredient] = True
+                elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] > 0:
+                    if level > relevant_ingredient[rel_ingredient] or level < 0:
                         relevant_ingredient[rel_ingredient] = level
-                    elif rel_ingredient in relevant_ingredient and self.local_remove_duplicates:
-                        del relevant_ingredient[rel_ingredient]
-                        removed[rel_ingredient] = True
-                    elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] > 0:
-                        if level > relevant_ingredient[rel_ingredient] or level < 0:
-                            relevant_ingredient[rel_ingredient] = level
-                    elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] < 0 and level < \
-                            relevant_ingredient[rel_ingredient]:
-                        relevant_ingredient[rel_ingredient] = level
+                elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] < 0 and level < \
+                        relevant_ingredient[rel_ingredient]:
+                    relevant_ingredient[rel_ingredient] = level
+        print("질병딕트")
+        print(relevant_ingredient.items())
         return relevant_ingredient
 
     def remove_selected_items_page_9(self):
@@ -2432,6 +2465,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def update_selected_disease_and_allergies_locally(self):
         self.local_diseases = convert_checked_item_in_lw_to_str_set(self.ui.listWidget_diseases_7)
+        print("local dis")
+        print(self.local_diseases)
         self.local_gs_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_gs_7, 1)
         self.local_ms_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_ms_7, 1)
         self.local_lgG4_allergic_ingredients = convert_tw_to_dict(self.ui.tableWidget_allergies_lgg4_7, 1)
