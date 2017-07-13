@@ -1550,7 +1550,7 @@ class Ui_MainWindow(object):
         self.btn_findby_ing_name_14.setGeometry(QtCore.QRect(290, 70, 111, 31))
         self.btn_findby_ing_name_14.setObjectName("btn_findby_ing_name_14")
         self.widget_28 = QtWidgets.QWidget(self.page_data_ing_2_14)
-        self.widget_28.setGeometry(QtCore.QRect(1080, 570, 221, 61))
+        self.widget_28.setGeometry(QtCore.QRect(1110, 620, 221, 61))
         self.widget_28.setObjectName("widget_28")
         self.btn_cancel_14 = QtWidgets.QPushButton(self.widget_28)
         self.btn_cancel_14.setGeometry(QtCore.QRect(0, 20, 111, 31))
@@ -1559,7 +1559,7 @@ class Ui_MainWindow(object):
         self.btn_confirm_ing_14.setGeometry(QtCore.QRect(110, 20, 111, 31))
         self.btn_confirm_ing_14.setObjectName("btn_confirm_ing_14")
         self.widget_63 = QtWidgets.QWidget(self.page_data_ing_2_14)
-        self.widget_63.setGeometry(QtCore.QRect(1210, 0, 201, 51))
+        self.widget_63.setGeometry(QtCore.QRect(1200, 0, 201, 51))
         self.widget_63.setObjectName("widget_63")
         self.btn_home_14 = QtWidgets.QPushButton(self.widget_63)
         self.btn_home_14.setGeometry(QtCore.QRect(70, 0, 71, 51))
@@ -3549,7 +3549,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(13)
+        self.stackedWidget.setCurrentIndex(14)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
