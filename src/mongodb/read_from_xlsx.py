@@ -28,6 +28,7 @@ def read_xlsx_db(xls_file_name):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
+            print(cell.value)
         row_data["급성알레르기음식"] = ast.literal_eval(row_data["급성알레르기음식"])
         row_data["만성lgG4과민반응음식"] = ast.literal_eval(row_data["만성lgG4과민반응음식"])
         row_data["만성알레르기음식"] = ast.literal_eval(row_data["만성알레르기음식"])

@@ -90,6 +90,7 @@ def add_dummy_nutrient(i):
     Nutrient(
         영양소명="영양소명_" + str(i),
         영양소분류=nut_cat_list[random.randint(0, 10)],
+        #영양소분류인덱스 = i,
         하루권장량RDA=random.uniform(0, 50),
         최대권장량WHO=random.uniform(0, 50),
         최대권장량식약처=random.uniform(0, 50),
@@ -124,6 +125,7 @@ def add_dummy_ingredient(i):
         식품분류3="식품분류3_" + str(i),
         식품분류4="식품분류4_" + str(i),
         식품분류5="식품분류5_" + str(i),
+        #식품분류인덱스 = i,
         식품설명="식품설명_" + str(i),
         식품명중국어="식품명중국어_" + str(i),
         식품명일본어="식품명일본어_" + str(i),
@@ -224,3 +226,4 @@ def populate_dummy():
 
 # reset_database()
 # populate_dummy()
+# print_db_stats()
