@@ -72,7 +72,7 @@ class Ui_MainWindow(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.btn_home_2 = QtWidgets.QPushButton(self.page_2)
-        self.btn_home_2.setGeometry(QtCore.QRect(1330, 0, 71, 51))
+        self.btn_home_2.setGeometry(QtCore.QRect(1280, 0, 71, 51))
         self.btn_home_2.setObjectName("btn_home_2")
         self.widget_56 = QtWidgets.QWidget(self.page_2)
         self.widget_56.setGeometry(QtCore.QRect(570, 210, 231, 271))
@@ -93,7 +93,7 @@ class Ui_MainWindow(object):
         self.btn_home_3.setGeometry(QtCore.QRect(1350, 0, 71, 51))
         self.btn_home_3.setObjectName("btn_home_3")
         self.widget_13 = QtWidgets.QWidget(self.page_3)
-        self.widget_13.setGeometry(QtCore.QRect(1160, 660, 221, 61))
+        self.widget_13.setGeometry(QtCore.QRect(1150, 640, 221, 61))
         self.widget_13.setObjectName("widget_13")
         self.btn_cancel_3 = QtWidgets.QPushButton(self.widget_13)
         self.btn_cancel_3.setGeometry(QtCore.QRect(10, 20, 101, 31))
@@ -3558,7 +3558,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
