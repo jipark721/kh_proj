@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>14</number>
+       <number>13</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -5003,7 +5003,7 @@
        <widget class="QWidget" name="widget_37" native="true">
         <property name="geometry">
          <rect>
-          <x>1150</x>
+          <x>1200</x>
           <y>0</y>
           <width>171</width>
           <height>71</height>
@@ -5258,7 +5258,7 @@
        <widget class="QWidget" name="widget_63" native="true">
         <property name="geometry">
          <rect>
-          <x>1150</x>
+          <x>1210</x>
           <y>0</y>
           <width>201</width>
           <height>51</height>
