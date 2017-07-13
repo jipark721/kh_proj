@@ -29,12 +29,13 @@ def read_xlsx_db(xls_file_name):
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
             print(cell.value)
-        row_data["급성알레르기음식"] = ast.literal_eval(row_data["급성알레르기음식"])
-        row_data["만성lgG4과민반응음식"] = ast.literal_eval(row_data["만성lgG4과민반응음식"])
-        row_data["만성알레르기음식"] = ast.literal_eval(row_data["만성알레르기음식"])
-        row_data["진단"] = ast.literal_eval(row_data["진단"])
+        row_data["급성알레르기음식"] = convert_to_datastructure(row_data, "급성알레르기음식")
+        row_data["만성lgG4과민반응음식"] = convert_to_datastructure(row_data, "만성lgG4과민반응음식")
+        row_data["만성알레르기음식"] = convert_to_datastructure(row_data, "만성알레르기음식")
+        row_data["진단"] = convert_to_datastructure(row_data, "진단")
         row_data["생년월일"] = pd.to_datetime(row_data["생년월일"])
-        row_data["진료일"] = [d.date() for d in pd.to_datetime(ast.literal_eval(row_data["진료일"]))]
+        dates = convert_to_datastructure(row_data, "진료일")
+        row_data["진료일"] = [d.date() for d in pd.to_datetime(dates)] if dates else []
         Patient(**row_data).save()
 
 
@@ -59,7 +60,7 @@ def read_xlsx_db(xls_file_name):
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
 
-        row_data["식품영양소관계"] = ast.literal_eval(row_data["식품영양소관계"])
+        row_data["식품영양소관계"] = convert_to_datastructure(row_data, "식품영양소관계")
         for nutrient, quant in row_data["식품영양소관계"].items():
             try:
                 target_nutrient = Nutrient.objects.get(영양소명=nutrient)
@@ -80,8 +81,8 @@ def read_xlsx_db(xls_file_name):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
-        row_data["질병식품관계"] = ast.literal_eval(row_data["질병식품관계"])
-        row_data["질병영양소관계"] = ast.literal_eval(row_data["질병영양소관계"])
+        row_data["질병식품관계"] = convert_to_datastructure(row_data, "질병식품관계")
+        row_data["질병영양소관계"] = convert_to_datastructure(row_data, "질병영양소관계")
 
         for ingredient, quant in row_data["질병식품관계"].items():
             try:
@@ -101,6 +102,13 @@ def read_xlsx_db(xls_file_name):
 
     print_db_stats()
     return True
+
+def convert_to_datastructure(row_data, field):
+    try:
+        return ast.literal_eval(row_data[field])
+    except:
+        print("Parse error for " + field)
+        return None
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
