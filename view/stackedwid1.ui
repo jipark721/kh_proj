@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>10</number>
+       <number>14</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
@@ -4617,7 +4617,7 @@
         <widget class="QComboBox" name="comboBox_past_list_10">
          <property name="geometry">
           <rect>
-           <x>130</x>
+           <x>140</x>
            <y>590</y>
            <width>161</width>
            <height>26</height>
@@ -4704,14 +4704,14 @@
            <x>450</x>
            <y>30</y>
            <width>201</width>
-           <height>701</height>
+           <height>591</height>
           </rect>
          </property>
         </widget>
         <widget class="QPushButton" name="btn_home_11">
          <property name="geometry">
           <rect>
-           <x>1340</x>
+           <x>1260</x>
            <y>0</y>
            <width>71</width>
            <height>51</height>
@@ -4724,8 +4724,8 @@
         <widget class="QWidget" name="widget_12" native="true">
          <property name="geometry">
           <rect>
-           <x>1030</x>
-           <y>720</y>
+           <x>950</x>
+           <y>630</y>
            <width>371</width>
            <height>41</height>
           </rect>
@@ -4926,7 +4926,7 @@
        <widget class="QPushButton" name="btn_home_12">
         <property name="geometry">
          <rect>
-          <x>1350</x>
+          <x>1270</x>
           <y>0</y>
           <width>71</width>
           <height>51</height>
@@ -5003,10 +5003,10 @@
        <widget class="QWidget" name="widget_37" native="true">
         <property name="geometry">
          <rect>
-          <x>1280</x>
+          <x>1150</x>
           <y>0</y>
-          <width>141</width>
-          <height>51</height>
+          <width>171</width>
+          <height>71</height>
          </rect>
         </property>
         <widget class="QPushButton" name="btn_home_13">
@@ -5222,8 +5222,8 @@
        <widget class="QWidget" name="widget_28" native="true">
         <property name="geometry">
          <rect>
-          <x>1190</x>
-          <y>710</y>
+          <x>1080</x>
+          <y>570</y>
           <width>221</width>
           <height>61</height>
          </rect>
@@ -5258,9 +5258,9 @@
        <widget class="QWidget" name="widget_63" native="true">
         <property name="geometry">
          <rect>
-          <x>1280</x>
+          <x>1150</x>
           <y>0</y>
-          <width>141</width>
+          <width>201</width>
           <height>51</height>
          </rect>
         </property>
