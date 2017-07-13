@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1361</width>
+    <width>1342</width>
     <height>731</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
        <widget class="QWidget" name="widget_67" native="true">
         <property name="geometry">
          <rect>
-          <x>448</x>
+          <x>400</x>
           <y>190</y>
           <width>541</width>
           <height>291</height>
@@ -91,7 +91,7 @@
        <widget class="QPushButton" name="btn_quit_app_0">
         <property name="geometry">
          <rect>
-          <x>1230</x>
+          <x>1210</x>
           <y>0</y>
           <width>113</width>
           <height>41</height>
@@ -106,8 +106,8 @@
        <widget class="QPushButton" name="btn_goToData_1">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>300</y>
+          <x>580</x>
+          <y>250</y>
           <width>151</width>
           <height>41</height>
          </rect>
@@ -125,8 +125,8 @@
        <widget class="QPushButton" name="btn_goToPatient_1">
         <property name="geometry">
          <rect>
-          <x>640</x>
-          <y>350</y>
+          <x>580</x>
+          <y>300</y>
           <width>151</width>
           <height>41</height>
          </rect>
@@ -138,7 +138,7 @@
        <widget class="QPushButton" name="btn_logout_1">
         <property name="geometry">
          <rect>
-          <x>1230</x>
+          <x>1210</x>
           <y>0</y>
           <width>113</width>
           <height>41</height>
@@ -153,7 +153,7 @@
        <widget class="QPushButton" name="btn_home_2">
         <property name="geometry">
          <rect>
-          <x>1270</x>
+          <x>1250</x>
           <y>0</y>
           <width>71</width>
           <height>51</height>
@@ -166,8 +166,8 @@
        <widget class="QWidget" name="widget_56" native="true">
         <property name="geometry">
          <rect>
-          <x>570</x>
-          <y>210</y>
+          <x>530</x>
+          <y>200</y>
           <width>231</width>
           <height>271</height>
          </rect>
@@ -217,7 +217,7 @@
        <widget class="QPushButton" name="btn_home_3">
         <property name="geometry">
          <rect>
-          <x>1270</x>
+          <x>1250</x>
           <y>0</y>
           <width>71</width>
           <height>51</height>
@@ -230,7 +230,7 @@
        <widget class="QWidget" name="widget_13" native="true">
         <property name="geometry">
          <rect>
-          <x>1130</x>
+          <x>1090</x>
           <y>620</y>
           <width>211</width>
           <height>51</height>
@@ -875,7 +875,7 @@
         <widget class="QPushButton" name="btn_home_4">
          <property name="geometry">
           <rect>
-           <x>1280</x>
+           <x>1260</x>
            <y>0</y>
            <width>71</width>
            <height>51</height>
@@ -901,7 +901,7 @@
         <widget class="QWidget" name="widget_66" native="true">
          <property name="geometry">
           <rect>
-           <x>1050</x>
+           <x>1030</x>
            <y>620</y>
            <width>301</width>
            <height>51</height>
@@ -1342,7 +1342,7 @@
        <widget class="QPushButton" name="btn_home_5">
         <property name="geometry">
          <rect>
-          <x>1270</x>
+          <x>1250</x>
           <y>0</y>
           <width>71</width>
           <height>51</height>
@@ -1355,7 +1355,7 @@
        <widget class="QWidget" name="widget_14" native="true">
         <property name="geometry">
          <rect>
-          <x>1130</x>
+          <x>1110</x>
           <y>620</y>
           <width>211</width>
           <height>51</height>
@@ -1518,7 +1518,7 @@
        <widget class="QWidget" name="widget_15" native="true">
         <property name="geometry">
          <rect>
-          <x>1130</x>
+          <x>1110</x>
           <y>620</y>
           <width>211</width>
           <height>51</height>
@@ -2067,7 +2067,7 @@
         <widget class="QPushButton" name="btn_home_7">
          <property name="geometry">
           <rect>
-           <x>1270</x>
+           <x>1250</x>
            <y>0</y>
            <width>71</width>
            <height>51</height>
@@ -2235,7 +2235,7 @@
         <widget class="QWidget" name="widget_19" native="true">
          <property name="geometry">
           <rect>
-           <x>1040</x>
+           <x>1020</x>
            <y>620</y>
            <width>301</width>
            <height>51</height>
@@ -2283,7 +2283,7 @@
         <widget class="QPushButton" name="btn_home_8">
          <property name="geometry">
           <rect>
-           <x>1270</x>
+           <x>1250</x>
            <y>0</y>
            <width>71</width>
            <height>51</height>
@@ -3021,7 +3021,7 @@
         <widget class="QWidget" name="widget_49" native="true">
          <property name="geometry">
           <rect>
-           <x>1040</x>
+           <x>1020</x>
            <y>620</y>
            <width>301</width>
            <height>51</height>
@@ -3169,7 +3169,7 @@
         <widget class="QPushButton" name="btn_home_9">
          <property name="geometry">
           <rect>
-           <x>1270</x>
+           <x>1250</x>
            <y>0</y>
            <width>71</width>
            <height>51</height>
@@ -3647,7 +3647,7 @@
         <widget class="QPushButton" name="btn_check_duplicate_ing_9">
          <property name="geometry">
           <rect>
-           <x>1250</x>
+           <x>1240</x>
            <y>76</y>
            <width>81</width>
            <height>41</height>
@@ -3660,7 +3660,7 @@
         <widget class="QPushButton" name="btn_delete_selected_9">
          <property name="geometry">
           <rect>
-           <x>1250</x>
+           <x>1240</x>
            <y>140</y>
            <width>81</width>
            <height>41</height>
@@ -3673,7 +3673,7 @@
         <widget class="QWidget" name="widget_50" native="true">
          <property name="geometry">
           <rect>
-           <x>1040</x>
+           <x>1020</x>
            <y>620</y>
            <width>301</width>
            <height>51</height>
@@ -4018,7 +4018,7 @@
         <widget class="QPushButton" name="btn_check_duplicate_single_ing_9">
          <property name="geometry">
           <rect>
-           <x>1250</x>
+           <x>1240</x>
            <y>108</y>
            <width>81</width>
            <height>41</height>
@@ -4054,7 +4054,7 @@
         <widget class="QPushButton" name="btn_uncheck_all_9">
          <property name="geometry">
           <rect>
-           <x>1250</x>
+           <x>1240</x>
            <y>170</y>
            <width>81</width>
            <height>41</height>
@@ -4083,7 +4083,7 @@
        <widget class="QPushButton" name="btn_home_10">
         <property name="geometry">
          <rect>
-          <x>1270</x>
+          <x>1250</x>
           <y>0</y>
           <width>71</width>
           <height>51</height>
@@ -4494,7 +4494,7 @@
          <rect>
           <x>670</x>
           <y>40</y>
-          <width>661</width>
+          <width>651</width>
           <height>631</height>
          </rect>
         </property>
@@ -4527,7 +4527,7 @@
         <widget class="QTableWidget" name="tableWidget_past_rec_ing_10">
          <property name="geometry">
           <rect>
-           <x>0</x>
+           <x>-10</x>
            <y>30</y>
            <width>320</width>
            <height>551</height>
@@ -4572,7 +4572,7 @@
         <widget class="QTableWidget" name="tableWidget_past_unrec_ing_10">
          <property name="geometry">
           <rect>
-           <x>320</x>
+           <x>310</x>
            <y>30</y>
            <width>330</width>
            <height>551</height>
@@ -4640,7 +4640,7 @@
         <widget class="QWidget" name="widget_52" native="true">
          <property name="geometry">
           <rect>
-           <x>360</x>
+           <x>350</x>
            <y>580</y>
            <width>301</width>
            <height>51</height>
@@ -4681,7 +4681,7 @@
          <rect>
           <x>10</x>
           <y>0</y>
-          <width>1321</width>
+          <width>1311</width>
           <height>671</height>
          </rect>
         </property>
@@ -4711,7 +4711,7 @@
         <widget class="QPushButton" name="btn_home_11">
          <property name="geometry">
           <rect>
-           <x>1260</x>
+           <x>1240</x>
            <y>0</y>
            <width>71</width>
            <height>51</height>
@@ -4724,7 +4724,7 @@
         <widget class="QWidget" name="widget_12" native="true">
          <property name="geometry">
           <rect>
-           <x>950</x>
+           <x>930</x>
            <y>630</y>
            <width>371</width>
            <height>41</height>
@@ -4799,8 +4799,8 @@
        <widget class="QWidget" name="widget_3" native="true">
         <property name="geometry">
          <rect>
-          <x>560</x>
-          <y>170</y>
+          <x>510</x>
+          <y>100</y>
           <width>301</width>
           <height>461</height>
          </rect>
@@ -4926,7 +4926,7 @@
        <widget class="QPushButton" name="btn_home_12">
         <property name="geometry">
          <rect>
-          <x>1270</x>
+          <x>1250</x>
           <y>0</y>
           <width>71</width>
           <height>51</height>
@@ -4941,8 +4941,8 @@
        <widget class="QWidget" name="widget_9" native="true">
         <property name="geometry">
          <rect>
-          <x>370</x>
-          <y>90</y>
+          <x>320</x>
+          <y>50</y>
           <width>701</width>
           <height>571</height>
          </rect>
@@ -5003,7 +5003,7 @@
        <widget class="QWidget" name="widget_37" native="true">
         <property name="geometry">
          <rect>
-          <x>1200</x>
+          <x>1180</x>
           <y>0</y>
           <width>141</width>
           <height>71</height>
@@ -5222,7 +5222,7 @@
        <widget class="QWidget" name="widget_28" native="true">
         <property name="geometry">
          <rect>
-          <x>1110</x>
+          <x>1090</x>
           <y>620</y>
           <width>221</width>
           <height>51</height>
@@ -5258,9 +5258,9 @@
        <widget class="QWidget" name="widget_63" native="true">
         <property name="geometry">
          <rect>
-          <x>1200</x>
+          <x>1180</x>
           <y>0</y>
-          <width>141</width>
+          <width>151</width>
           <height>51</height>
          </rect>
         </property>
@@ -5378,7 +5378,7 @@
        <widget class="QWidget" name="widget_22" native="true">
         <property name="geometry">
          <rect>
-          <x>1070</x>
+          <x>1050</x>
           <y>610</y>
           <width>261</width>
           <height>61</height>
@@ -5796,7 +5796,7 @@
        <widget class="QWidget" name="widget_59" native="true">
         <property name="geometry">
          <rect>
-          <x>710</x>
+          <x>690</x>
           <y>180</y>
           <width>601</width>
           <height>31</height>
@@ -5956,7 +5956,7 @@
        <widget class="QWidget" name="widget_60" native="true">
         <property name="geometry">
          <rect>
-          <x>710</x>
+          <x>690</x>
           <y>210</y>
           <width>621</width>
           <height>281</height>
@@ -6246,7 +6246,7 @@
        <widget class="QWidget" name="widget_64" native="true">
         <property name="geometry">
          <rect>
-          <x>1200</x>
+          <x>1180</x>
           <y>0</y>
           <width>141</width>
           <height>51</height>
@@ -6282,7 +6282,7 @@
        <widget class="QWidget" name="widget_32" native="true">
         <property name="geometry">
          <rect>
-          <x>710</x>
+          <x>690</x>
           <y>450</y>
           <width>621</width>
           <height>161</height>
@@ -6816,7 +6816,7 @@
        <widget class="QWidget" name="widget_62" native="true">
         <property name="geometry">
          <rect>
-          <x>980</x>
+          <x>960</x>
           <y>610</y>
           <width>351</width>
           <height>61</height>
@@ -7002,7 +7002,7 @@
        <widget class="QWidget" name="widget_65" native="true">
         <property name="geometry">
          <rect>
-          <x>1200</x>
+          <x>1180</x>
           <y>0</y>
           <width>141</width>
           <height>51</height>
@@ -7043,7 +7043,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1331</width>
+          <width>1311</width>
           <height>671</height>
          </rect>
         </property>
@@ -7345,7 +7345,7 @@
        <widget class="QWidget" name="widget_24" native="true">
         <property name="geometry">
          <rect>
-          <x>1120</x>
+          <x>1100</x>
           <y>620</y>
           <width>211</width>
           <height>51</height>
@@ -7372,7 +7372,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1331</width>
+          <width>1301</width>
           <height>661</height>
          </rect>
         </property>
@@ -7435,7 +7435,7 @@
          </property>
          <property name="geometry">
           <rect>
-           <x>620</x>
+           <x>600</x>
            <y>90</y>
            <width>701</width>
            <height>471</height>
@@ -7669,7 +7669,7 @@
        <widget class="QWidget" name="widget_26" native="true">
         <property name="geometry">
          <rect>
-          <x>1120</x>
+          <x>1100</x>
           <y>620</y>
           <width>211</width>
           <height>51</height>
@@ -7694,8 +7694,8 @@
        <widget class="QWidget" name="widget_20" native="true">
         <property name="geometry">
          <rect>
-          <x>360</x>
-          <y>90</y>
+          <x>300</x>
+          <y>70</y>
           <width>701</width>
           <height>441</height>
          </rect>
@@ -7743,7 +7743,7 @@
        <widget class="QWidget" name="widget_45" native="true">
         <property name="geometry">
          <rect>
-          <x>1200</x>
+          <x>1180</x>
           <y>0</y>
           <width>141</width>
           <height>51</height>
@@ -7902,7 +7902,7 @@
        <widget class="QWidget" name="widget_30" native="true">
         <property name="geometry">
          <rect>
-          <x>1110</x>
+          <x>1090</x>
           <y>620</y>
           <width>221</width>
           <height>51</height>
@@ -8418,7 +8418,7 @@
        <widget class="QWidget" name="widget_36" native="true">
         <property name="geometry">
          <rect>
-          <x>980</x>
+          <x>960</x>
           <y>610</y>
           <width>351</width>
           <height>61</height>
@@ -8454,7 +8454,7 @@
        <widget class="QWidget" name="widget_35" native="true">
         <property name="geometry">
          <rect>
-          <x>640</x>
+          <x>620</x>
           <y>40</y>
           <width>691</width>
           <height>631</height>
@@ -8636,7 +8636,7 @@
         <widget class="QWidget" name="widget_73" native="true">
          <property name="geometry">
           <rect>
-           <x>1040</x>
+           <x>1010</x>
            <y>620</y>
            <width>301</width>
            <height>51</height>
@@ -8961,7 +8961,7 @@
         <widget class="QWidget" name="widget_75" native="true">
          <property name="geometry">
           <rect>
-           <x>1040</x>
+           <x>1010</x>
            <y>620</y>
            <width>301</width>
            <height>51</height>
@@ -9264,8 +9264,8 @@
        <widget class="QWidget" name="widget_38" native="true">
         <property name="geometry">
          <rect>
-          <x>360</x>
-          <y>70</y>
+          <x>300</x>
+          <y>60</y>
           <width>701</width>
           <height>571</height>
          </rect>
@@ -9300,7 +9300,7 @@
        <widget class="QWidget" name="widget_46" native="true">
         <property name="geometry">
          <rect>
-          <x>1200</x>
+          <x>1180</x>
           <y>0</y>
           <width>141</width>
           <height>51</height>
@@ -9410,7 +9410,7 @@
        <widget class="QWidget" name="widget_40" native="true">
         <property name="geometry">
          <rect>
-          <x>1120</x>
+          <x>1100</x>
           <y>620</y>
           <width>211</width>
           <height>51</height>
@@ -9724,7 +9724,7 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>690</x>
+          <x>670</x>
           <y>40</y>
           <width>641</width>
           <height>471</height>
@@ -10185,7 +10185,7 @@
        <widget class="QWidget" name="widget_17" native="true">
         <property name="geometry">
          <rect>
-          <x>1120</x>
+          <x>1100</x>
           <y>620</y>
           <width>211</width>
           <height>51</height>
@@ -10225,7 +10225,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1341</width>
+          <width>1321</width>
           <height>671</height>
          </rect>
         </property>
@@ -10510,7 +10510,7 @@
         <widget class="QPushButton" name="btn_home_29">
          <property name="geometry">
           <rect>
-           <x>1270</x>
+           <x>1250</x>
            <y>0</y>
            <width>71</width>
            <height>51</height>
@@ -10536,7 +10536,7 @@
         <widget class="QWidget" name="widget_70" native="true">
          <property name="geometry">
           <rect>
-           <x>1030</x>
+           <x>1010</x>
            <y>620</y>
            <width>301</width>
            <height>51</height>
@@ -10934,7 +10934,7 @@
           <rect>
            <x>1120</x>
            <y>61</y>
-           <width>201</width>
+           <width>191</width>
            <height>271</height>
           </rect>
          </property>
@@ -10968,7 +10968,7 @@
           <rect>
            <x>1120</x>
            <y>357</y>
-           <width>201</width>
+           <width>191</width>
            <height>281</height>
           </rect>
          </property>
@@ -11163,15 +11163,15 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1341</width>
+          <width>1321</width>
           <height>611</height>
          </rect>
         </property>
         <widget class="QWidget" name="widget_77" native="true">
          <property name="geometry">
           <rect>
-           <x>360</x>
-           <y>120</y>
+           <x>290</x>
+           <y>100</y>
            <width>701</width>
            <height>381</height>
           </rect>
@@ -11206,7 +11206,7 @@
         <widget class="QWidget" name="widget_80" native="true">
          <property name="geometry">
           <rect>
-           <x>1200</x>
+           <x>1180</x>
            <y>0</y>
            <width>141</width>
            <height>51</height>
@@ -11247,7 +11247,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1331</width>
+          <width>1311</width>
           <height>671</height>
          </rect>
         </property>
@@ -11592,7 +11592,7 @@
         <widget class="QPushButton" name="btn_done_31">
          <property name="geometry">
           <rect>
-           <x>1230</x>
+           <x>1210</x>
            <y>640</y>
            <width>101</width>
            <height>31</height>
@@ -11614,7 +11614,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1331</width>
+          <width>1311</width>
           <height>671</height>
          </rect>
         </property>
@@ -11762,7 +11762,7 @@
         <widget class="QPushButton" name="btn_done_32">
          <property name="geometry">
           <rect>
-           <x>1230</x>
+           <x>1210</x>
            <y>640</y>
            <width>101</width>
            <height>31</height>
@@ -11921,7 +11921,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1361</width>
+     <width>1342</width>
      <height>22</height>
     </rect>
    </property>
