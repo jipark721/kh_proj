@@ -162,8 +162,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_home_10.clicked.connect(lambda x: self.go_home(10))
         self.ui.btn_back_10.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(9))
         self.ui.btn_next_10.clicked.connect(lambda x: self.go_to_page_11())
-        self.ui.btn_sort_by_level_10.clicked.connect(lambda x: self.sort_by_level_page_10())
-        self.ui.btn_sort_by_ing_cat_10.clicked.connect(lambda x: self.sort_by_ing_cat_page_10())
+        # self.ui.btn_sort_by_level_10.clicked.connect(lambda x: self.sort_by_level_page_10())
+        # self.ui.btn_sort_by_ing_cat_10.clicked.connect(lambda x: self.sort_by_ing_cat_page_10())
 
         # page_11
         self.ui.btn_end_diagnosis_11 .clicked.connect(lambda x: self.end_diagnosis())

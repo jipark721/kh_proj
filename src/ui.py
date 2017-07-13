@@ -1351,12 +1351,6 @@ class Ui_MainWindow(object):
         self.tableWidget_current_unrec_ing_10.setHorizontalHeaderItem(5, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_current_unrec_ing_10.setHorizontalHeaderItem(6, item)
-        self.btn_sort_by_ing_cat_10 = QtWidgets.QPushButton(self.widget_4)
-        self.btn_sort_by_ing_cat_10.setGeometry(QtCore.QRect(120, 580, 111, 31))
-        self.btn_sort_by_ing_cat_10.setObjectName("btn_sort_by_ing_cat_10")
-        self.btn_sort_by_level_10 = QtWidgets.QPushButton(self.widget_4)
-        self.btn_sort_by_level_10.setGeometry(QtCore.QRect(10, 580, 111, 31))
-        self.btn_sort_by_level_10.setObjectName("btn_sort_by_level_10")
         self.widget_11 = QtWidgets.QWidget(self.page_10)
         self.widget_11.setGeometry(QtCore.QRect(670, 40, 651, 631))
         self.widget_11.setObjectName("widget_11")
@@ -3561,7 +3555,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(10)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -3877,8 +3871,6 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "분류4"))
         item = self.tableWidget_current_unrec_ing_10.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "분류5"))
-        self.btn_sort_by_ing_cat_10.setText(_translate("MainWindow", "식품분류로 정렬"))
-        self.btn_sort_by_level_10.setText(_translate("MainWindow", "level로 정렬"))
         self.label_66.setText(_translate("MainWindow", "과거 권고 식품"))
         self.label_67.setText(_translate("MainWindow", "과거 비권고 식품"))
         item = self.tableWidget_past_rec_ing_10.horizontalHeaderItem(0)
