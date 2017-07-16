@@ -2,10 +2,6 @@
 
 ### Collaborators: Alex Ahn, Ji Park
 
-## Scores:
-### Ji : 10
-### Alex : 7 (WINNER!!)
-
 ## Simple Set Up & Check up:
 
 1. git clone
