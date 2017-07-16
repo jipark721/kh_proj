@@ -46,8 +46,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_specialty = None
         self.local_specialty_level = -1
         self.local_remove_duplicates = True
-        self.local_rec_threshold = 0
-        self.local_nonrec_threshold = 0
+        self.local_dis_rel_ing_manual = False
+        self.local_nut_rel_ing_manual = False
+        self.local_allergy_rel_ing_manual = False
+        self.local_dis_rec_threshold = 0
+        self.local_dis_unrec_threshold = 0
         self.local_gs_threshold = 0
         self.local_lgG4_threshold = 0
         self.local_ms_threshold = 0
@@ -134,6 +137,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # page 8 - filtering page
         self.ui.btn_back_8.clicked.connect(lambda x: self.ui.stackedWidget.setCurrentIndex(7))
         self.ui.btn_next_8.clicked.connect(self.go_to_page_4)
+        self.ui.btn_check_all_manual_8.clicked.connect(self.check_all_manual)
 
         # page_4
         self.ui.btn_home_4.clicked.connect(lambda x: self.go_home(4))
@@ -515,8 +519,11 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_origin, self.local_origin_level = self.get_most_specified_origin_and_level(8)
         self.local_specialty, self.local_specialty_level = self.get_most_specified_specialty_and_level(8)
         self.local_remove_duplicates = True if self.ui.radioButton_handle_duplicate_auto_8.isChecked() else False
-        self.local_rec_threshold = self.ui.spinBox_dis_rel_ing_level_rec_8.value()
-        self.local_nonrec_threshold = self.ui.spinBox_dis_rel_ing_level_unrec_8.value()
+        self.local_nut_rel_ing_manual = True if self.ui.ckBox_nut_rel_ing_manual_8.isChecked() else False
+        self.local_dis_rel_ing_manual = True if self.ui.ckBox_dis_rel_ing_manual_8.isChecked() else False
+        self.local_allergy_rel_ing_manual = True if self.ui.ckBox_allergy_rel_ing_manual_8.isChecked() else False
+        self.local_dis_rec_threshold = self.ui.spinBox_dis_rel_ing_level_rec_8.value()
+        self.local_dis_unrec_threshold = self.ui.spinBox_dis_rel_ing_level_unrec_8.value()
         self.local_gasung_threshold = self.ui.spinBox_allergy_gasung_level_8.value()
         self.local_gs_threshold = self.ui.spinBox_allergy_gs_level_8.value()
         self.local_ms_threshold = self.ui.spinBox_allergy_ms_level_8.value()
@@ -752,21 +759,23 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # self.render_all_selected_nutrients()
         self.build_rec_or_unrec_level_nut_dict(self.ui.tableWidget_nutrients_rec_29, self.rec_level_nut_dict)
         self.build_rec_or_unrec_level_nut_dict(self.ui.tableWidget_nutrients_unrec_29, self.unrec_level_nut_dict)
-        print("질병 threshold")
-        print(self.local_rec_threshold)
-        print(self.local_nonrec_threshold)
-        # render rec/nonrec ingredients by disease
+
+        pos_dict, neg_dict = self.render_rec_unrec_ing_from_dis()
         render_checkbox_pos_and_neg_level_tw(self.ui.tableWidget_rec_ing_from_dis_9,
                                              self.ui.tableWidget_unrec_ing_from_dis_9,
-                                             self.get_relevant_ingredients_from_diseases_str(),
-                                             self.local_rec_threshold, self.local_nonrec_threshold)
-
+                                             pos_dict, neg_dict,
+                                             self.local_dis_rel_ing_manual)
         # render nonrec ingredients by allergies
         render_checkbox_level_tw(self.ui.tableWidget_unrec_ing_from_allergies_9,
                                  self.get_relevant_ingredients_from_all_allergies(),
-                                 -1)
+                                 -1, self.local_allergy_rel_ing_manual)
 
         render_checkbox_lw_for_list(self.ui.listWidget_always_unrec_9, self.get_always_unrec_ingredients(), None)
+
+    def check_all_manual(self):
+        self.ui.ckBox_allergy_rel_ing_manual_8.setChecked(True)
+        self.ui.ckBox_dis_rel_ing_manual_8.setChecked(True)
+        self.ui.ckBox_nut_rel_ing_manual_8.setChecked(True)
 
     def get_always_unrec_ingredients(self):
         relevant_ingredient = []
@@ -775,25 +784,98 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 relevant_ingredient.append(ing_obj.식품명)
         return relevant_ingredient
 
+    def render_rec_unrec_ing_from_dis(self):
+        relevant_ingredient = {}
+        pos_ing_dict = {}
+        neg_ing_dict = {}
+        for disease_str in self.local_diseases:
+            disease_obj = Disease.objects.get(질병명=disease_str)
+            for rel_ingredient, level in disease_obj.질병식품관계.items():
+                ing_obj = Ingredient.objects.get(식품명=rel_ingredient)
+                if self.basic_filtering_for_single_ing_obj(ing_obj) and \
+                        (level >= self.local_dis_rec_threshold or level <= self.local_dis_unrec_threshold):
+                    if not self.local_dis_rel_ing_manual:
+                        if rel_ingredient not in relevant_ingredient:
+                            relevant_ingredient[rel_ingredient] = level
+                            if level > 0:
+                                pos_ing_dict[rel_ingredient] = (level, disease_str)
+                            elif level < 0:
+                                neg_ing_dict[rel_ingredient] = (level, disease_str)
+                        else:
+                            old_level = relevant_ingredient[rel_ingredient]
+                            if old_level > 0 and level < 0:
+                                del pos_ing_dict[rel_ingredient]
+                                neg_ing_dict[rel_ingredient] = (level, disease_str)
+                                relevant_ingredient[rel_ingredient] = level
+                            elif old_level < 0 and level > 0:
+                                continue
+                            elif abs(old_level) < abs(level):
+                                if old_level > 0:
+                                    pos_ing_dict[rel_ingredient] = (level, disease_str)
+                                elif old_level < 0:
+                                    neg_ing_dict[rel_ingredient] = (level, disease_str)
+
+                                relevant_ingredient[rel_ingredient] = level
+
+                    else: #all duplicates remain
+                        if level > 0:
+                            if rel_ingredient not in pos_ing_dict:
+                                l = []
+                                l.append((level, disease_str))
+                                pos_ing_dict[rel_ingredient] = l
+                            else:
+                                pos_ing_dict[rel_ingredient].append((level, disease_str))
+                        elif level < 0:
+                            if rel_ingredient not in neg_ing_dict:
+                                l = []
+                                l.append((level, disease_str))
+                                neg_ing_dict[rel_ingredient] = l
+                            else:
+                                neg_ing_dict[rel_ingredient].append((level, disease_str))
+        return pos_ing_dict, neg_ing_dict
+
     def get_relevant_ingredients_from_diseases_str(self):
         relevant_ingredient = {}
         removed = {}
-        for disease in self.local_diseases:
-            disease = Disease.objects.get(질병명=disease)
-            for rel_ingredient, level in disease.질병식품관계.items():
+        for disease_str in self.local_diseases:
+            disease_obj = Disease.objects.get(질병명=disease_str)
+            for rel_ingredient, level in disease_obj.질병식품관계.items():
                 ing_obj = Ingredient.objects.get(식품명=rel_ingredient)
-                # if self.basic_filtering_for_single_ing_obj(ing_obj):
-                if rel_ingredient not in relevant_ingredient and rel_ingredient not in removed:
-                    relevant_ingredient[rel_ingredient] = level
-                elif rel_ingredient in relevant_ingredient and self.local_remove_duplicates:
-                    del relevant_ingredient[rel_ingredient]
-                    removed[rel_ingredient] = True
-                elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] > 0:
-                    if level > relevant_ingredient[rel_ingredient] or level < 0:
-                        relevant_ingredient[rel_ingredient] = level
-                elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] < 0 and level < \
-                        relevant_ingredient[rel_ingredient]:
-                    relevant_ingredient[rel_ingredient] = level
+                if self.basic_filtering_for_single_ing_obj(ing_obj) and \
+                        (level >= self.local_dis_rec_threshold or level <= self.local_dis_unrec_threshold):
+                    if not self.local_dis_rel_ing_manual:
+                        if rel_ingredient not in relevant_ingredient :
+                            relevant_ingredient[rel_ingredient] = (level, disease_str)
+                        else:
+                            old_level = relevant_ingredient[rel_ingredient][0]
+                            if old_level > 0 and level < 0:
+                                relevant_ingredient[rel_ingredient] = (level, disease_str)
+                            elif old_level < 0 and level > 0:
+                                continue
+                            elif abs(old_level) < abs(level):
+                                relevant_ingredient[rel_ingredient] = (level, disease_str)
+
+                    else: #all duplicates remain
+                        if rel_ingredient not in relevant_ingredient:
+                            l = []
+                            l.append((level, disease_str))
+                            relevant_ingredient[rel_ingredient] = l
+                        else:
+                            relevant_ingredient[rel_ingredient].append((level, disease_str))
+                #
+                # ing_obj = Ingredient.objects.get(식품명=rel_ingredient)
+                # # if self.basic_filtering_for_single_ing_obj(ing_obj):
+                # if rel_ingredient not in relevant_ingredient and rel_ingredient not in removed:
+                #     relevant_ingredient[rel_ingredient] = level
+                # elif rel_ingredient in relevant_ingredient and self.local_remove_duplicates:
+                #     del relevant_ingredient[rel_ingredient]
+                #     removed[rel_ingredient] = True
+                # elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] > 0:
+                #     if level > relevant_ingredient[rel_ingredient] or level < 0:
+                #         relevant_ingredient[rel_ingredient] = level
+                # elif rel_ingredient in relevant_ingredient and relevant_ingredient[rel_ingredient] < 0 and level < \
+                #         relevant_ingredient[rel_ingredient]:
+                #     relevant_ingredient[rel_ingredient] = level
         print("질병딕트")
         print(relevant_ingredient.items())
         return relevant_ingredient
@@ -2049,14 +2131,18 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_lgG4_allergic_ingredients.clear()
         self.local_diseases.clear()
 
+        self.local_remove_duplicates = True
+        self.local_dis_rel_ing_manual = False
+        self.local_nut_rel_ing_manual = False
+        self.local_allergy_rel_ing_manual = False
         self.local_printing_rep_level = 0
         self.local_extinction_level= 0
         self.local_origin = None
         self.local_origin_level = -1
         self.local_specialty = None
         self.local_specialty_level = -1
-        self.local_rec_threshold = 0
-        self.local_nonrec_threshold = 0
+        self.local_dis_rec_threshold = 0
+        self.local_dis_unrec_threshold = 0
         self.local_gs_threshold = 0
         self.local_lgG4_threshold = 0
         self.local_ms_threshold = 0
@@ -2125,6 +2211,9 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.spinBox_dis_rel_ing_level_unrec_8.setValue(-1)
         self.ui.radioButton_handle_duplicate_auto_8.setChecked(True)
         self.ui.radioButton_handle_duplicate_manual_8.setChecked(False)
+        self.ui.ckBox_nut_rel_ing_manual_8.setChecked(False)
+        self.ui.ckBox_dis_rel_ing_manual_8.setChecked(False)
+        self.ui.ckBox_allergy_rel_ing_manual_8.setChecked(False)
         self.ui.spinBox_allergy_gasung_level_8.setValue(1)
         self.ui.spinBox_allergy_gs_level_8.setValue(1)
         self.ui.spinBox_allergy_ms_level_8.setValue(1)

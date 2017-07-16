@@ -210,33 +210,44 @@ def render_all_checkbox_level_tw(content_collection, tw, content_field_name, che
         rowIndex = rowIndex + 1
         tw.resizeColumnsToContents()
 
-def render_checkbox_level_tw(tw, checked_content_dict, positive_direction):
-    tw.setRowCount(len(checked_content_dict))
-    tw.setColumnCount(2)
+# checked content dict:
+# if not is_manual, it's dict of ing - (level, dis/allergy src)
+# if is_manual, it's dict of ing - list of (level, dis/allergy src)
+def render_checkbox_level_tw(tw, checked_content_dict, positive_direction, is_manual):
+    tw.setRowCount(10000)
+    tw.setColumnCount(3)
     rowIndex = 0
-    for elem, level in sorted(checked_content_dict.items(), key=operator.itemgetter(1), reverse=positive_direction):
-        ckbtnitem = QtWidgets.QTableWidgetItem(elem)
-        ckbtnitem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
-        levelitem = QtWidgets.QTableWidgetItem(str(level))
-        ckbtnitem.setCheckState(QtCore.Qt.Unchecked)
-        tw.setItem(rowIndex, 0, ckbtnitem)
-        tw.setItem(rowIndex, 1, levelitem)
-        rowIndex = rowIndex + 1
+    if not is_manual:
+        for elem, level_src_tuple in sorted(checked_content_dict.items(), key=operator.itemgetter(1), reverse=positive_direction):
+            ckbtnitem = make_tw_checkbox_item(elem, False)
+
+            levelitem = make_tw_str_item(str(level_src_tuple[0]))
+            srcitem = make_tw_str_item(level_src_tuple[1])
+
+            tw.setItem(rowIndex, 0, ckbtnitem)
+            tw.setItem(rowIndex, 1, levelitem)
+            tw.setItem(rowIndex, 2, srcitem)
+            rowIndex += 1
+    else:
+        for elem, list_of_tup in checked_content_dict:
+            for level_src_tup in list_of_tup:
+                ckbtnitem = make_tw_checkbox_item(elem, False)
+                levelitem = make_tw_str_item(str(level_src_tup[0]))
+                srcitem = make_tw_str_item(level_src_tup[1])
+                tw.setItem(rowIndex, 0, ckbtnitem)
+                tw.setItem(rowIndex, 1, levelitem)
+                tw.setItem(rowIndex, 2, srcitem)
+                rowIndex += 1
+    tw.setRowCount(rowIndex)
     tw.resizeColumnsToContents()
 
-def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, checked_content_dict, rec_threshold, nonrec_threshold):
-    positive_content_dict = {}
-    negative_content_dict = {}
-    print("dis related ings")
-    print(checked_content_dict.items())
-    for elem, level in checked_content_dict.items():
-        if level >= rec_threshold:
-            positive_content_dict[elem] = level
-        if level <= nonrec_threshold:
-            negative_content_dict[elem] = level
-    render_checkbox_level_tw(positive_tw, positive_content_dict, 1)
-    render_checkbox_level_tw(negative_tw, negative_content_dict, 0)
+# pos_dict and neg_dict:
+# if not is_manual, it's dict of ing - (level, dis/allergy src)
+# if is_manual, it's dict of ing - list of (level, dis/allergy src)
+def render_checkbox_pos_and_neg_level_tw(positive_tw, negative_tw, pos_dict, neg_dict, is_manual):
+
+    render_checkbox_level_tw(positive_tw, pos_dict, 1, is_manual)
+    render_checkbox_level_tw(negative_tw, neg_dict, 0, is_manual)
     positive_tw.resizeColumnsToContents()
     negative_tw.resizeColumnsToContents()
 

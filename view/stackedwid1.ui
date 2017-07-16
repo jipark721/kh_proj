@@ -18,13 +18,13 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>8</number>
       </property>
       <widget class="QWidget" name="page_0">
        <widget class="QWidget" name="widget_67" native="true">
         <property name="geometry">
          <rect>
-          <x>400</x>
+          <x>360</x>
           <y>190</y>
           <width>541</width>
           <height>291</height>
@@ -2759,6 +2759,67 @@
            <string>중복관련</string>
           </property>
          </widget>
+         <widget class="QCheckBox" name="ckBox_nut_rel_ing_manual_8">
+          <property name="geometry">
+           <rect>
+            <x>150</x>
+            <y>130</y>
+            <width>191</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>영양소 관련 식품 중복 수동 수정</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="ckBox_dis_rel_ing_manual_8">
+          <property name="geometry">
+           <rect>
+            <x>340</x>
+            <y>130</y>
+            <width>191</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>질병 관련 식품 중복 수동 수정</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="ckBox_allergy_rel_ing_manual_8">
+          <property name="geometry">
+           <rect>
+            <x>540</x>
+            <y>130</y>
+            <width>221</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>알레르기 관련 식품 중복 수동 수정</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_check_all_manual_8">
+          <property name="geometry">
+           <rect>
+            <x>440</x>
+            <y>100</y>
+            <width>113</width>
+            <height>32</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>모두 선택</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="widget_8" native="true">
          <property name="geometry">
@@ -3583,6 +3644,11 @@
            <string> level</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>알레르기 출처</string>
+          </property>
+         </column>
         </widget>
         <widget class="QTableWidget" name="tableWidget_unrec_ing_from_dis_9">
          <property name="geometry">
@@ -3603,6 +3669,11 @@
            <string> level</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>질병 출처</string>
+          </property>
+         </column>
         </widget>
         <widget class="QTableWidget" name="tableWidget_rec_ing_from_dis_9">
          <property name="geometry">
@@ -3621,6 +3692,11 @@
          <column>
           <property name="text">
            <string> level</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>질병출처</string>
           </property>
          </column>
         </widget>
@@ -3645,7 +3721,7 @@
          </column>
          <column>
           <property name="text">
-           <string>영양소명</string>
+           <string>영양소 출처</string>
           </property>
          </column>
          <column>
@@ -3680,7 +3756,7 @@
          </column>
          <column>
           <property name="text">
-           <string>영양소명</string>
+           <string>영양소 출처</string>
           </property>
          </column>
          <column>
