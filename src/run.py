@@ -2671,7 +2671,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.lineEdit_ing_category3_15.clear()
         self.ui.lineEdit_ing_category4_15.clear()
         self.ui.lineEdit_ing_category5_15.clear()
-        self.ui.lineEdit_ing_category_index_15.clear()
+        #self.ui.lineEdit_ing_category_index_15.clear()
         self.ui.plainTextEdit_ing_description_15.clear()
         self.ui.lineEdit_ing_academic_name_15.clear()
         self.ui.lineEdit_ing_lang_english_15.clear()
