@@ -42,9 +42,7 @@ def read_xlsx_db(xls_file_name):
     # Nutrient
     worksheet = workbook.sheet_by_name("nutrient")
     keys = [v.value for v in worksheet.row(0)]
-    for row_number in range(worksheet.nrows):
-        if row_number == 0:
-            continue
+    for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
@@ -53,55 +51,77 @@ def read_xlsx_db(xls_file_name):
     # Ingredient
     worksheet = workbook.sheet_by_name("ingredient")
     keys = [v.value for v in worksheet.row(0)]
-    for row_number in range(worksheet.nrows):
-        if row_number == 0:
-            continue
+    for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
-
-        row_data["식품영양소관계"] = convert_to_datastructure(row_data, "식품영양소관계")
-        for nutrient, quant in row_data["식품영양소관계"].items():
-            try:
-                target_nutrient = Nutrient.objects.get(영양소명=nutrient)
-            except:
-                print("[Error in %s 식품영양소관계]: Nutrient [%s] does not exist in the nutrients list" %(row_data["식품명"], nutrient))
-                return False
-            target_nutrient.포함식품리스트[row_data["식품명"]] = quant
-            target_nutrient.save()
         Ingredient(**row_data).save()
 
 
     # Disease
     worksheet = workbook.sheet_by_name("disease")
     keys = [v.value for v in worksheet.row(0)]
-    for row_number in range(worksheet.nrows):
-        if row_number == 0:
-            continue
+    for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             row_data[keys[col_number]] = cell.value
-        row_data["질병식품관계"] = convert_to_datastructure(row_data, "질병식품관계")
-        row_data["질병영양소관계"] = convert_to_datastructure(row_data, "질병영양소관계")
-
-        for ingredient, quant in row_data["질병식품관계"].items():
-            try:
-                target_ingredient = Ingredient.objects.get(식품명=ingredient)
-            except:
-                print("[Error in %s 질병식품관계]: Ingredient [%s] does not exist in the ingredient list" %(row_data["질병명"], ingredient))
-                return False
-
-        for nutrient, quant in row_data["질병영양소관계"].items():
-            try:
-                target_nutrient = Nutrient.objects.get(영양소명=nutrient)
-            except:
-                print("[Error in %s 질병영양소관계]: Ingredient [%s] does not exist in the ingredient list" %(row_data["질병명"], nutrient))
-                return False
-
         Disease(**row_data).save()
+
+
+    # 식품영양소관계
+    worksheet = workbook.sheet_by_name("식품영양소관계")
+    keys = [v.value for v in worksheet.row(0)]
+    for row_number in range(1, worksheet.nrows):
+        row_data = {}
+        for col_number, cell in enumerate(worksheet.row(row_number)):
+            row_data[keys[col_number]] = cell.value
+        ingredient = Ingredient.objects.get(식품명=row_data["식품명"])
+        del row_data["식품명"]
+        for nutrient_name, quantity in row_data.items():
+            if quantity:
+                ingredient.식품영양소관계[nutrient_name] = quantity
+                nutrient = Nutrient.objects.get(영양소명=nutrient_name)
+                nutrient.포함식품리스트[ingredient.식품명] = quantity
+                nutrient.save()
+        ingredient.save()
+
+
+    # 질병식품관계
+    worksheet = workbook.sheet_by_name("질병식품관계")
+    keys = [v.value for v in worksheet.row(0)]
+    for row_number in range(1, worksheet.nrows):
+        row_data = {}
+        for col_number, cell in enumerate(worksheet.row(row_number)):
+            row_data[keys[col_number]] = cell.value
+        disease = Disease.objects.get(질병명=row_data["질병명"])
+        del row_data["질병명"]
+        for ingredient_name, quantity in row_data.items():
+            if quantity:
+                disease.질병식품관계[ingredient_name] = quantity
+        disease.save()
+
+
+    # 질병영양소관계
+    worksheet = workbook.sheet_by_name("질병식품관계")
+    keys = [v.value for v in worksheet.row(0)]
+    for row_number in range(1, worksheet.nrows):
+        row_data = {}
+        for col_number, cell in enumerate(worksheet.row(row_number)):
+            row_data[keys[col_number]] = cell.value
+        disease = Disease.objects.get(질병명=row_data["질병명"])
+        del row_data["질병명"]
+        for nutrient_name, quantity in row_data.items():
+            if quantity:
+                disease.질병영양소관계[nutrient_name] = quantity
+        disease.save()
+
 
     print_db_stats()
     return True
+
+
+# print("[Error in %s 식품영양소관계]: Nutrient [%s] does not exist in the nutrients list" %(row_data["식품명"], nutrient))
+# print("[Error in %s 질병식품관계]: Ingredient [%s] does not exist in the ingredient list" %(row_data["질병명"], ingredient))
 
 def convert_to_datastructure(row_data, field):
     try:

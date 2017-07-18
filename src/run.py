@@ -29,6 +29,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # local classes
         self.current_patient = None
+        self.current_date = datetime.date.today()
 
         self.local_office_visit_date_str = datetime.date.today()
         self.local_gs_allergic_ingredients = {}
