@@ -207,8 +207,8 @@ def render_all_checkbox_level_tw(content_collection, tw, content_field_name, che
             levelitem.setText(str(checked_content_dict[item[content_field_name]]))
         tw.setItem(rowIndex, 0, ckbtnitem)
         tw.setItem(rowIndex, 1, levelitem)
-        rowIndex = rowIndex + 1
-        tw.resizeColumnsToContents()
+        rowIndex += 1
+    tw.resizeColumnsToContents()
 
 # checked content dict:
 # if not is_manual, it's dict of ing - (level, dis/allergy src)
@@ -228,8 +228,9 @@ def render_checkbox_level_tw(tw, checked_content_dict, positive_direction, is_ma
             tw.setItem(rowIndex, 1, levelitem)
             tw.setItem(rowIndex, 2, srcitem)
             rowIndex += 1
-    else:
-        for elem, list_of_tup in checked_content_dict:
+    else: #NOT SORTED
+        for elem in checked_content_dict:
+            list_of_tup = checked_content_dict[elem]
             for level_src_tup in list_of_tup:
                 ckbtnitem = make_tw_checkbox_item(elem, False)
                 levelitem = make_tw_str_item(str(level_src_tup[0]))
