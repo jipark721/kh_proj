@@ -45,7 +45,9 @@ def read_xlsx_db(xls_file_name):
     for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
-            row_data[keys[col_number]] = cell.value
+            if cell.value and cell.value != "":
+                print(cell.value)
+                row_data[keys[col_number]] = cell.value
         Nutrient(**row_data).save()
 
     # Ingredient
@@ -54,7 +56,10 @@ def read_xlsx_db(xls_file_name):
     for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
-            row_data[keys[col_number]] = cell.value
+            if cell.value and cell.value != "":
+                print(cell.value)
+
+                row_data[keys[col_number]] = cell.value
         Ingredient(**row_data).save()
 
 
@@ -64,7 +69,10 @@ def read_xlsx_db(xls_file_name):
     for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
-            row_data[keys[col_number]] = cell.value
+            if cell.value and cell.value != "":
+                print(cell.value)
+
+                row_data[keys[col_number]] = cell.value
         Disease(**row_data).save()
 
 
@@ -74,9 +82,12 @@ def read_xlsx_db(xls_file_name):
     for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
-            row_data[keys[col_number]] = cell.value
-        ingredient = Ingredient.objects.get(식품명=row_data["식품명"])
-        del row_data["식품명"]
+            if cell.value and cell.value != "" and cell.value != "-":
+                print(cell.value)
+
+                row_data[keys[col_number]] = cell.value
+        ingredient = Ingredient.objects.get(식품명=row_data["식품영양소관계식품명"])
+        del row_data["식품영양소관계식품명"]
         for nutrient_name, quantity in row_data.items():
             if quantity:
                 ingredient.식품영양소관계[nutrient_name] = quantity
@@ -92,9 +103,12 @@ def read_xlsx_db(xls_file_name):
     for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
-            row_data[keys[col_number]] = cell.value
-        disease = Disease.objects.get(질병명=row_data["질병명"])
-        del row_data["질병명"]
+            if cell.value and cell.value != "" and cell.value != "-":
+                print(cell.value)
+
+                row_data[keys[col_number]] = cell.value
+        disease = Disease.objects.get(질병명=row_data["질병식품관계질병명"])
+        del row_data["질병식품관계질병명"]
         for ingredient_name, quantity in row_data.items():
             if quantity:
                 disease.질병식품관계[ingredient_name] = quantity
@@ -102,14 +116,17 @@ def read_xlsx_db(xls_file_name):
 
 
     # 질병영양소관계
-    worksheet = workbook.sheet_by_name("질병식품관계")
+    worksheet = workbook.sheet_by_name("질병영양소관계")
     keys = [v.value for v in worksheet.row(0)]
     for row_number in range(1, worksheet.nrows):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
-            row_data[keys[col_number]] = cell.value
-        disease = Disease.objects.get(질병명=row_data["질병명"])
-        del row_data["질병명"]
+            if cell.value and cell.value != "" and cell.value != "-":
+                print(cell.value)
+
+                row_data[keys[col_number]] = cell.value
+        disease = Disease.objects.get(질병명=row_data["질병영양소관계질병명"])
+        del row_data["질병영양소관계질병명"]
         for nutrient_name, quantity in row_data.items():
             if quantity:
                 disease.질병영양소관계[nutrient_name] = quantity
