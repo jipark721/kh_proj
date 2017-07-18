@@ -2043,6 +2043,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.reset_page_4_and_29()
         self.reset_page_9()
         self.reset_page_10()
+        self.ui.tableWidget_clientCandidates_5.setRowCount(0)
 
         self.current_patient = None
         self.local_gs_allergic_ingredients.clear()
