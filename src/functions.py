@@ -539,6 +539,8 @@ def find_item_index_for_str_in_tw(tw, str, col):
     return -1
 
 
+def compare(ing1, ing2):
+    pass
 #########################
 ##
 ## Master Data Editor
