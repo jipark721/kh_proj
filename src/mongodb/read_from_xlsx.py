@@ -95,7 +95,7 @@ def read_xlsx_db(xls_file_name):
                     nutrient.포함식품리스트[ingredient.식품명] = float(quantity)
                     nutrient.save()
                 except:
-                    print("[식품영양소관계식품명 Error] Count not convert [%s] to float number for %s" % (quantity, name))
+                    print("[식품영양소관계식품명 Error] Count not convert [%s] to float number for %s: %s" % (quantity, name, nutrient_name))
         ingredient.save()
 
 
@@ -114,11 +114,11 @@ def read_xlsx_db(xls_file_name):
             if quantity:
                 try:
                     if abs(int(quantity)) > 5:
-                        print("[질병식품관계 Error] %s is too large or too small for %s" % (quantity, name))
+                        print("[질병식품관계 Error] %s is too large or too small for %s: %s" % (quantity, name, ingredient_name))
                     else:
                         disease.질병식품관계[ingredient_name] = quantity
                 except:
-                    print("[질병식품관계 Error] Count not convert %s to number for %s" % (quantity, name))
+                    print("[질병식품관계 Error] Count not convert %s to number for %s: %s" % (quantity, name, ingredient_name))
         disease.save()
 
 
@@ -137,11 +137,11 @@ def read_xlsx_db(xls_file_name):
             if quantity:
                 try:
                     if abs(int(quantity)) > 5:
-                        print("[질병영양소관계 Error] %s is too large or too small for %s" % (quantity, name))
+                        print("[질병영양소관계 Error] %s is too large or too small for %s: %s: %s" % (quantity, name, nutrient_name))
                     else:
                         disease.질병영양소관계[nutrient_name] = int(quantity)
                 except:
-                    print("[질병영양소관계 Error] Count not convert %s to float number for %s" % (quantity, name))
+                    print("[질병영양소관계 Error] Count not convert %s to float number for %s: %s" % (quantity, name, nutrient_name))
         disease.save()
 
 
