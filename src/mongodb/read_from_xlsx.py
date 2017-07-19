@@ -90,10 +90,13 @@ def read_xlsx_db(xls_file_name):
         del row_data["식품영양소관계식품명"]
         for nutrient_name, quantity in row_data.items():
             if quantity:
-                ingredient.식품영양소관계[nutrient_name] = quantity
-                nutrient = Nutrient.objects.get(영양소명=nutrient_name)
-                nutrient.포함식품리스트[ingredient.식품명] = quantity
-                nutrient.save()
+                try:
+                    ingredient.식품영양소관계[nutrient_name] = float(quantity)
+                    nutrient = Nutrient.objects.get(영양소명=nutrient_name)
+                    nutrient.포함식품리스트[ingredient.식품명] = float(quantity)
+                    nutrient.save()
+                except:
+                    print("Count not convert %s to float number" % quantity)
         ingredient.save()
 
 
@@ -111,7 +114,10 @@ def read_xlsx_db(xls_file_name):
         del row_data["질병식품관계질병명"]
         for ingredient_name, quantity in row_data.items():
             if quantity:
-                disease.질병식품관계[ingredient_name] = quantity
+                try:
+                    disease.질병식품관계[ingredient_name] = quantity
+                except:
+                    print("Count not convert %s to float number" % quantity)
         disease.save()
 
 
@@ -129,7 +135,10 @@ def read_xlsx_db(xls_file_name):
         del row_data["질병영양소관계질병명"]
         for nutrient_name, quantity in row_data.items():
             if quantity:
-                disease.질병영양소관계[nutrient_name] = quantity
+                try:
+                    disease.질병영양소관계[nutrient_name] = quantity
+                except:
+                    print("Count not convert %s to float number" % quantity)
         disease.save()
 
 
