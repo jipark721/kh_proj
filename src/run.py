@@ -2537,8 +2537,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def check_password(self):
         pwd = self.ui.lineEdit_pw_0.text()
+        self.ui.lineEdit_pw_0.clear()
         if pwd == "kiho":
-            self.ui.lineEdit_pw_0.setText("")
             self.ui.stackedWidget.setCurrentIndex(1)
         elif len(pwd) != 0:
             create_warning_message("비밀번호가 틀립니다.")
