@@ -115,7 +115,7 @@ def read_xlsx_db(xls_file_name):
         for ingredient_name, quantity in row_data.items():
             if quantity:
                 try:
-                    disease.질병식품관계[ingredient_name] = quantity
+                    disease.질병식품관계[ingredient_name] = float(quantity)
                 except:
                     print("Count not convert %s to float number" % quantity)
         disease.save()
@@ -136,7 +136,7 @@ def read_xlsx_db(xls_file_name):
         for nutrient_name, quantity in row_data.items():
             if quantity:
                 try:
-                    disease.질병영양소관계[nutrient_name] = quantity
+                    disease.질병영양소관계[nutrient_name] = float(quantity)
                 except:
                     print("Count not convert %s to float number" % quantity)
         disease.save()
