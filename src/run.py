@@ -3714,7 +3714,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             report += "\n" + str(i+1) + ". " + ingredient.식품명 + "\n\n"
             for field in fields:
                 report += field + ": " + str(ingredient[field]) + "\n"
-            report += "\n\n"
+            report += "\n\n\n"
         report += "\n\n\n\n\n"
         report += "<NOT RECOMMENDED INGREDIENTS>"
         for i, ingredient in enumerate([Ingredient.objects.get(식품명=unrec_ing) for unrec_ing in unrec_ings]):
@@ -3722,7 +3722,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             report += "\n" + str(i+1) + ". " + ingredient.식품명 + "\n\n"
             for field in fields:
                 report += field + ": " + str(ingredient[field]) + "\n"
-            report += "\n\n"
+            report += "\n\n\n"
         return report
 
     def init_text_edit(self):
