@@ -83,17 +83,19 @@ def read_xlsx_db(xls_file_name):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             if cell.value and cell.value != "" and cell.value != "-":
-                print(cell.value)
-
                 row_data[keys[col_number]] = cell.value
         ingredient = Ingredient.objects.get(식품명=row_data["식품영양소관계식품명"])
+        name = row_data["식품영양소관계식품명"]
         del row_data["식품영양소관계식품명"]
         for nutrient_name, quantity in row_data.items():
             if quantity:
-                ingredient.식품영양소관계[nutrient_name] = quantity
-                nutrient = Nutrient.objects.get(영양소명=nutrient_name)
-                nutrient.포함식품리스트[ingredient.식품명] = quantity
-                nutrient.save()
+                try:
+                    ingredient.식품영양소관계[nutrient_name] = float(quantity)
+                    nutrient = Nutrient.objects.get(영양소명=nutrient_name)
+                    nutrient.포함식품리스트[ingredient.식품명] = float(quantity)
+                    nutrient.save()
+                except:
+                    print("[식품영양소관계식품명 Error] Count not convert [%s] to float number for %s: %s" % (quantity, name, nutrient_name))
         ingredient.save()
 
 
@@ -104,14 +106,19 @@ def read_xlsx_db(xls_file_name):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             if cell.value and cell.value != "" and cell.value != "-":
-                print(cell.value)
-
                 row_data[keys[col_number]] = cell.value
         disease = Disease.objects.get(질병명=row_data["질병식품관계질병명"])
+        name = row_data["질병식품관계질병명"]
         del row_data["질병식품관계질병명"]
         for ingredient_name, quantity in row_data.items():
             if quantity:
-                disease.질병식품관계[ingredient_name] = quantity
+                try:
+                    if abs(int(quantity)) > 5:
+                        print("[질병식품관계 Error] %s is too large or too small for %s: %s" % (quantity, name, ingredient_name))
+                    else:
+                        disease.질병식품관계[ingredient_name] = quantity
+                except:
+                    print("[질병식품관계 Error] Count not convert %s to number for %s: %s" % (quantity, name, ingredient_name))
         disease.save()
 
 
@@ -122,14 +129,19 @@ def read_xlsx_db(xls_file_name):
         row_data = {}
         for col_number, cell in enumerate(worksheet.row(row_number)):
             if cell.value and cell.value != "" and cell.value != "-":
-                print(cell.value)
-
                 row_data[keys[col_number]] = cell.value
         disease = Disease.objects.get(질병명=row_data["질병영양소관계질병명"])
+        name = row_data["질병영양소관계질병명"]
         del row_data["질병영양소관계질병명"]
         for nutrient_name, quantity in row_data.items():
             if quantity:
-                disease.질병영양소관계[nutrient_name] = quantity
+                try:
+                    if abs(int(quantity)) > 5:
+                        print("[질병영양소관계 Error] %s is too large or too small for %s: %s: %s" % (quantity, name, nutrient_name))
+                    else:
+                        disease.질병영양소관계[nutrient_name] = int(quantity)
+                except:
+                    print("[질병영양소관계 Error] Count not convert %s to float number for %s: %s" % (quantity, name, nutrient_name))
         disease.save()
 
 
