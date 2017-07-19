@@ -647,8 +647,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         self.ultimate_rec_level_ing_dict = convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_rec_ing_from_nut_9)
         self.ultimate_rec_level_ing_dict = combine_two_dicts_key_level_value_set_of_ings(self.ultimate_rec_level_ing_dict, convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_rec_ing_from_dis_9))
-
-
         self.ultimate_unrec_level_ing_dict = convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_nut_9)
         self.ultimate_unrec_level_ing_dict = combine_two_dicts_key_level_value_set_of_ings(self.ultimate_unrec_level_ing_dict, convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_dis_9))
         self.ultimate_unrec_level_ing_dict = combine_two_dicts_key_level_value_set_of_ings(self.ultimate_unrec_level_ing_dict, convert_tw_to_dict_with_key_value_level(self.ui.tableWidget_unrec_ing_from_allergies_9))
@@ -661,7 +659,6 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         print("rec level-ing set dict")
         print(self.ultimate_rec_level_ing_dict.items())
         print("unrec level-ing set dict")
-
         print(self.ultimate_unrec_level_ing_dict.items())
 
         self.render_ultimate_rec_and_unrec_tw_by_level()
@@ -1112,25 +1109,37 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         # 데이터안에는 각 식품 100그램 안에 영양소가 얼마 들어있는지 기입되어있음
         # 1 - one_portion_first clicked, 2 - 100g_first clicked, 4 - mortality_first clicked, 8 - protein_first clicked
         ing = Ingredient.objects.get(식품명 = ing_str)
-        default_100g_value = Decimal(ing.식품영양소관계[nut_str])
+        default_100g_value = 100.0
+        if ing.식품영양소관계[nut_str]:
+            default_100g_value = Decimal(ing.식품영양소관계[nut_str])
+        waste = 0
+        if ing.폐기율:
+            waste = ing.폐기율
+        protein = 100
+        if ing.단백질가식부:
+            protein = ing.단백질가식부
+        oneportion = 100
+        if ing.단일식사분량:
+            oneportion = ing.단일식사분량
+
         if for_secondary or portion_code == 2 or portion_code == 6 or portion_code == 10 or portion_code == 14: #여기서는 무조건 100그램으로 써줘야함
             if portion_code == 3 or portion_code == 2:
                 return default_100g_value
             elif portion_code == 7 or portion_code == 6:
-                return default_100g_value * (1-ing.폐기율)
+                return default_100g_value * (100-waste) / 100
             elif portion_code == 11 or portion_code == 10:
-                return default_100g_value * (ing.단백질가식부)
+                return default_100g_value * (protein /100)
             elif portion_code == 15 or portion_code == 14:
-                return default_100g_value * (1-ing.폐기율) * ing.단백질가식부
+                return default_100g_value * (100-waste) / 100 * protein / 100
         else:
             if (portion_code == 1 or portion_code == 3):
-                return default_100g_value * ing.단일식사분량 / 100
+                return default_100g_value * oneportion / 100
             elif portion_code == 4 or portion_code == 5 or portion_code == 7:
-                return default_100g_value * ing.단일식사분량 / 100 * (1-ing.폐기율)
+                return default_100g_value * oneportion / 100 * (100-waste) / 100
             elif portion_code == 8 or portion_code == 9 or portion_code == 11:
-                return default_100g_value * ing.단일식사분량 / 100 * ing.단백질가식부
+                return default_100g_value * oneportion / 100 * protein / 100
             elif portion_code == 12 or portion_code == 13 or portion_code == 15:
-                return default_100g_value * ing.단일식사분량 / 100 * (1-ing.폐기율) * ing.단백질가식부
+                return default_100g_value * oneportion / 100 * (100-waste) / 100 * protein / 100
 
 
     def get_level_count(self, level, dict):
@@ -1236,14 +1245,21 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             return Ingredient.objects(식품분류5=ing_cat_str)
 
     def basic_filtering_for_single_ing_obj(self, ing_obj):
-        return ing_obj.출력대표성등급 <= self.local_printing_rep_level and ing_obj.멸종등급 > self.local_extinction_level \
+        if ing_obj.출력대표성등급 and ing_obj.멸종등급:
+            return ing_obj.출력대표성등급 <= self.local_printing_rep_level and ing_obj.멸종등급 > self.local_extinction_level \
                and self.isOriginAndSpecialtyBothSatisfied(ing_obj.식품명)
+        elif not ing_obj.출력대표성등급 and ing_obj.멸종등급:
+            return ing_obj.멸종등급 > self.local_extinction_level and self.isOriginAndSpecialtyBothSatisfied(ing_obj.식품명)
+        elif ing_obj.출력대표성등급 and not ing_obj.멸종등급:
+            return ing_obj.출력대표성등급 <= self.local_printing_rep_level and self.isOriginAndSpecialtyBothSatisfied(ing_obj.식품명)
+        else:
+            return self.isOriginAndSpecialtyBothSatisfied(ing_obj.식품명)
 
     def insert_similar_ingredients_for_each_allergy(self, relevant_ings, ing_obj, ing_cat_level, lvl, is_manual, src_str):
         similar_ingredients = self.get_similar_ingredients_for_allergy(ing_obj, ing_cat_level)
         for similar_ing in similar_ingredients:
             similar_ing_str = similar_ing.식품명
-            if not is_manual and (similar_ing_str not in relevant_ings or lvl < relevant_ings[similar_ing_str]):
+            if not is_manual and (similar_ing_str not in relevant_ings or lvl < relevant_ings[similar_ing_str][0]):
                 relevant_ings[similar_ing_str] = (lvl, src_str)
             elif is_manual:
                 if similar_ing_str not in relevant_ings:
@@ -1263,7 +1279,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
                 ing_str = ing_obj.식품명
                 lvl = ing_obj.가성알레르기등급
                 if self.basic_filtering_for_single_ing_obj(ing_obj):
-                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str]:
+                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str][0]:
                         relevant_ingredients[ing_str] = (lvl, "가성")
                     if gasung_ing_cat_level and gasung_ing_cat_level != "":
                         self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ing_obj, gasung_ing_cat_level, lvl, is_manual, "가성 유사 식품")
@@ -1271,7 +1287,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             for ing_str, lvl in self.local_gs_allergic_ingredients.items():
                 ing_obj = Ingredient.objects.get(식품명=ing_str)
                 if self.basic_filtering_for_single_ing_obj(ing_obj) and lvl < self.local_gs_threshold:
-                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str]:
+                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str][0]:
                         relevant_ingredients[ing_str] = (lvl, "급성")
                     if gs_ing_cat_level and gs_ing_cat_level != "":
                         self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ing_obj,
@@ -1280,7 +1296,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             for ing_str, lvl in self.local_ms_allergic_ingredients.items():
                 ing_obj = Ingredient.objects.get(식품명=ing_str)
                 if self.basic_filtering_for_single_ing_obj(ing_obj) and lvl < self.local_ms_threshold:
-                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str]:
+                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str][0]:
                         relevant_ingredients[ing_str] = (lvl, "만성")
                     if ms_ing_cat_level and ms_ing_cat_level != "":
                         self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ing_obj,
@@ -1289,7 +1305,7 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             for ing_str, lvl in self.local_lgG4_allergic_ingredients.items():
                 ing_obj = Ingredient.objects.get(식품명=ing_str)
                 if self.basic_filtering_for_single_ing_obj(ing_obj) and lvl < self.local_lgG4_threshold:
-                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str]:
+                    if ing_str not in relevant_ingredients or lvl < relevant_ingredients[ing_str][0]:
                         relevant_ingredients[ing_str] = (lvl, "만성 lgG4")
                     if lgg4_ing_cat_level and lgg4_ing_cat_level != "":
                         self.insert_similar_ingredients_for_each_allergy(relevant_ingredients, ing_obj,
@@ -2410,14 +2426,14 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         if not name:
             found_patients = Patient.objects.all()
         else:
-            found_patients = Patient.objects(이름=name)
+            found_patients = Patient.objects(이름__icontains=name)
         self.render_found_patients(found_patients, tw)
 
     def find_patients_by_id(self, id, tw):
         if not id:
             found_patients = Patient.objects.all()
         else:
-            found_patients = Patient.objects.get(ID=id)
+            found_patients = Patient.objects(ID__icontains=id)
         self.render_found_patients(found_patients, tw)
 
     def render_found_patients(self, found_patients, tw):
@@ -2521,8 +2537,8 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
     def check_password(self):
         pwd = self.ui.lineEdit_pw_0.text()
+        self.ui.lineEdit_pw_0.clear()
         if pwd == "kiho":
-            self.ui.lineEdit_pw_0.setText("")
             self.ui.stackedWidget.setCurrentIndex(1)
         elif len(pwd) != 0:
             create_warning_message("비밀번호가 틀립니다.")
