@@ -171,6 +171,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
 
         # page_11
         self.ui.btn_end_diagnosis_11 .clicked.connect(lambda x: self.end_diagnosis())
+        self.ui.btn_check_all_lang_11.clicked.connect(lambda x: self.check_all_lw(self.ui.listWidget_ing_data_lang_to_print_11))
+        self.ui.btn_check_all_print_stuff_11.clicked.connect(lambda x: self.check_all_lw(self.ui.listWidget_ing_data_cat_to_print_11))
+        self.ui.btn_uncheck_all_lang_11.clicked.connect(lambda x: uncheck_all_checkbox_lw(self.ui.listWidget_ing_data_lang_to_print_11))
+        self.ui.btn_uncheck_all_print_stuff_11.clicked.connect(lambda x: uncheck_all_checkbox_lw(self.ui.listWidget_ing_data_cat_to_print_11))
         self.ui.take_screenshot_11.clicked.connect(lambda x: self.get_pdf_from_page_11())
         self.ui.btn_home_11.clicked.connect(lambda x: self.go_to_home_no_warning())
         self.ui.btn_back_11.clicked.connect(lambda x: self.go_to_previous_page(11))
@@ -364,6 +368,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.ui.btn_view_common_ing_32.clicked.connect(self.show_common_ing)
         self.ui.btn_close_common_ings_32.clicked.connect(self.close_common_ing_widget)
         self.ui.btn_done_32.clicked.connect(self.done_with_from_nut_to_ing)
+
+    def check_all_lw(self, lw):
+        for index in range(lw.count()):
+            lw.item(index).setCheckState(QtCore.Qt.Checked)
 
     def select_all_checkboxes_page_4_and_29(self):
         for index in range(len(self.list_of_nut_tw)):
@@ -3726,9 +3734,17 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
         self.local_rec_ingredients = rec_ings
         self.local_unrec_ingredients = unrec_ings
 
-        self.save_local_data_to_patient(self.current_patient)
-        self.clear_current_patient_info_and_all_related_pages()
-        self.go_to_home_no_warning()
+        msgbox = QtWidgets.QMessageBox()
+        msgbox.setWindowTitle("Information")
+        msgbox.setText("진단이 끝났습니다. 홈으로 돌아가시겠습니까")
+        msgbox.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        msgbox.setDefaultButton(QtWidgets.QMessageBox.Yes)
+        ret = msgbox.exec_()
+        if ret == QtWidgets.QMessageBox.Yes:
+            self.save_local_data_to_patient(self.current_patient)
+            self.clear_current_patient_info_and_all_related_pages()
+            self.go_to_home_no_warning()
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
