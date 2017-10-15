@@ -1,7 +1,7 @@
 venv/
 .DS_Store
 .idea/
-view/stackedwid1.ui.autosave
+src/stackedwid1.ui.autosave
 *.pyc
 __pycache__/
 src/mongodb/db/

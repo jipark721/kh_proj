@@ -3,6 +3,7 @@
 
 import sys
 import webbrowser
+import subprocess
 from ui import Ui_MainWindow as UI
 from mongodb.utils import *
 from mongodb.models import *
@@ -3713,7 +3714,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             report += "\n=============================================\n"
             report += "\n" + str(i+1) + ". " + ingredient.식품명 + "\n\n"
             for field in fields:
-                report += field + ": " + str(ingredient[field]) + "\n"
+                if ingredient[field]:
+                    report += field + ": " + str(ingredient[field]) + "\n"
+                else:
+                    report += field + ":\n"
             report += "\n\n\n"
         report += "\n\n\n\n\n"
         report += "<NOT RECOMMENDED INGREDIENTS>"
@@ -3721,7 +3725,10 @@ class MyFoodRecommender(QtWidgets.QMainWindow):
             report += "\n=============================================\n"
             report += "\n" + str(i+1) + ". " + ingredient.식품명 + "\n\n"
             for field in fields:
-                report += field + ": " + str(ingredient[field]) + "\n"
+                if ingredient[field]:
+                    report += field + ": " + str(ingredient[field]) + "\n"
+                else:
+                    report += field + ":\n"
             report += "\n\n\n"
         return report
 
