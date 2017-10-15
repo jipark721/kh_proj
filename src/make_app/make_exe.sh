@@ -1,1 +1,1 @@
-python setup.py build
+python setup_windows.py build

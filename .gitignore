@@ -6,3 +6,4 @@ src/stackedwid1.ui.autosave
 __pycache__/
 src/mongodb/db/
 json/
+src/make_app/build/
