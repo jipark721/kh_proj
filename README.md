@@ -2,22 +2,21 @@
 
 ### Collaborators: Alex Ahn, Ji Park
 
-## Simple Set Up & Check up:
+## Prerequisites
 
-1. git clone
-2. run "init_proj.sh"
-3. run "python test_db.py" at mongodb dir.
-
-## Environment  Requirements (recommend using Homebrew for installation):
-
+- Brew
 - Python3
-- Mongodb
-- VirtualEnvironment
-- packages : please refer to requirements.txt
 
-## Virtual Environment
+## Set up
 
-- make sure to activate environment ("source venv/bin/activate") every time.
+virtualenv -p python3 venv
+source venv/bin/activate
+pip3 install -r requirements
+
+## Run 
+
+DB: mongod --dbpath mongodb/db/data
+RUN: python run.py
 
 ## Initializing DB
 
